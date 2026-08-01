@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Menu, X, Home, Building, LayoutDashboard, LogOut } from "lucide-react";
+import { Menu, X, Home, Building, LayoutDashboard, LogOut, Info, PhoneCall, PlusCircle } from "lucide-react";
 import { useAuthStore } from "@/lib/store/authStore";
 import { Button } from "@/components/ui/button";
 
@@ -28,7 +28,42 @@ export default function Navbar() {
   const navLinks = [
     { name: "Home", href: "/", icon: <Home className="w-4 h-4 mr-2" /> },
     { name: "Properties", href: "/properties", icon: <Building className="w-4 h-4 mr-2" /> },
+    { name: "About", href: "/about", icon: <Info className="w-4 h-4 mr-2" /> },
+    { name: "Contact", href: "/contact", icon: <PhoneCall className="w-4 h-4 mr-2" /> },
   ];
+
+  const isDashboard = pathname?.startsWith("/dashboard");
+
+  const renderListPropertyBtn = (isMobile = false) => {
+    if (isDashboard) return null;
+
+    const btnClass = isMobile 
+      ? "w-full bg-sky-500 hover:bg-sky-600 text-white mt-2" 
+      : "bg-sky-500 hover:bg-sky-600 text-white shadow-lg shadow-sky-500/20";
+
+    if (!isAuthenticated) {
+      return (
+        <Link href="/login?redirect=/dashboard/landlord/properties/new" onClick={() => setIsOpen(false)}>
+          <Button className={btnClass}>
+            List Your Property
+          </Button>
+        </Link>
+      );
+    }
+    
+    if (isAuthenticated && user?.role === "LANDLORD") {
+      return (
+        <Link href="/dashboard/landlord/properties/new" onClick={() => setIsOpen(false)}>
+          <Button className={btnClass}>
+            <PlusCircle className="w-4 h-4 mr-2" />
+            List Your Property
+          </Button>
+        </Link>
+      );
+    }
+
+    return null;
+  };
 
   if (!isMounted) return null;
 
@@ -43,7 +78,7 @@ export default function Navbar() {
             </Link>
           </div>
 
-          <div className="hidden md:flex md:items-center md:space-x-8">
+          <div className="hidden md:flex md:items-center md:space-x-6">
             {navLinks.map((link) => (
               <Link
                 key={link.name}
@@ -61,6 +96,8 @@ export default function Navbar() {
           </div>
 
           <div className="hidden md:flex md:items-center md:space-x-4">
+            {renderListPropertyBtn()}
+            
             {isAuthenticated ? (
               <>
                 <Link href={`/dashboard/${user?.role?.toLowerCase()}`}>
@@ -79,11 +116,6 @@ export default function Navbar() {
                 <Link href="/login">
                   <Button variant="ghost" className="text-slate-600 hover:text-slate-900">
                     Login
-                  </Button>
-                </Link>
-                <Link href="/register">
-                  <Button className="shadow-lg shadow-primary/20">
-                    Register
                   </Button>
                 </Link>
               </>
@@ -123,6 +155,8 @@ export default function Navbar() {
             ))}
             
             <div className="pt-4 mt-4 border-t border-slate-100 flex flex-col gap-3">
+              {renderListPropertyBtn(true)}
+              
               {isAuthenticated ? (
                 <>
                   <Link href={`/dashboard/${user?.role?.toLowerCase()}`} onClick={() => setIsOpen(false)}>

@@ -13,7 +13,7 @@ export default function HomePage() {
           <div className="bg-white/40 backdrop-blur-2xl border border-white/60 p-8 md:p-14 rounded-[2.5rem] shadow-2xl max-w-4xl">
             <h1 className="text-5xl md:text-7xl font-extrabold text-slate-900 tracking-tight mb-6 leading-tight">
               Find Your Perfect <br className="hidden md:block" />
-             <span className="bg-clip-text text-transparent bg-linear-to-r from-primary to-blue-600">Rental Home</span>
+              <span className="bg-clip-text text-transparent bg-linear-to-r from-primary to-blue-600">Rental Home</span>
             </h1>
             <p className="text-lg md:text-xl text-slate-600 mb-10 max-w-2xl mx-auto font-medium">
               Discover thousands of premium rental properties. From cozy apartments to luxury estates, your next home is just a click away.
@@ -24,9 +24,9 @@ export default function HomePage() {
                   <Search className="mr-2 h-5 w-5" /> Browse Properties
                 </Button>
               </Link>
-              <Link href="/register">
+              <Link href="/contact">
                 <Button size="lg" variant="outline" className="h-14 px-8 text-lg w-full sm:w-auto bg-white/50 backdrop-blur-md border-slate-300 rounded-2xl hover:bg-white/80 transition-all">
-                  List Your Property
+                  Contact Us <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </Link>
             </div>

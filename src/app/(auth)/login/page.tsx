@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { toast } from "react-hot-toast";
 import { loginUser } from "@/lib/api/auth.api";
@@ -23,7 +23,10 @@ type LoginFormValues = z.infer<typeof loginSchema>;
 export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
   const login = useAuthStore((state) => state.login);
+  
+  const redirectUrl = searchParams.get("redirect");
 
   const {
     register,
@@ -41,7 +44,12 @@ export default function LoginPage() {
         login(res.data.user, res.data.token);
         document.cookie = `token=${res.data.token}; path=/; max-age=86400; SameSite=Strict`;
         toast.success("Login successful!");
-        router.push(`/dashboard/${res.data.user.role.toLowerCase()}`);
+        
+        if (redirectUrl && res.data.user.role === "LANDLORD") {
+          router.push(redirectUrl);
+        } else {
+          router.push(`/dashboard/${res.data.user.role.toLowerCase()}`);
+        }
       }
     } catch (error: any) {
       toast.error(error.response?.data?.message || "Login failed. Please try again.");
@@ -51,7 +59,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-[80vh] px-4">
+    <div className="flex items-center justify-center min-h-[80vh] px-4 pt-16">
       <Card className="w-full max-w-md bg-white/40 backdrop-blur-xl border-white/50 shadow-2xl rounded-2xl">
         <CardHeader className="space-y-1 text-center">
           <CardTitle className="text-3xl font-bold tracking-tight text-slate-900">
