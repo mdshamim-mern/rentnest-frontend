@@ -16,8 +16,8 @@ export default function PropertyCard({ property }: PropertyCardProps) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
 
-  const images = (property as any).image 
-    ? [(property as any).image] 
+  const images = property.image 
+    ? [property.image, ...(property.images || [])] 
     : ["https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&q=80&w=1000"];
 
   const nextImage = (e: React.MouseEvent) => {
@@ -88,7 +88,7 @@ export default function PropertyCard({ property }: PropertyCardProps) {
             </div>
             <div className="absolute top-4 left-4 z-20">
               <div className="bg-slate-900/80 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold text-white uppercase tracking-wider shadow-sm border border-white/20">
-                {property.category?.name || "Property"}
+                {property.propertyType || property.category?.name || "Property"}
               </div>
             </div>
           </div>
@@ -107,15 +107,15 @@ export default function PropertyCard({ property }: PropertyCardProps) {
           </div>
 
           <div className="flex items-center gap-4 text-slate-600 text-sm font-medium mb-6 pb-6 border-b border-slate-100">
-            <div className="flex items-center gap-1.5 bg-slate-50 px-2 py-1 rounded-lg"><BedDouble className="h-4 w-4" /> 3</div>
-            <div className="flex items-center gap-1.5 bg-slate-50 px-2 py-1 rounded-lg"><Bath className="h-4 w-4" /> 2</div>
-            <div className="flex items-center gap-1.5 bg-slate-50 px-2 py-1 rounded-lg"><SquareSquare className="h-4 w-4" /> 1800</div>
+            <div className="flex items-center gap-1.5 bg-slate-50 px-2 py-1 rounded-lg"><BedDouble className="h-4 w-4" /> {property.bedrooms || "-"}</div>
+            <div className="flex items-center gap-1.5 bg-slate-50 px-2 py-1 rounded-lg"><Bath className="h-4 w-4" /> {property.bathrooms || "-"}</div>
+            <div className="flex items-center gap-1.5 bg-slate-50 px-2 py-1 rounded-lg"><SquareSquare className="h-4 w-4" /> {property.floorArea || "-"}</div>
           </div>
           
           <div className="mt-auto flex items-center justify-between">
             <div>
-              <span className="text-2xl font-black text-slate-900">${property.price}</span>
-              <span className="text-slate-500 text-sm font-medium"> / mo</span>
+              <span className="text-2xl font-black text-slate-900">৳ {property.price}</span>
+              <span className="text-slate-500 text-sm font-medium"> {property.rentType === "Per Year" ? "/ yr" : "/ mo"}</span>
             </div>
             <Button className="rounded-xl px-6 bg-sky-50 hover:bg-sky-500 text-sky-600 hover:text-white transition-colors font-bold shadow-none hover:shadow-lg hover:shadow-sky-500/30">
               Details

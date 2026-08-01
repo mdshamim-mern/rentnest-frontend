@@ -15,3 +15,8 @@ export const getCategories = async (): Promise<ApiResponse<Category[]>> => {
   const response = await axiosInstance.get('/categories');
   return response.data;
 };
+
+export const createProperty = async (data: any): Promise<ApiResponse<Property>> => {
+  const response = await axiosInstance.post('/properties', data);
+  return response.data;
+};

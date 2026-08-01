@@ -30,11 +30,33 @@ export interface Property {
   description: string;
   location: string;
   price: number;
+  rentType?: string;
+  rentNegotiable?: boolean;
+  floorArea?: number;
+  rentFor?: string[];
+  bedrooms?: number;
+  bathrooms?: number;
+  balcony?: number;
+  floorLevel?: string;
+  gas?: string;
+  parking?: string;
+  lift?: string;
+  furnished?: string;
+  facing?: string;
+  serviceCharge?: number;
+  availableFrom?: string;
+  amenities?: string[];
+  videoLink?: string;
+  newBuild?: string;
+  propertyType?: string;
   categoryId: string;
   landlordId: string;
   createdAt: string;
   category?: Category;
   landlord?: User;
+  image?: string;
+  images?: string[];
+  isAvailable?: boolean;
 }
 
 export interface RentalRequest {

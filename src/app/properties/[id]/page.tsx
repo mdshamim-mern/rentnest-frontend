@@ -6,10 +6,11 @@ import Image from "next/image";
 import { getPropertyById } from "@/lib/api/properties.api";
 import { Property } from "@/types";
 import { Button } from "@/components/ui/button";
-import { MapPin, User, CheckCircle2, Home, Share, Calendar, BedDouble, Bath, SquareSquare, ShieldCheck, Wifi, Car, ThermometerSnowflake, MessageSquare, Phone, MessageCircle } from "lucide-react";
+import { MapPin, User, CheckCircle2, Home, Share, Calendar, BedDouble, Bath, SquareSquare, MessageSquare, Phone, MessageCircle, Info, ChevronRight, Check } from "lucide-react";
 import { useAuthStore } from "@/lib/store/authStore";
 import { axiosInstance } from "@/lib/api/axiosInstance";
 import toast from "react-hot-toast";
+import PropertyCard from "@/components/properties/PropertyCard";
 
 export default function PropertyDetailsPage() {
   const params = useParams();
@@ -18,16 +19,25 @@ export default function PropertyDetailsPage() {
   const [property, setProperty] = useState<Property | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isTourLoading, setIsTourLoading] = useState(false);
+  const [similarProperties, setSimilarProperties] = useState<Property[]>([]);
 
   const fallbackImage = "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&q=80&w=2000";
-  const smallImage1 = "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&q=80&w=800";
-  const smallImage2 = "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=800";
 
   useEffect(() => {
-    const fetchProperty = async () => {
+    const fetchPropertyAndSimilar = async () => {
       try {
         const res = await getPropertyById(params.id as string);
-        if (res.success) setProperty(res.data);
+        if (res.success) {
+            setProperty(res.data);
+            
+            const similarRes = await axiosInstance.get('/properties', {
+                 params: { categoryId: res.data.categoryId }
+            });
+            if (similarRes.data.success) {
+                const filtered = similarRes.data.data.filter((p: Property) => p.id !== res.data.id).slice(0, 3);
+                setSimilarProperties(filtered);
+            }
+        }
       } catch (error) {
         toast.error("Failed to load property details");
         router.push("/properties");
@@ -35,7 +45,7 @@ export default function PropertyDetailsPage() {
         setIsLoading(false);
       }
     };
-    if (params.id) fetchProperty();
+    if (params.id) fetchPropertyAndSimilar();
   }, [params.id, router]);
 
   const handleRequest = () => {
@@ -106,6 +116,9 @@ export default function PropertyDetailsPage() {
   }
   if (!property) return null;
 
+  const smallImage1 = property.images && property.images.length > 0 ? property.images[0] : fallbackImage;
+  const smallImage2 = property.images && property.images.length > 1 ? property.images[1] : fallbackImage;
+
   return (
     <div className="min-h-screen bg-linear-to-br from-slate-50 via-sky-50/40 to-slate-100 py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
@@ -113,7 +126,7 @@ export default function PropertyDetailsPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 h-[50vh] md:h-[60vh] rounded-[2.5rem] overflow-hidden shadow-2xl shadow-sky-100/50">
           <div className="md:col-span-2 relative h-full group">
             <Image 
-              src={(property as any).image || fallbackImage} 
+              src={property.image || fallbackImage} 
               alt={property.title}
               fill
               className="object-cover group-hover:scale-105 transition-transform duration-700"
@@ -122,7 +135,7 @@ export default function PropertyDetailsPage() {
             <div className="absolute inset-0 bg-linear-to-t from-slate-900/60 via-transparent to-transparent" />
             <div className="absolute bottom-8 left-8 right-8">
               <div className="bg-sky-500/90 backdrop-blur-md w-fit px-4 py-1.5 rounded-full text-white text-sm font-bold tracking-wider uppercase mb-3 shadow-lg">
-                {property.category?.name || "Premium"}
+                {property.propertyType || property.category?.name || "Premium"}
               </div>
               <h1 className="text-3xl md:text-5xl font-extrabold text-white mb-2 leading-tight drop-shadow-md">
                 {property.title}
@@ -165,50 +178,86 @@ export default function PropertyDetailsPage() {
             <div className="flex flex-wrap gap-4">
               <div className="flex items-center gap-3 bg-white/60 backdrop-blur-xl px-6 py-4 rounded-2xl border border-white/50 shadow-sm">
                 <div className="p-2 bg-sky-100 text-sky-600 rounded-full"><BedDouble className="h-5 w-5" /></div>
-                <div><p className="text-sm text-slate-500 font-medium">Bedrooms</p><p className="font-bold text-slate-900">3 Beds</p></div>
+                <div><p className="text-sm text-slate-500 font-medium">Bedrooms</p><p className="font-bold text-slate-900">{property.bedrooms || "-"} Beds</p></div>
               </div>
               <div className="flex items-center gap-3 bg-white/60 backdrop-blur-xl px-6 py-4 rounded-2xl border border-white/50 shadow-sm">
                 <div className="p-2 bg-sky-100 text-sky-600 rounded-full"><Bath className="h-5 w-5" /></div>
-                <div><p className="text-sm text-slate-500 font-medium">Bathrooms</p><p className="font-bold text-slate-900">2 Baths</p></div>
+                <div><p className="text-sm text-slate-500 font-medium">Bathrooms</p><p className="font-bold text-slate-900">{property.bathrooms || "-"} Baths</p></div>
               </div>
               <div className="flex items-center gap-3 bg-white/60 backdrop-blur-xl px-6 py-4 rounded-2xl border border-white/50 shadow-sm">
                 <div className="p-2 bg-sky-100 text-sky-600 rounded-full"><SquareSquare className="h-5 w-5" /></div>
-                <div><p className="text-sm text-slate-500 font-medium">Area</p><p className="font-bold text-slate-900">1,850 sqft</p></div>
+                <div><p className="text-sm text-slate-500 font-medium">Area</p><p className="font-bold text-slate-900">{property.floorArea ? `${property.floorArea} sqft` : "-"}</p></div>
               </div>
             </div>
 
             <div>
-              <h2 className="text-3xl font-bold text-slate-900 mb-6">About this Property</h2>
+              <h2 className="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-2"><Info className="h-6 w-6 text-sky-500" /> Property Features</h2>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-y-6 gap-x-4 bg-white/60 backdrop-blur-xl p-8 rounded-3xl border border-white/50 shadow-sm">
+                 <div>
+                    <p className="text-sm text-slate-500 font-medium mb-1">Rent For</p>
+                    <p className="font-bold text-slate-800">{property.rentFor?.join(', ') || "-"}</p>
+                 </div>
+                 <div>
+                    <p className="text-sm text-slate-500 font-medium mb-1">Balcony</p>
+                    <p className="font-bold text-slate-800">{property.balcony || "-"}</p>
+                 </div>
+                 <div>
+                    <p className="text-sm text-slate-500 font-medium mb-1">Floor Available On</p>
+                    <p className="font-bold text-slate-800">{property.floorLevel || "-"}</p>
+                 </div>
+                 <div>
+                    <p className="text-sm text-slate-500 font-medium mb-1">Gas</p>
+                    <p className="font-bold text-slate-800">{property.gas || "-"}</p>
+                 </div>
+                 <div>
+                    <p className="text-sm text-slate-500 font-medium mb-1">Parking</p>
+                    <p className="font-bold text-slate-800">{property.parking || "-"}</p>
+                 </div>
+                 <div>
+                    <p className="text-sm text-slate-500 font-medium mb-1">Lift</p>
+                    <p className="font-bold text-slate-800">{property.lift || "-"}</p>
+                 </div>
+                 <div>
+                    <p className="text-sm text-slate-500 font-medium mb-1">Furnished</p>
+                    <p className="font-bold text-slate-800">{property.furnished || "-"}</p>
+                 </div>
+                 <div>
+                    <p className="text-sm text-slate-500 font-medium mb-1">Facing</p>
+                    <p className="font-bold text-slate-800">{property.facing || "-"}</p>
+                 </div>
+                 <div>
+                    <p className="text-sm text-slate-500 font-medium mb-1">Service Charge</p>
+                    <p className="font-bold text-slate-800">{property.serviceCharge ? `৳ ${property.serviceCharge}` : "-"}</p>
+                 </div>
+              </div>
+            </div>
+
+            <div>
+              <h2 className="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-2"><CheckCircle2 className="h-6 w-6 text-sky-500" /> Amenities</h2>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                  {property.amenities && property.amenities.length > 0 ? (
+                      property.amenities.map((item, idx) => (
+                          <div key={idx} className="flex items-center gap-3 bg-white/60 p-4 rounded-2xl border border-white/50 shadow-sm">
+                              <div className="bg-sky-100 p-1.5 rounded-full"><Check className="h-4 w-4 text-sky-600" /></div>
+                              <span className="font-medium text-slate-700">{item}</span>
+                          </div>
+                      ))
+                  ) : (
+                      <p className="text-slate-500 italic col-span-full">No specific amenities listed.</p>
+                  )}
+              </div>
+            </div>
+
+            <div>
+              <h2 className="text-2xl font-bold text-slate-900 mb-6">Description</h2>
               <p className="text-slate-600 leading-relaxed text-lg whitespace-pre-wrap bg-white/40 p-8 rounded-3xl border border-white/50 shadow-sm">
                 {property.description}
               </p>
             </div>
             
             <div>
-              <h2 className="text-3xl font-bold text-slate-900 mb-6">Premium Amenities</h2>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
-                <div className="flex flex-col items-center justify-center p-6 bg-white/60 backdrop-blur-xl rounded-3xl border border-white/50 shadow-sm hover:shadow-md transition-shadow">
-                  <Wifi className="h-8 w-8 text-sky-500 mb-3" />
-                  <span className="font-medium text-slate-700">High-Speed WiFi</span>
-                </div>
-                <div className="flex flex-col items-center justify-center p-6 bg-white/60 backdrop-blur-xl rounded-3xl border border-white/50 shadow-sm hover:shadow-md transition-shadow">
-                  <Car className="h-8 w-8 text-sky-500 mb-3" />
-                  <span className="font-medium text-slate-700">Private Parking</span>
-                </div>
-                <div className="flex flex-col items-center justify-center p-6 bg-white/60 backdrop-blur-xl rounded-3xl border border-white/50 shadow-sm hover:shadow-md transition-shadow">
-                  <ThermometerSnowflake className="h-8 w-8 text-sky-500 mb-3" />
-                  <span className="font-medium text-slate-700">Central AC</span>
-                </div>
-                <div className="flex flex-col items-center justify-center p-6 bg-white/60 backdrop-blur-xl rounded-3xl border border-white/50 shadow-sm hover:shadow-md transition-shadow">
-                  <ShieldCheck className="h-8 w-8 text-sky-500 mb-3" />
-                  <span className="font-medium text-slate-700">24/7 Security</span>
-                </div>
-              </div>
-            </div>
-
-            <div>
-              <h2 className="text-3xl font-bold text-slate-900 mb-6">Explore the Area</h2>
-              <div className="w-full h-80 bg-slate-200 rounded-3xl overflow-hidden relative border border-white/50 shadow-md">
+              <h2 className="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-2"><MapPin className="h-6 w-6 text-sky-500" /> Local Area Information</h2>
+              <div className="w-full h-96 bg-slate-200 rounded-3xl overflow-hidden relative border border-white/50 shadow-md">
                  <Image 
                     src="https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&q=80&w=1600" 
                     alt="Map view" 
@@ -216,8 +265,8 @@ export default function PropertyDetailsPage() {
                     className="object-cover opacity-80"
                   />
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <Button variant="secondary" className="rounded-full font-bold shadow-xl hover:scale-105 transition-transform">
-                      <MapPin className="mr-2 h-4 w-4 text-sky-500" /> View on Map
+                    <Button variant="secondary" className="rounded-full font-bold shadow-xl hover:scale-105 transition-transform h-12 px-6">
+                      <MapPin className="mr-2 h-5 w-5 text-sky-500" /> View on Google Maps
                     </Button>
                   </div>
               </div>
@@ -228,14 +277,17 @@ export default function PropertyDetailsPage() {
           <div className="relative">
             <div className="sticky top-28 space-y-6">
               <div className="bg-white/60 backdrop-blur-2xl border border-white/60 p-8 rounded-[2rem] shadow-xl shadow-sky-100/50">
-                <div className="flex justify-between items-start mb-6">
+                <div className="flex justify-between items-start mb-2">
                   <div>
-                    <div className="text-sm font-semibold text-slate-500 uppercase tracking-widest mb-1">Monthly Rent</div>
-                    <div className="text-4xl font-extrabold text-slate-900">${property.price}</div>
+                    <div className="text-sm font-semibold text-slate-500 uppercase tracking-widest mb-1">{property.rentType || "Monthly Rent"}</div>
+                    <div className="text-4xl font-extrabold text-slate-900">৳ {property.price}</div>
                   </div>
                   <Button onClick={handleShare} variant="outline" size="icon" className="rounded-full h-10 w-10 bg-white/80 border-slate-200 hover:text-sky-500 hover:scale-110 transition-transform shadow-sm">
                     <Share className="h-4 w-4" />
                   </Button>
+                </div>
+                <div className="mb-6 inline-block bg-slate-100 text-slate-600 px-3 py-1 rounded-full text-sm font-semibold border border-slate-200">
+                    {property.rentNegotiable ? "Negotiable" : "Fixed"}
                 </div>
                 
                 <div className="space-y-4 mb-8">
@@ -260,8 +312,12 @@ export default function PropertyDetailsPage() {
                   <div className="text-sm font-semibold text-slate-500 mb-4">LISTED BY</div>
                   <div className="flex flex-col gap-4 bg-white/40 p-5 rounded-3xl border border-white/50">
                     <div className="flex items-center gap-4 mb-2">
-                      <div className="bg-sky-100 w-14 h-14 rounded-full flex items-center justify-center shrink-0 border-2 border-white shadow-sm">
-                        <User className="h-7 w-7 text-sky-600" />
+                      <div className="bg-sky-100 w-14 h-14 rounded-full flex items-center justify-center shrink-0 border-2 border-white shadow-sm overflow-hidden">
+                        {(property.landlord as any)?.profile?.photo ? (
+                            <img src={(property.landlord as any).profile.photo} alt="avatar" className="w-full h-full object-cover" />
+                        ) : (
+                            <User className="h-7 w-7 text-sky-600" />
+                        )}
                       </div>
                       <div>
                         <div className="font-bold text-slate-900 text-lg line-clamp-1">{property.landlord?.name || "Verified Owner"}</div>
@@ -302,6 +358,22 @@ export default function PropertyDetailsPage() {
           </div>
 
         </div>
+        
+        {similarProperties.length > 0 && (
+             <div className="pt-12 border-t border-slate-200/60 mt-12">
+                <div className="flex justify-between items-center mb-8">
+                    <h2 className="text-3xl font-bold text-slate-900">Similar Properties</h2>
+                    <Button variant="ghost" className="text-sky-600 font-bold hover:bg-sky-50 hover:text-sky-700">
+                        View All <ChevronRight className="ml-1 h-5 w-5" />
+                    </Button>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {similarProperties.map(sim => (
+                        <PropertyCard key={sim.id} property={sim} />
+                    ))}
+                </div>
+             </div>
+        )}
 
       </div>
     </div>
