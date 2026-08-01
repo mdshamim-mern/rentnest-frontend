@@ -64,7 +64,6 @@ export default function NewPropertyPage() {
   const {
     register,
     handleSubmit,
-    control,
     setValue,
     watch,
     formState: { errors },
@@ -77,6 +76,19 @@ export default function NewPropertyPage() {
       amenities: [],
     }
   });
+
+  const selectedCategory = watch("categoryId");
+  const currentPropertyType = watch("propertyType");
+  const currentRentType = watch("rentType");
+  const currentBedrooms = watch("bedrooms");
+  const currentBathrooms = watch("bathrooms");
+  const currentBalcony = watch("balcony");
+  const currentFloorLevel = watch("floorLevel");
+  const currentGas = watch("gas");
+  const currentParking = watch("parking");
+  const currentLift = watch("lift");
+  const currentFurnished = watch("furnished");
+  const currentFacing = watch("facing");
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -102,12 +114,19 @@ export default function NewPropertyPage() {
 
   const handleAdditionalImagesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-      const filesArray = Array.from(e.target.files).slice(0, 19);
-      setImageFiles(filesArray);
-      
-      const previews = filesArray.map(file => URL.createObjectURL(file));
-      setImagePreviews(previews);
+      const newFiles = Array.from(e.target.files);
+      setImageFiles(prev => {
+        const combined = [...prev, ...newFiles].slice(0, 19);
+        return combined;
+      });
+      const newPreviews = newFiles.map(file => URL.createObjectURL(file));
+      setImagePreviews(prev => [...prev, ...newPreviews].slice(0, 19));
     }
+  };
+
+  const removeAdditionalImage = (index: number) => {
+    setImageFiles(prev => prev.filter((_, i) => i !== index));
+    setImagePreviews(prev => prev.filter((_, i) => i !== index));
   };
 
   const onSubmit = async (data: PropertyFormValues) => {
@@ -150,17 +169,40 @@ export default function NewPropertyPage() {
         }
       }
 
-      const submitData = {
-        ...data,
-        floorArea: data.floorArea === "" ? undefined : Number(data.floorArea),
-        bedrooms: data.bedrooms === "" ? undefined : Number(data.bedrooms),
-        bathrooms: data.bathrooms === "" ? undefined : Number(data.bathrooms),
-        balcony: data.balcony === "" ? undefined : Number(data.balcony),
-        serviceCharge: data.serviceCharge === "" ? undefined : Number(data.serviceCharge),
-        videoLink: data.videoLink === "" ? undefined : data.videoLink,
+      const submitData: any = {
+        title: data.title,
+        description: data.description,
+        location: data.location,
+        price: Number(data.price),
+        categoryId: data.categoryId,
+        isAvailable: data.isAvailable,
+        rentType: data.rentType,
+        rentNegotiable: data.rentNegotiable,
+        floorArea: (data.floorArea !== undefined && data.floorArea !== "") ? Number(data.floorArea) : undefined,
+        rentFor: data.rentFor,
+        bedrooms: (data.bedrooms !== undefined && data.bedrooms !== "") ? Number(data.bedrooms) : undefined,
+        bathrooms: (data.bathrooms !== undefined && data.bathrooms !== "") ? Number(data.bathrooms) : undefined,
+        balcony: (data.balcony !== undefined && data.balcony !== "") ? Number(data.balcony) : undefined,
+        floorLevel: data.floorLevel,
+        gas: data.gas,
+        parking: data.parking,
+        lift: data.lift,
+        furnished: data.furnished,
+        facing: data.facing,
+        serviceCharge: (data.serviceCharge !== undefined && data.serviceCharge !== "") ? Number(data.serviceCharge) : undefined,
+        availableFrom: data.availableFrom ? new Date(data.availableFrom).toISOString() : undefined,
+        amenities: data.amenities,
+        videoLink: data.videoLink,
+        propertyType: data.propertyType,
         image: mainImageUrl,
-        images: additionalImageUrls
+        ...(additionalImageUrls.length > 0 ? { images: additionalImageUrls } : {})
       };
+
+      Object.keys(submitData).forEach(key => {
+        if (submitData[key] === undefined || submitData[key] === null || submitData[key] === "") {
+          delete submitData[key];
+        }
+      });
 
       const response = await axiosInstance.post('/properties', submitData);
       
@@ -168,11 +210,16 @@ export default function NewPropertyPage() {
         toast.success("Property created successfully");
         router.push('/dashboard/landlord/properties');
       }
-    } catch (error) {
-      toast.error("Failed to create property");
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || "Failed to create property");
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const getCategoryName = (id: string) => {
+    const cat = categories.find(c => c.id === id);
+    return cat ? cat.name : "Select category";
   };
 
   return (
@@ -192,9 +239,9 @@ export default function NewPropertyPage() {
              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <div className="space-y-2">
                 <label className="text-sm font-medium text-slate-700">Category *</label>
-                <Select onValueChange={(val) => setValue("categoryId", val as string, { shouldValidate: true })}>
+                <Select value={selectedCategory || undefined} onValueChange={(val) => setValue("categoryId", val ?? "", { shouldValidate: true })}>
                   <SelectTrigger className="bg-white border-slate-200 h-12 rounded-xl focus:ring-sky-500">
-                    <SelectValue placeholder="Select category" />
+                    <SelectValue placeholder="Select category">{getCategoryName(selectedCategory || "")}</SelectValue>
                   </SelectTrigger>
                   <SelectContent className="rounded-xl">
                     {categories.map((cat) => (
@@ -207,7 +254,7 @@ export default function NewPropertyPage() {
 
               <div className="space-y-2">
                 <label className="text-sm font-medium text-slate-700">Property Type</label>
-                <Select onValueChange={(val) => setValue("propertyType", val as string)}>
+                <Select value={currentPropertyType || undefined} onValueChange={(val) => setValue("propertyType", val ?? undefined)}>
                   <SelectTrigger className="bg-white border-slate-200 h-12 rounded-xl focus:ring-sky-500">
                     <SelectValue placeholder="Select type" />
                   </SelectTrigger>
@@ -247,7 +294,7 @@ export default function NewPropertyPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <div className="space-y-2">
                 <label className="text-sm font-medium text-slate-700">Rent Type</label>
-                <Select onValueChange={(val) => setValue("rentType", val as string)}>
+                <Select value={currentRentType || undefined} onValueChange={(val) => setValue("rentType", val ?? undefined)}>
                   <SelectTrigger className="bg-white border-slate-200 h-12 rounded-xl focus:ring-sky-500">
                     <SelectValue placeholder="Per Month" />
                   </SelectTrigger>
@@ -310,7 +357,7 @@ export default function NewPropertyPage() {
               <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-slate-700">Bedroom *</label>
-                    <Select onValueChange={(val) => setValue("bedrooms", Number(val as string))}>
+                    <Select value={currentBedrooms?.toString() || undefined} onValueChange={(val) => setValue("bedrooms", val ? Number(val) : undefined)}>
                         <SelectTrigger className="bg-white border-slate-200 h-12 rounded-xl focus:ring-sky-500">
                             <SelectValue placeholder="Choose" />
                         </SelectTrigger>
@@ -324,7 +371,7 @@ export default function NewPropertyPage() {
                   
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-slate-700">Bathroom *</label>
-                    <Select onValueChange={(val) => setValue("bathrooms", Number(val as string))}>
+                    <Select value={currentBathrooms?.toString() || undefined} onValueChange={(val) => setValue("bathrooms", val ? Number(val) : undefined)}>
                         <SelectTrigger className="bg-white border-slate-200 h-12 rounded-xl focus:ring-sky-500">
                             <SelectValue placeholder="Choose" />
                         </SelectTrigger>
@@ -338,7 +385,7 @@ export default function NewPropertyPage() {
 
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-slate-700">Balcony</label>
-                    <Select onValueChange={(val) => setValue("balcony", Number(val as string))}>
+                    <Select value={currentBalcony?.toString() || undefined} onValueChange={(val) => setValue("balcony", val ? Number(val) : undefined)}>
                         <SelectTrigger className="bg-white border-slate-200 h-12 rounded-xl focus:ring-sky-500">
                             <SelectValue placeholder="Choose" />
                         </SelectTrigger>
@@ -352,7 +399,7 @@ export default function NewPropertyPage() {
 
                    <div className="space-y-2">
                     <label className="text-sm font-medium text-slate-700">Floor Available On</label>
-                    <Select onValueChange={(val) => setValue("floorLevel", val as string)}>
+                    <Select value={currentFloorLevel || undefined} onValueChange={(val) => setValue("floorLevel", val ?? undefined)}>
                         <SelectTrigger className="bg-white border-slate-200 h-12 rounded-xl focus:ring-sky-500">
                             <SelectValue placeholder="Choose" />
                         </SelectTrigger>
@@ -377,7 +424,7 @@ export default function NewPropertyPage() {
                <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-slate-700">Gas</label>
-                    <Select onValueChange={(val) => setValue("gas", val as string)}>
+                    <Select value={currentGas || undefined} onValueChange={(val) => setValue("gas", val ?? undefined)}>
                         <SelectTrigger className="bg-white border-slate-200 h-12 rounded-xl focus:ring-sky-500">
                             <SelectValue placeholder="Choose" />
                         </SelectTrigger>
@@ -390,7 +437,7 @@ export default function NewPropertyPage() {
                   
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-slate-700">Parking</label>
-                    <Select onValueChange={(val) => setValue("parking", val as string)}>
+                    <Select value={currentParking || undefined} onValueChange={(val) => setValue("parking", val ?? undefined)}>
                         <SelectTrigger className="bg-white border-slate-200 h-12 rounded-xl focus:ring-sky-500">
                             <SelectValue placeholder="Choose" />
                         </SelectTrigger>
@@ -405,7 +452,7 @@ export default function NewPropertyPage() {
 
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-slate-700">Lift</label>
-                    <Select onValueChange={(val) => setValue("lift", val as string)}>
+                    <Select value={currentLift || undefined} onValueChange={(val) => setValue("lift", val ?? undefined)}>
                         <SelectTrigger className="bg-white border-slate-200 h-12 rounded-xl focus:ring-sky-500">
                             <SelectValue placeholder="Choose" />
                         </SelectTrigger>
@@ -420,7 +467,7 @@ export default function NewPropertyPage() {
 
                    <div className="space-y-2">
                     <label className="text-sm font-medium text-slate-700">Furnished</label>
-                    <Select onValueChange={(val) => setValue("furnished", val as string)}>
+                    <Select value={currentFurnished || undefined} onValueChange={(val) => setValue("furnished", val ?? undefined)}>
                         <SelectTrigger className="bg-white border-slate-200 h-12 rounded-xl focus:ring-sky-500">
                             <SelectValue placeholder="Choose" />
                         </SelectTrigger>
@@ -436,7 +483,7 @@ export default function NewPropertyPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-slate-700">Facing</label>
-                    <Select onValueChange={(val) => setValue("facing", val as string)}>
+                    <Select value={currentFacing || undefined} onValueChange={(val) => setValue("facing", val ?? undefined)}>
                         <SelectTrigger className="bg-white border-slate-200 h-12 rounded-xl focus:ring-sky-500">
                             <SelectValue placeholder="Choose" />
                         </SelectTrigger>
@@ -507,9 +554,18 @@ export default function NewPropertyPage() {
               <label className="text-sm font-medium text-slate-700">Additional Photos (Max 19)</label>
               <Input type="file" accept="image/*" multiple onChange={handleAdditionalImagesChange} className="bg-white border-slate-200 h-12 rounded-xl focus-visible:ring-sky-500 pt-2.5" />
                {imagePreviews.length > 0 && (
-                  <div className="flex gap-2 mt-4 overflow-x-auto pb-2">
+                  <div className="flex flex-wrap gap-2 mt-4 pb-2">
                       {imagePreviews.map((src, i) => (
-                          <img key={i} src={src} alt="Additional Preview" className="w-16 h-16 object-cover rounded-lg border border-slate-200 shrink-0" />
+                          <div key={i} className="relative group">
+                              <img src={src} alt="Additional Preview" className="w-16 h-16 object-cover rounded-lg border border-slate-200 shrink-0" />
+                              <button 
+                                  type="button" 
+                                  onClick={() => removeAdditionalImage(i)}
+                                  className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity"
+                              >
+                                  ×
+                              </button>
+                          </div>
                       ))}
                   </div>
               )}
