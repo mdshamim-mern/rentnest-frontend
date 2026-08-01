@@ -1,74 +1,282 @@
-import { Search, SlidersHorizontal } from "lucide-react";
+import { Search, Map, List, ChevronDown, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Category } from "@/types";
+import MainFilterButton from "./FilterUI/MainFilterButton";
+import DropdownMenu from "./FilterUI/DropdownMenu";
+import RangeInput from "./FilterUI/RangeInput";
+import toast from "react-hot-toast";
+import Link from "next/link";
 
 interface PropertyFiltersProps {
   searchTerm: string;
   setSearchTerm: (value: string) => void;
+  selectedLocation: string;
+  setSelectedLocation: (value: string) => void;
+  searchMode: string;
+  setSearchMode: (value: string) => void;
+  viewMode: string;
+  setViewMode: (value: string) => void;
   selectedCategory: string;
   setSelectedCategory: (value: string) => void;
+  propertyType: string;
+  setPropertyType: (value: string) => void;
   minPrice: string;
   setMinPrice: (value: string) => void;
   maxPrice: string;
   setMaxPrice: (value: string) => void;
+  minArea: string;
+  setMinArea: (value: string) => void;
+  maxArea: string;
+  setMaxArea: (value: string) => void;
+  rooms: string[];
+  setRooms: (value: string[]) => void;
+  beds: string;
+  setBeds: (value: string) => void;
+  baths: string;
+  setBaths: (value: string) => void;
+  amenities: string[];
+  setAmenities: (value: string[]) => void;
+  newBuilds: string;
+  setNewBuilds: (value: string) => void;
+  moreOptions: string[];
+  setMoreOptions: (value: string[]) => void;
   categories: Category[];
+  onReset: () => void;
 }
 
-export default function PropertyFilters({
-  searchTerm,
-  setSearchTerm,
-  selectedCategory,
-  setSelectedCategory,
-  minPrice,
-  setMinPrice,
-  maxPrice,
-  setMaxPrice,
-  categories,
-}: PropertyFiltersProps) {
+export default function PropertyFilters(props: PropertyFiltersProps) {
   return (
-    <div className="bg-white/60 backdrop-blur-2xl border border-white/60 p-6 rounded-3xl shadow-xl shadow-sky-100/40 mb-12 flex flex-col xl:flex-row gap-4 items-center">
-      <div className="relative grow w-full">
-        <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-sky-500 h-5 w-5" />
-        <Input 
-          placeholder="Search by title or location..." 
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="pl-12 h-14 bg-white/80 border-white/50 rounded-2xl text-base shadow-sm focus-visible:ring-sky-500"
-        />
-      </div>
+    <div className="relative z-50 bg-white/60 backdrop-blur-2xl border border-white/60 p-6 rounded-3xl shadow-xl shadow-sky-100/40 mb-12 flex flex-col gap-6">
       
-      <div className="flex flex-col sm:flex-row w-full xl:w-auto gap-4">
-        <div className="flex gap-2 w-full sm:w-auto">
+      <div className="flex flex-col xl:flex-row gap-4 items-center justify-between w-full">
+        <div className="flex items-center gap-1 bg-white/80 p-1 rounded-full border border-white/50 shadow-sm w-full xl:w-auto h-12">
+          <button 
+            onClick={() => props.setSearchMode("ai")}
+            className={`whitespace-nowrap px-5 h-full rounded-full text-sm font-semibold transition-colors ${props.searchMode === "ai" ? "bg-sky-500 text-white shadow-md" : "text-slate-600 hover:bg-slate-100"}`}
+          >
+            AI Search
+          </button>
+          <button 
+            onClick={() => props.setSearchMode("classic")}
+            className={`whitespace-nowrap px-5 h-full rounded-full text-sm font-semibold transition-colors ${props.searchMode === "classic" ? "bg-sky-500 text-white shadow-md" : "text-slate-600 hover:bg-slate-100"}`}
+          >
+            Classic
+          </button>
+        </div>
+        
+        <div className="relative grow w-full h-12">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-sky-500 h-5 w-5" />
           <Input 
-            type="number" 
-            placeholder="Min $" 
-            value={minPrice}
-            onChange={(e) => setMinPrice(e.target.value)}
-            className="h-14 w-full sm:w-28 bg-white/80 border-white/50 rounded-2xl shadow-sm focus-visible:ring-sky-500"
+            placeholder="Dubai, United Arab Emirates" 
+            value={props.searchTerm}
+            onChange={(e) => props.setSearchTerm(e.target.value)}
+            className="pl-12 pr-24 h-full bg-white/80 border-white/50 rounded-2xl text-base text-slate-800 shadow-sm focus-visible:ring-sky-500 w-full"
           />
-          <Input 
-            type="number" 
-            placeholder="Max $" 
-            value={maxPrice}
-            onChange={(e) => setMaxPrice(e.target.value)}
-            className="h-14 w-full sm:w-28 bg-white/80 border-white/50 rounded-2xl shadow-sm focus-visible:ring-sky-500"
+          <div className="absolute right-1.5 top-1/2 -translate-y-1/2 flex items-center gap-1 h-9">
+            {props.searchTerm && (
+              <button onClick={() => props.setSearchTerm("")} className="p-1.5 text-slate-400 hover:text-slate-600 transition-colors h-full flex items-center justify-center">
+                <X className="h-4 w-4" />
+              </button>
+            )}
+            <button 
+              onClick={() => {
+                if (props.searchTerm) {
+                  props.setSelectedLocation(props.searchTerm);
+                  toast.success("Location updated!");
+                }
+              }}
+              className="flex items-center justify-center px-3 h-full bg-sky-500 hover:bg-sky-600 text-white rounded-xl shadow-sm transition-colors"
+            >
+              <Search className="h-4 w-4" />
+            </button>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-4 w-full xl:w-auto justify-between xl:justify-end">
+          <button 
+            onClick={() => toast.success("Search Saved Successfully!")}
+            className="whitespace-nowrap h-12 px-6 bg-white border border-slate-200 rounded-2xl text-slate-800 font-bold hover:bg-slate-50 shadow-sm transition-colors"
+          >
+            Save Search
+          </button>
+          <div className="flex items-center gap-1 bg-white/80 p-1 rounded-2xl border border-white/50 shadow-sm h-12">
+            <button 
+              onClick={() => props.setViewMode("list")}
+              className={`flex items-center gap-2 px-4 h-full rounded-xl text-sm font-semibold transition-colors ${props.viewMode === "list" ? "bg-white shadow-md text-slate-900" : "text-slate-600 hover:bg-slate-100"}`}
+            >
+              <List className={`h-4 w-4 ${props.viewMode === "list" ? "text-sky-500" : ""}`} /> List
+            </button>
+            <button 
+              onClick={() => props.setViewMode("map")}
+              className={`flex items-center gap-2 px-4 h-full rounded-xl text-sm font-semibold transition-colors ${props.viewMode === "map" ? "bg-white shadow-md text-slate-900" : "text-slate-600 hover:bg-slate-100"}`}
+            >
+              <Map className={`h-4 w-4 ${props.viewMode === "map" ? "text-sky-500" : ""}`} /> Map
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div className="flex flex-wrap items-center gap-2 text-sm text-slate-500 font-medium px-2">
+        <Link href="/" className="hover:text-sky-500 cursor-pointer transition-colors">Back to Home</Link>
+        <span>|</span>
+        <span className="hover:text-sky-500 cursor-pointer transition-colors">Property Search</span>
+        <span>/</span>
+        <span className="text-slate-800 font-bold">{props.selectedLocation}</span>
+        <span>/</span>
+        <div className="relative flex items-center">
+          <DropdownMenu 
+            label="Choose Location" 
+            value={props.selectedLocation} 
+            onChange={props.setSelectedLocation}
+            type="single"
+            options={[
+              { label: "United Arab Emirates / Dubai", value: "United Arab Emirates / Dubai" },
+              { label: "United Arab Emirates / Abu Dhabi", value: "United Arab Emirates / Abu Dhabi" },
+              { label: "United Arab Emirates / Sharjah", value: "United Arab Emirates / Sharjah" },
+              { label: "Bangladesh / Dhaka", value: "Bangladesh / Dhaka" }
+            ]} 
           />
         </div>
-        <div className="w-full sm:w-56">
-          <Select value={selectedCategory} onValueChange={(val) => setSelectedCategory(val || "all")}>
-            <SelectTrigger className="h-14 bg-white/80 border-white/50 rounded-2xl text-base shadow-sm focus:ring-sky-500">
-              <SlidersHorizontal className="mr-2 h-4 w-4 text-sky-500 shrink-0" />
-              <SelectValue placeholder="All Categories" />
-            </SelectTrigger>
-            <SelectContent className="rounded-xl bg-white/90 backdrop-blur-xl">
-              <SelectItem value="all">All Categories</SelectItem>
-              {categories.map((cat) => (
-                <SelectItem key={cat.id} value={cat.id}>{cat.name}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+      </div>
+
+      <div className="flex flex-wrap items-center gap-3">
+        <MainFilterButton onReset={props.onReset} />
+
+        <DropdownMenu 
+          label="Property Type" 
+          value={props.propertyType} 
+          onChange={props.setPropertyType}
+          type="single"
+          options={[
+            { label: "All Types", value: "all" },
+            { label: "Apartment", value: "apartment" },
+            { label: "Villa", value: "villa" },
+            { label: "Duplex", value: "duplex" },
+            { label: "Penthouse", value: "penthouse" },
+            { label: "Townhouse", value: "townhouse" },
+            { label: "Studio", value: "studio" }
+          ]} 
+        />
+
+        <DropdownMenu 
+          label="Property Category" 
+          value={props.selectedCategory} 
+          onChange={props.setSelectedCategory}
+          type="single"
+          options={[
+            { label: "All Categories", value: "all" },
+            ...props.categories.map(c => ({ label: c.name, value: c.id })),
+            { label: "Residential", value: "residential" },
+            { label: "Commercial", value: "commercial" },
+            { label: "Industrial", value: "industrial" },
+            { label: "Land/Plot", value: "land" }
+          ]} 
+        />
+
+        <div className="group relative">
+          <button className="h-10 px-4 flex items-center gap-2 bg-white border border-slate-200 hover:border-sky-300 hover:bg-sky-50 rounded-full text-sm font-medium text-slate-700 transition-colors shadow-sm">
+            Pricing <ChevronDown className="h-4 w-4 text-slate-400" />
+          </button>
+          <div className="absolute top-full left-0 mt-2 hidden group-hover:block z-100">
+            <RangeInput 
+              minVal={props.minPrice} setMinVal={props.setMinPrice} 
+              maxVal={props.maxPrice} setMaxVal={props.setMaxPrice} 
+              placeholder="Price" 
+            />
+          </div>
         </div>
+
+        <div className="group relative">
+          <button className="h-10 px-4 flex items-center gap-2 bg-white border border-slate-200 hover:border-sky-300 hover:bg-sky-50 rounded-full text-sm font-medium text-slate-700 transition-colors shadow-sm">
+            Area (sqft) <ChevronDown className="h-4 w-4 text-slate-400" />
+          </button>
+          <div className="absolute top-full left-0 mt-2 hidden group-hover:block z-100">
+            <RangeInput 
+              minVal={props.minArea} setMinVal={props.setMinArea} 
+              maxVal={props.maxArea} setMaxVal={props.setMaxArea} 
+              placeholder="Sqft" 
+            />
+          </div>
+        </div>
+
+        <DropdownMenu 
+          label="Room" 
+          value={props.rooms} 
+          onChange={props.setRooms}
+          type="grid"
+          options={[
+            { label: "1", value: "1" }, { label: "2", value: "2" }, 
+            { label: "3", value: "3" }, { label: "4", value: "4" },
+            { label: "5", value: "5" }, { label: "6+", value: "6+" }
+          ]} 
+        />
+
+        <DropdownMenu 
+          label="Beds" 
+          value={props.beds} 
+          onChange={props.setBeds}
+          type="grid"
+          options={[
+            { label: "Studio", value: "studio" }, { label: "1", value: "1" },
+            { label: "2", value: "2" }, { label: "3", value: "3" },
+            { label: "4", value: "4" }, { label: "5+", value: "5+" }
+          ]} 
+        />
+
+        <DropdownMenu 
+          label="Baths" 
+          value={props.baths} 
+          onChange={props.setBaths}
+          type="grid"
+          options={[
+            { label: "1", value: "1" }, { label: "2", value: "2" }, 
+            { label: "3", value: "3" }, { label: "4+", value: "4+" }
+          ]} 
+        />
+
+        <DropdownMenu 
+          label="Amenities" 
+          value={props.amenities} 
+          onChange={props.setAmenities}
+          type="multiple"
+          options={[
+            { label: "Swimming Pool", value: "pool" },
+            { label: "Gym", value: "gym" },
+            { label: "Parking", value: "parking" },
+            { label: "Balcony", value: "balcony" },
+            { label: "Elevator", value: "elevator" },
+            { label: "Security", value: "security" },
+            { label: "Garden", value: "garden" },
+            { label: "Furnished", value: "furnished" }
+          ]} 
+        />
+
+        <DropdownMenu 
+          label="New Builds" 
+          value={props.newBuilds} 
+          onChange={props.setNewBuilds}
+          type="single"
+          options={[
+            { label: "Any", value: "all" },
+            { label: "Yes / Brand New", value: "yes" },
+            { label: "No / Pre-owned", value: "no" },
+            { label: "Under Construction", value: "under_construction" },
+            { label: "Ready to Move", value: "ready" }
+          ]} 
+        />
+
+        <DropdownMenu 
+          label="More Options" 
+          value={props.moreOptions} 
+          onChange={props.setMoreOptions}
+          type="multiple"
+          options={[
+            { label: "Year Built", value: "year_built" },
+            { label: "Floor Level", value: "floor_level" },
+            { label: "Pet Friendly", value: "pet_friendly" },
+            { label: "Virtual Tour Available", value: "virtual_tour" }
+          ]} 
+        />
       </div>
     </div>
   );

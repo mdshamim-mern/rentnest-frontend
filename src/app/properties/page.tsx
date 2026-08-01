@@ -1,12 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Search, SlidersHorizontal, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { axiosInstance } from "@/lib/api/axiosInstance";
 import { Property, Category } from "@/types";
-import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import PropertyCard from "@/components/properties/PropertyCard";
+import PropertyFilters from "@/components/properties/PropertyFilters";
 import toast from "react-hot-toast";
 
 export default function PropertiesPage() {
@@ -15,9 +14,21 @@ export default function PropertiesPage() {
   const [isLoading, setIsLoading] = useState(true);
   
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedLocation, setSelectedLocation] = useState("United Arab Emirates / Dubai");
+  const [searchMode, setSearchMode] = useState("ai");
+  const [viewMode, setViewMode] = useState("list");
   const [selectedCategory, setSelectedCategory] = useState("all");
+  const [propertyType, setPropertyType] = useState("all");
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
+  const [minArea, setMinArea] = useState("");
+  const [maxArea, setMaxArea] = useState("");
+  const [rooms, setRooms] = useState<string[]>([]);
+  const [beds, setBeds] = useState("all");
+  const [baths, setBaths] = useState("all");
+  const [amenities, setAmenities] = useState<string[]>([]);
+  const [newBuilds, setNewBuilds] = useState("all");
+  const [moreOptions, setMoreOptions] = useState<string[]>([]);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -27,7 +38,7 @@ export default function PropertiesPage() {
           setCategories(response.data.data);
         }
       } catch (error) {
-        console.error("Failed to load categories");
+        toast.error("Failed to load categories");
       }
     };
     fetchCategories();
@@ -51,6 +62,25 @@ export default function PropertiesPage() {
     fetchProperties();
   }, [selectedCategory]);
 
+  const handleResetFilters = () => {
+    setSearchTerm("");
+    setSelectedLocation("United Arab Emirates / Dubai");
+    setSearchMode("ai");
+    setViewMode("list");
+    setSelectedCategory("all");
+    setPropertyType("all");
+    setMinPrice("");
+    setMaxPrice("");
+    setMinArea("");
+    setMaxArea("");
+    setRooms([]);
+    setBeds("all");
+    setBaths("all");
+    setAmenities([]);
+    setNewBuilds("all");
+    setMoreOptions([]);
+  };
+
   const filteredProperties = properties.filter(p => {
     const matchesSearch = p.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
                           p.location.toLowerCase().includes(searchTerm.toLowerCase());
@@ -63,50 +93,26 @@ export default function PropertiesPage() {
     <div className="min-h-screen bg-slate-50/50 pt-8 pb-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        <div className="bg-white/60 backdrop-blur-2xl border border-white/60 p-6 rounded-3xl shadow-xl shadow-sky-100/40 mb-12 flex flex-col xl:flex-row gap-4 items-center">
-          <div className="relative grow w-full">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-sky-500 h-5 w-5" />
-            <Input 
-              placeholder="Search by title or location..." 
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-12 h-14 bg-white/80 border-white/50 rounded-2xl text-base shadow-sm focus-visible:ring-sky-500"
-            />
-          </div>
-          
-          <div className="flex flex-col sm:flex-row w-full xl:w-auto gap-4">
-            <div className="flex gap-2 w-full sm:w-auto">
-              <Input 
-                type="number" 
-                placeholder="Min $" 
-                value={minPrice}
-                onChange={(e) => setMinPrice(e.target.value)}
-                className="h-14 w-full sm:w-28 bg-white/80 border-white/50 rounded-2xl shadow-sm focus-visible:ring-sky-500"
-              />
-              <Input 
-                type="number" 
-                placeholder="Max $" 
-                value={maxPrice}
-                onChange={(e) => setMaxPrice(e.target.value)}
-                className="h-14 w-full sm:w-28 bg-white/80 border-white/50 rounded-2xl shadow-sm focus-visible:ring-sky-500"
-              />
-            </div>
-            <div className="w-full sm:w-56">
-              <Select value={selectedCategory} onValueChange={(val) => setSelectedCategory(val || "all")}>
-                <SelectTrigger className="h-14 bg-white/80 border-white/50 rounded-2xl text-base shadow-sm focus:ring-sky-500">
-                  <SlidersHorizontal className="mr-2 h-4 w-4 text-sky-500 shrink-0" />
-                  <SelectValue placeholder="All Categories" />
-                </SelectTrigger>
-                <SelectContent className="rounded-xl bg-white/90 backdrop-blur-xl">
-                  <SelectItem value="all">All Categories</SelectItem>
-                  {categories.map(cat => (
-                    <SelectItem key={cat.id} value={cat.id}>{cat.name}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-        </div>
+        <PropertyFilters 
+          searchTerm={searchTerm} setSearchTerm={setSearchTerm}
+          selectedLocation={selectedLocation} setSelectedLocation={setSelectedLocation}
+          searchMode={searchMode} setSearchMode={setSearchMode}
+          viewMode={viewMode} setViewMode={setViewMode}
+          selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory}
+          propertyType={propertyType} setPropertyType={setPropertyType}
+          minPrice={minPrice} setMinPrice={setMinPrice}
+          maxPrice={maxPrice} setMaxPrice={setMaxPrice}
+          minArea={minArea} setMinArea={setMinArea}
+          maxArea={maxArea} setMaxArea={setMaxArea}
+          rooms={rooms} setRooms={setRooms}
+          beds={beds} setBeds={setBeds}
+          baths={baths} setBaths={setBaths}
+          amenities={amenities} setAmenities={setAmenities}
+          newBuilds={newBuilds} setNewBuilds={setNewBuilds}
+          moreOptions={moreOptions} setMoreOptions={setMoreOptions}
+          categories={categories}
+          onReset={handleResetFilters}
+        />
 
         {isLoading ? (
           <div className="flex justify-center items-center py-32">
