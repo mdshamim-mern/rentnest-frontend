@@ -314,20 +314,20 @@ export default function EditPropertyPage() {
           </div>
           <CardContent className="p-6 space-y-6">
              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-slate-700">Category *</label>
-                <Select value={watch("categoryId") || ""} onValueChange={(val) => setValue("categoryId", val as string, { shouldValidate: true })}>
-                  <SelectTrigger className="bg-white border-slate-200 h-12 rounded-xl focus:ring-sky-500">
-                    <SelectValue placeholder="Select category">{getCategoryName(watch("categoryId") || "")}</SelectValue>
-                  </SelectTrigger>
-                  <SelectContent className="rounded-xl">
-                    {categories.map((cat) => (
-                      <SelectItem key={cat.id} value={cat.id}>{cat.name}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                {errors.categoryId && <p className="text-sm text-red-500">{errors.categoryId.message}</p>}
-              </div>
+       <div className="space-y-2">
+         <label className="text-sm font-medium text-slate-700">Property Category *</label>
+         <Select value={watch("categoryId") || ""} onValueChange={(val: any) => setValue("categoryId", val || "", { shouldValidate: true })}>
+           <SelectTrigger className="bg-white border-slate-200 h-12 rounded-xl focus:ring-sky-500">
+             <SelectValue placeholder="Select category">{getCategoryName(watch("categoryId") || "")}</SelectValue>
+            </SelectTrigger>
+            <SelectContent className="rounded-xl">
+              {categories.map((cat) => (
+               <SelectItem key={cat.id} value={cat.id}>{cat.name}</SelectItem>
+                 ))}
+            </SelectContent>
+           </Select>
+            {errors.categoryId && <p className="text-sm text-red-500">{errors.categoryId.message}</p>}
+       </div>
 
               <div className="space-y-2">
                 <label className="text-sm font-medium text-slate-700">Property Type</label>

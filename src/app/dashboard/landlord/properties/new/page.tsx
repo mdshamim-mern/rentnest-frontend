@@ -241,7 +241,7 @@ export default function NewPropertyPage() {
           <CardContent className="p-6 space-y-6">
              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <div className="space-y-2">
-                <label className="text-sm font-medium text-slate-700">Category *</label>
+                <label className="text-sm font-medium text-slate-700">Property Category *</label>
                 <Select value={selectedCategory || ""} onValueChange={(val: any) => setValue("categoryId", val || "", { shouldValidate: true })}>
                   <SelectTrigger className="bg-white border-slate-200 h-12 rounded-xl focus:ring-sky-500">
                     <SelectValue placeholder="Select category">{getCategoryName(selectedCategory || "")}</SelectValue>
