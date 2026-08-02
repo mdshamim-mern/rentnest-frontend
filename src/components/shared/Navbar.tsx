@@ -22,7 +22,7 @@ export default function Navbar() {
     document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     localStorage.removeItem('auth-storage');
     logout();
-    router.push("/login");
+    window.location.href = "/login";
   };
 
   const navLinks = [
