@@ -72,7 +72,7 @@ export default function ProfileSettingsForm({ userId }: ProfileSettingsFormProps
     imageFormData.append("image", file);
 
     try {
-      const apiKey = "d4eef5d31d116090d4ae71ea46bc433a";
+      const apiKey = "80513d4886804b34beb937245121cbe4";
       const res = await fetch(`https://api.imgbb.com/1/upload?key=${apiKey}`, {
         method: "POST",
         body: imageFormData,
