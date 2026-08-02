@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useRouter } from "next/navigation";
@@ -151,43 +151,15 @@ export default function NewPropertyPage() {
   const onSubmit = async (data: PropertyFormValues) => {
     try {
       setIsSubmitting(true);
-      let mainImageUrl = "";
-      let additionalImageUrls: string[] = [];
 
-      if (imageFile) {
-        const formData = new FormData();
-        formData.append("image", imageFile);
-        const uploadRes = await axiosInstance.post('/upload', formData, {
-          headers: { 'Content-Type': 'multipart/form-data' }
-        });
-        if (uploadRes.data.success) {
-          mainImageUrl = uploadRes.data.data.url;
-        } else {
-          toast.error("Main image upload failed");
-          setIsSubmitting(false);
-          return;
-        }
-      } else {
+      if (!imageFile) {
         toast.error("Please select a main image");
         setIsSubmitting(false);
         return;
       }
 
-      for (const file of imageFiles) {
-        const formData = new FormData();
-        formData.append("image", file);
-        try {
-          const uploadRes = await axiosInstance.post('/upload', formData, {
-            headers: { 'Content-Type': 'multipart/form-data' }
-          });
-          if (uploadRes.data.success) {
-            additionalImageUrls.push(uploadRes.data.data.url);
-          }
-        } catch(e) {
-             console.error("Additional image upload failed", e);
-        }
-      }
-
+      const formData = new FormData();
+      
       const submitData: any = {
         title: data.title,
         description: data.description,
@@ -213,17 +185,29 @@ export default function NewPropertyPage() {
         amenities: data.amenities,
         videoLink: data.videoLink,
         propertyType: data.propertyType,
-        image: mainImageUrl,
-        ...(additionalImageUrls.length > 0 ? { images: additionalImageUrls } : {})
       };
 
       Object.keys(submitData).forEach(key => {
-        if (submitData[key] === undefined || submitData[key] === null || submitData[key] === "") {
-          delete submitData[key];
+        if (submitData[key] !== undefined && submitData[key] !== null && submitData[key] !== "") {
+          if (Array.isArray(submitData[key])) {
+            submitData[key].forEach((val: string) => {
+              formData.append(key, val);
+            });
+          } else {
+            formData.append(key, String(submitData[key]));
+          }
         }
       });
 
-      const response = await axiosInstance.post('/properties', submitData);
+      formData.append("image", imageFile);
+      
+      imageFiles.forEach(file => {
+        formData.append("images", file);
+      });
+
+      const response = await axiosInstance.post('/properties', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
       
       if (response.data.success || response.status === 201) {
         toast.success("Property created successfully");
