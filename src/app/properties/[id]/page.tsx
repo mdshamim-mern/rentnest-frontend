@@ -10,12 +10,26 @@ import { Button } from "@/components/ui/button";
 import { 
   MapPin, User, CheckCircle2, Home, Share, Calendar, BedDouble, Bath, SquareSquare, 
   MessageSquare, Phone, MessageCircle, Info, ChevronRight, Check, X, ChevronLeft, 
-  Flame, Car, ArrowUpDown, Armchair, Compass, Wrench, Users, Wind, Layers 
+  Flame, Car, ArrowUpDown, Armchair, Compass, Wrench, Users, Wind, Layers, ShieldCheck, 
+  Cctv, Zap, Building2, Droplet, Wifi, AlertTriangle, Speaker
 } from "lucide-react";
 import { useAuthStore } from "@/lib/store/authStore";
 import { axiosInstance } from "@/lib/api/axiosInstance";
 import toast from "react-hot-toast";
 import PropertyCard from "@/components/properties/PropertyCard";
+
+const getAmenityIcon = (amenityName: string) => {
+  const name = amenityName.toLowerCase();
+  if (name.includes('cctv')) return <Cctv className="h-4 w-4 text-sky-600" />;
+  if (name.includes('security') || name.includes('guard')) return <ShieldCheck className="h-4 w-4 text-sky-600" />;
+  if (name.includes('generator') || name.includes('power')) return <Zap className="h-4 w-4 text-sky-600" />;
+  if (name.includes('hall') || name.includes('community')) return <Building2 className="h-4 w-4 text-sky-600" />;
+  if (name.includes('pump') || name.includes('wasa') || name.includes('water')) return <Droplet className="h-4 w-4 text-sky-600" />;
+  if (name.includes('wifi') || name.includes('internet')) return <Wifi className="h-4 w-4 text-sky-600" />;
+  if (name.includes('fire')) return <AlertTriangle className="h-4 w-4 text-sky-600" />;
+  if (name.includes('intercom')) return <Speaker className="h-4 w-4 text-sky-600" />;
+  return <Check className="h-4 w-4 text-sky-600" />;
+};
 
 export default function PropertyDetailsPage() {
   const params = useParams();
@@ -294,7 +308,9 @@ export default function PropertyDetailsPage() {
                   {property.amenities && property.amenities.length > 0 ? (
                       property.amenities.map((item, idx) => (
                           <div key={idx} className="flex items-center gap-3 bg-white/60 p-4 rounded-2xl border border-white/50 shadow-sm">
-                              <div className="bg-sky-100 p-1.5 rounded-full"><Check className="h-4 w-4 text-sky-600" /></div>
+                              <div className="bg-sky-100 p-1.5 rounded-full">
+                                  {getAmenityIcon(item)}
+                              </div>
                               <span className="font-medium text-slate-700">{item}</span>
                           </div>
                       ))
@@ -312,21 +328,28 @@ export default function PropertyDetailsPage() {
             </div>
             
             <div>
-              <h2 className="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-2"><MapPin className="h-6 w-6 text-sky-500" /> Local Area Information</h2>
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
+                  <MapPin className="h-6 w-6 text-sky-500" /> Local Area Information
+                </h2>
+                <a href={`https://maps.google.com/?q=${encodeURIComponent(property.location)}`} target="_blank" rel="noreferrer">
+                   <Button variant="outline" className="rounded-xl border-sky-200 text-sky-600 hover:bg-sky-50">
+                     <MapPin className="mr-2 h-4 w-4" /> Open in Maps
+                   </Button>
+                </a>
+              </div>
               <div className="w-full h-96 bg-slate-200 rounded-3xl overflow-hidden relative border border-white/50 shadow-md">
-                 <Image 
-                    src="https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&q=80&w=1600" 
-                    alt="Map view" 
-                    fill 
-                    className="object-cover opacity-80"
+                 <iframe 
+                    title="Property Location"
+                    src={`https://maps.google.com/maps?q=${encodeURIComponent(property.location)}&t=&z=13&ie=UTF8&iwloc=&output=embed`}
+                    width="100%" 
+                    height="100%" 
+                    style={{ border: 0 }} 
+                    allowFullScreen 
+                    loading="lazy" 
+                    referrerPolicy="no-referrer-when-downgrade"
+                    className="absolute inset-0"
                  />
-                 <div className="absolute inset-0 flex items-center justify-center">
-                   <a href={`https://maps.google.com/?q=${encodeURIComponent(property.location)}`} target="_blank" rel="noreferrer">
-                     <Button variant="secondary" className="rounded-full font-bold shadow-xl hover:scale-105 transition-transform h-12 px-6">
-                       <MapPin className="mr-2 h-5 w-5 text-sky-500" /> View on Google Maps
-                     </Button>
-                   </a>
-                 </div>
               </div>
             </div>
 
@@ -379,9 +402,6 @@ export default function PropertyDetailsPage() {
                       </div>
                       <div>
                         <div className="font-bold text-slate-900 text-lg line-clamp-1">{property.landlord?.name || "Verified Owner"}</div>
-                        <div className="text-sm text-sky-600 font-medium flex items-center mt-0.5">
-                          <CheckCircle2 className="h-4 w-4 mr-1" /> Pro Landlord
-                        </div>
                       </div>
                     </div>
                     
