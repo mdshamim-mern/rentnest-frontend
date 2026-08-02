@@ -76,6 +76,14 @@ export default function TenantRequestsPage() {
     }
   };
 
+  const calculateTotalAmount = (startDate: string, endDate: string, monthlyPrice: number) => {
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    let months = (end.getFullYear() - start.getFullYear()) * 12 + (end.getMonth() - start.getMonth());
+    if (months <= 0) months = 1;
+    return months * (monthlyPrice || 0);
+  };
+
   return (
     <div className="space-y-6 relative">
       <div>
@@ -123,7 +131,7 @@ export default function TenantRequestsPage() {
                         {new Date(request.startDate).toLocaleDateString()} - {new Date(request.endDate).toLocaleDateString()}
                       </TableCell>
                       <TableCell className="text-slate-900 font-bold">
-                        ${request.property?.price || 0}
+                        ৳ {calculateTotalAmount(request.startDate, request.endDate, request.property?.price || 0)}
                       </TableCell>
                       <TableCell>
                         <span className={`px-3 py-1 rounded-full text-xs font-bold border ${getStatusColor(request.status)}`}>
