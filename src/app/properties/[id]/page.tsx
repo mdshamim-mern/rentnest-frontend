@@ -138,8 +138,7 @@ export default function PropertyDetailsPage() {
     }
   };
 
-  if (isLoading) {
-    return (
+  if (isLoading) {  return (
       <div className="min-h-screen flex items-center justify-center bg-slate-50/50">
         <div className="animate-pulse flex flex-col items-center">
           <Home className="h-16 w-16 text-sky-300 mb-6 animate-bounce" />

@@ -4,8 +4,33 @@ import { Mail, Phone, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { useState, useEffect } from "react";
+import { getAdminInfo } from "@/lib/api/user.api";
 
 export default function ContactPage() {
+  const [contactInfo, setContactInfo] = useState({
+    phone: "+880 1234 567 890",
+    email: "support@rentnest.com",
+    address: "RentNest Headquarters\n123 Real Estate Avenue\nDhaka, Bangladesh 1212",
+  });
+
+  useEffect(() => {
+    const fetchAdminInfo = async () => {
+      try {
+        const res = await getAdminInfo();
+        if (res.success && res.data) {
+          setContactInfo({
+            phone: res.data.phone || contactInfo.phone,
+            email: res.data.email || contactInfo.email,
+            address: res.data.profile?.address || contactInfo.address,
+          });
+        }
+      } catch (error) {
+      }
+    };
+    fetchAdminInfo();
+  }, []);
+
   return (
     <div className="min-h-screen pt-24 pb-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -54,8 +79,8 @@ export default function ContactPage() {
               <div>
                 <h3 className="text-lg font-bold text-slate-900">Email Us</h3>
                 <p className="text-slate-600 mb-1">We typically reply within 24 hours.</p>
-                <a href="mailto:support@rentnest.com" className="text-primary font-medium hover:underline">
-                  support@rentnest.com
+                <a href={`mailto:${contactInfo.email}`} className="text-primary font-medium hover:underline">
+                  {contactInfo.email}
                 </a>
               </div>
             </div>
@@ -67,8 +92,8 @@ export default function ContactPage() {
               <div>
                 <h3 className="text-lg font-bold text-slate-900">Call Us</h3>
                 <p className="text-slate-600 mb-1">Available Mon-Fri, 9am-6pm.</p>
-                <a href="tel:+8801234567890" className="text-primary font-medium hover:underline">
-                  +880 1234 567 890
+                <a href={`tel:${contactInfo.phone}`} className="text-primary font-medium hover:underline">
+                  {contactInfo.phone}
                 </a>
               </div>
             </div>
@@ -79,10 +104,8 @@ export default function ContactPage() {
               </div>
               <div>
                 <h3 className="text-lg font-bold text-slate-900">Office Location</h3>
-                <p className="text-slate-600">
-                  RentNest Headquarters<br />
-                  123 Real Estate Avenue<br />
-                  Dhaka, Bangladesh 1212
+                <p className="text-slate-600 whitespace-pre-wrap">
+                  {contactInfo.address}
                 </p>
               </div>
             </div>

@@ -1,7 +1,34 @@
+"use client";
+
 import Link from "next/link";
 import { MapPin, Phone, Mail } from "lucide-react";
+import { useState, useEffect } from "react";
+import { getAdminInfo } from "@/lib/api/user.api";
 
 export default function Footer() {
+  const [contactInfo, setContactInfo] = useState({
+    phone: "+880 1234 567 890",
+    email: "support@rentnest.com",
+    address: "Dhaka, Bangladesh",
+  });
+
+  useEffect(() => {
+    const fetchAdminInfo = async () => {
+      try {
+        const res = await getAdminInfo();
+        if (res.success && res.data) {
+          setContactInfo({
+            phone: res.data.phone || contactInfo.phone,
+            email: res.data.email || contactInfo.email,
+            address: res.data.profile?.address || contactInfo.address,
+          });
+        }
+      } catch (error) {
+      }
+    };
+    fetchAdminInfo();
+  }, []);
+
   return (
     <footer className="bg-white/40 backdrop-blur-md border-t border-slate-200/60 mt-auto">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -82,15 +109,15 @@ export default function Footer() {
             <ul className="space-y-3">
               <li className="flex items-start">
                 <MapPin className="h-5 w-5 text-slate-400 mr-2 shrink-0" />
-                <span className="text-sm text-slate-500">Dhaka, Bangladesh</span>
+                <span className="text-sm text-slate-500 whitespace-pre-wrap">{contactInfo.address}</span>
               </li>
               <li className="flex items-center">
                 <Phone className="h-5 w-5 text-slate-400 mr-2 shrink-0" />
-                <span className="text-sm text-slate-500">+880 1865190471</span>
+                <span className="text-sm text-slate-500">{contactInfo.phone}</span>
               </li>
               <li className="flex items-center">
                 <Mail className="h-5 w-5 text-slate-400 mr-2 shrink-0" />
-                <span className="text-sm text-slate-500">mdshamim.mern@gmail.com</span>
+                <span className="text-sm text-slate-500">{contactInfo.email}</span>
               </li>
             </ul>
           </div>
