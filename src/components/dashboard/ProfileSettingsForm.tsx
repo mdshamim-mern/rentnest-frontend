@@ -5,7 +5,6 @@ import { Loader2, Save, User, Mail, Phone, MessageCircle, FileText, Lock, ImageP
 import toast from "react-hot-toast";
 import { getUserProfile, updateUserProfile } from "@/lib/api/user.api";
 import { useAuthStore } from "@/lib/store/authStore";
-import Image from "next/image";
 
 interface ProfileSettingsFormProps {
   userId: string;
@@ -81,6 +80,8 @@ export default function ProfileSettingsForm({ userId }: ProfileSettingsFormProps
       if (data.success) {
         setFormData((prev) => ({ ...prev, photo: data.data.url }));
         toast.success("Photo uploaded successfully!");
+      } else {
+        toast.error(data.error?.message || "Failed to upload photo");
       }
     } catch (error) {
       toast.error("Failed to upload photo");
@@ -160,7 +161,7 @@ export default function ProfileSettingsForm({ userId }: ProfileSettingsFormProps
           <div className="shrink-0 flex flex-col items-center gap-4">
             <div className="relative h-32 w-32 rounded-full overflow-hidden border-4 border-slate-100 bg-slate-50 flex items-center justify-center">
               {formData.photo ? (
-                <Image src={formData.photo} alt="Profile" fill className="object-cover" />
+                <img src={formData.photo} alt="Profile" className="w-full h-full object-cover" />
               ) : (
                 <User className="h-12 w-12 text-slate-300" />
               )}
