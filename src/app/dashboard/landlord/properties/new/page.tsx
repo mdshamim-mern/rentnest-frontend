@@ -70,9 +70,28 @@ export default function NewPropertyPage() {
   } = useForm<PropertyFormValues>({
     resolver: zodResolver(propertySchema),
     defaultValues: {
+      title: "",
+      description: "",
+      location: "",
+      categoryId: "",
       isAvailable: true,
+      rentType: "",
       rentNegotiable: false,
+      floorArea: "" as any,
       rentFor: [],
+      bedrooms: "" as any,
+      bathrooms: "" as any,
+      balcony: "" as any,
+      floorLevel: "",
+      gas: "",
+      parking: "",
+      lift: "",
+      furnished: "",
+      facing: "",
+      serviceCharge: "" as any,
+      availableFrom: "",
+      videoLink: "",
+      propertyType: "",
       amenities: [],
     }
   });
@@ -239,7 +258,7 @@ export default function NewPropertyPage() {
              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <div className="space-y-2">
                 <label className="text-sm font-medium text-slate-700">Category *</label>
-                <Select value={selectedCategory || undefined} onValueChange={(val) => setValue("categoryId", val ?? "", { shouldValidate: true })}>
+                <Select value={selectedCategory || ""} onValueChange={(val: any) => setValue("categoryId", val || "", { shouldValidate: true })}>
                   <SelectTrigger className="bg-white border-slate-200 h-12 rounded-xl focus:ring-sky-500">
                     <SelectValue placeholder="Select category">{getCategoryName(selectedCategory || "")}</SelectValue>
                   </SelectTrigger>
@@ -254,7 +273,7 @@ export default function NewPropertyPage() {
 
               <div className="space-y-2">
                 <label className="text-sm font-medium text-slate-700">Property Type</label>
-                <Select value={currentPropertyType || undefined} onValueChange={(val) => setValue("propertyType", val ?? undefined)}>
+                <Select value={currentPropertyType || ""} onValueChange={(val: any) => setValue("propertyType", val || "")}>
                   <SelectTrigger className="bg-white border-slate-200 h-12 rounded-xl focus:ring-sky-500">
                     <SelectValue placeholder="Select type" />
                   </SelectTrigger>
@@ -294,7 +313,7 @@ export default function NewPropertyPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <div className="space-y-2">
                 <label className="text-sm font-medium text-slate-700">Rent Type</label>
-                <Select value={currentRentType || undefined} onValueChange={(val) => setValue("rentType", val ?? undefined)}>
+                <Select value={currentRentType || ""} onValueChange={(val: any) => setValue("rentType", val || "")}>
                   <SelectTrigger className="bg-white border-slate-200 h-12 rounded-xl focus:ring-sky-500">
                     <SelectValue placeholder="Per Month" />
                   </SelectTrigger>
@@ -357,7 +376,7 @@ export default function NewPropertyPage() {
               <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-slate-700">Bedroom *</label>
-                    <Select value={currentBedrooms?.toString() || undefined} onValueChange={(val) => setValue("bedrooms", val ? Number(val) : undefined)}>
+                    <Select value={currentBedrooms?.toString() || ""} onValueChange={(val: any) => setValue("bedrooms", val ? Number(val) : undefined)}>
                         <SelectTrigger className="bg-white border-slate-200 h-12 rounded-xl focus:ring-sky-500">
                             <SelectValue placeholder="Choose" />
                         </SelectTrigger>
@@ -371,7 +390,7 @@ export default function NewPropertyPage() {
                   
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-slate-700">Bathroom *</label>
-                    <Select value={currentBathrooms?.toString() || undefined} onValueChange={(val) => setValue("bathrooms", val ? Number(val) : undefined)}>
+                    <Select value={currentBathrooms?.toString() || ""} onValueChange={(val: any) => setValue("bathrooms", val ? Number(val) : undefined)}>
                         <SelectTrigger className="bg-white border-slate-200 h-12 rounded-xl focus:ring-sky-500">
                             <SelectValue placeholder="Choose" />
                         </SelectTrigger>
@@ -385,7 +404,7 @@ export default function NewPropertyPage() {
 
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-slate-700">Balcony</label>
-                    <Select value={currentBalcony?.toString() || undefined} onValueChange={(val) => setValue("balcony", val ? Number(val) : undefined)}>
+                    <Select value={currentBalcony?.toString() || ""} onValueChange={(val: any) => setValue("balcony", val ? Number(val) : undefined)}>
                         <SelectTrigger className="bg-white border-slate-200 h-12 rounded-xl focus:ring-sky-500">
                             <SelectValue placeholder="Choose" />
                         </SelectTrigger>
@@ -399,7 +418,7 @@ export default function NewPropertyPage() {
 
                    <div className="space-y-2">
                     <label className="text-sm font-medium text-slate-700">Floor Available On</label>
-                    <Select value={currentFloorLevel || undefined} onValueChange={(val) => setValue("floorLevel", val ?? undefined)}>
+                    <Select value={currentFloorLevel || ""} onValueChange={(val: any) => setValue("floorLevel", val || "")}>
                         <SelectTrigger className="bg-white border-slate-200 h-12 rounded-xl focus:ring-sky-500">
                             <SelectValue placeholder="Choose" />
                         </SelectTrigger>
@@ -424,7 +443,7 @@ export default function NewPropertyPage() {
                <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-slate-700">Gas</label>
-                    <Select value={currentGas || undefined} onValueChange={(val) => setValue("gas", val ?? undefined)}>
+                    <Select value={currentGas || ""} onValueChange={(val: any) => setValue("gas", val || "")}>
                         <SelectTrigger className="bg-white border-slate-200 h-12 rounded-xl focus:ring-sky-500">
                             <SelectValue placeholder="Choose" />
                         </SelectTrigger>
@@ -437,7 +456,7 @@ export default function NewPropertyPage() {
                   
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-slate-700">Parking</label>
-                    <Select value={currentParking || undefined} onValueChange={(val) => setValue("parking", val ?? undefined)}>
+                    <Select value={currentParking || ""} onValueChange={(val: any) => setValue("parking", val || "")}>
                         <SelectTrigger className="bg-white border-slate-200 h-12 rounded-xl focus:ring-sky-500">
                             <SelectValue placeholder="Choose" />
                         </SelectTrigger>
@@ -452,7 +471,7 @@ export default function NewPropertyPage() {
 
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-slate-700">Lift</label>
-                    <Select value={currentLift || undefined} onValueChange={(val) => setValue("lift", val ?? undefined)}>
+                    <Select value={currentLift || ""} onValueChange={(val: any) => setValue("lift", val || "")}>
                         <SelectTrigger className="bg-white border-slate-200 h-12 rounded-xl focus:ring-sky-500">
                             <SelectValue placeholder="Choose" />
                         </SelectTrigger>
@@ -467,7 +486,7 @@ export default function NewPropertyPage() {
 
                    <div className="space-y-2">
                     <label className="text-sm font-medium text-slate-700">Furnished</label>
-                    <Select value={currentFurnished || undefined} onValueChange={(val) => setValue("furnished", val ?? undefined)}>
+                    <Select value={currentFurnished || ""} onValueChange={(val: any) => setValue("furnished", val || "")}>
                         <SelectTrigger className="bg-white border-slate-200 h-12 rounded-xl focus:ring-sky-500">
                             <SelectValue placeholder="Choose" />
                         </SelectTrigger>
@@ -483,7 +502,7 @@ export default function NewPropertyPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-slate-700">Facing</label>
-                    <Select value={currentFacing || undefined} onValueChange={(val) => setValue("facing", val ?? undefined)}>
+                    <Select value={currentFacing || ""} onValueChange={(val: any) => setValue("facing", val || "")}>
                         <SelectTrigger className="bg-white border-slate-200 h-12 rounded-xl focus:ring-sky-500">
                             <SelectValue placeholder="Choose" />
                         </SelectTrigger>

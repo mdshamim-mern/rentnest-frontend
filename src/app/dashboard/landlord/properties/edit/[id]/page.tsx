@@ -72,20 +72,32 @@ export default function EditPropertyPage() {
     formState: { errors },
   } = useForm<PropertyFormValues>({
     resolver: zodResolver(propertySchema),
+    defaultValues: {
+      title: "",
+      description: "",
+      location: "",
+      categoryId: "",
+      isAvailable: true,
+      rentType: "",
+      rentNegotiable: false,
+      floorArea: "" as any,
+      rentFor: [],
+      bedrooms: "" as any,
+      bathrooms: "" as any,
+      balcony: "" as any,
+      floorLevel: "",
+      gas: "",
+      parking: "",
+      lift: "",
+      furnished: "",
+      facing: "",
+      serviceCharge: "" as any,
+      availableFrom: "",
+      videoLink: "",
+      propertyType: "",
+      amenities: [],
+    }
   });
-
-  const selectedCategory = watch("categoryId");
-  const currentRentType = watch("rentType");
-  const currentPropertyType = watch("propertyType");
-  const currentBedrooms = watch("bedrooms");
-  const currentBathrooms = watch("bathrooms");
-  const currentBalcony = watch("balcony");
-  const currentFloorLevel = watch("floorLevel");
-  const currentGas = watch("gas");
-  const currentParking = watch("parking");
-  const currentLift = watch("lift");
-  const currentFurnished = watch("furnished");
-  const currentFacing = watch("facing");
 
   useEffect(() => {
     const fetchInitialData = async () => {
@@ -103,7 +115,7 @@ export default function EditPropertyPage() {
         if (propRes.data.success) {
           const property = propRes.data.data;
           
-          let formattedAvailableFrom = undefined;
+          let formattedAvailableFrom = "";
           if (property.availableFrom) {
              const date = new Date(property.availableFrom);
              formattedAvailableFrom = date.toISOString().split('T')[0];
@@ -113,27 +125,27 @@ export default function EditPropertyPage() {
             title: property.title || "",
             description: property.description || "",
             location: property.location || "",
-            price: property.price || "",
+            price: property.price || ("" as any),
             categoryId: property.categoryId || "",
             isAvailable: property.isAvailable !== false,
-            rentType: property.rentType || undefined,
+            rentType: property.rentType || "",
             rentNegotiable: property.rentNegotiable || false,
-            floorArea: property.floorArea || "",
+            floorArea: property.floorArea || ("" as any),
             rentFor: property.rentFor || [],
-            bedrooms: property.bedrooms !== null ? property.bedrooms : undefined,
-            bathrooms: property.bathrooms !== null ? property.bathrooms : undefined,
-            balcony: property.balcony !== null ? property.balcony : undefined,
-            floorLevel: property.floorLevel || undefined,
-            gas: property.gas || undefined,
-            parking: property.parking || undefined,
-            lift: property.lift || undefined,
-            furnished: property.furnished || undefined,
-            facing: property.facing || undefined,
-            serviceCharge: property.serviceCharge || "",
+            bedrooms: property.bedrooms !== null && property.bedrooms !== undefined ? property.bedrooms : ("" as any),
+            bathrooms: property.bathrooms !== null && property.bathrooms !== undefined ? property.bathrooms : ("" as any),
+            balcony: property.balcony !== null && property.balcony !== undefined ? property.balcony : ("" as any),
+            floorLevel: property.floorLevel || "",
+            gas: property.gas || "",
+            parking: property.parking || "",
+            lift: property.lift || "",
+            furnished: property.furnished || "",
+            facing: property.facing || "",
+            serviceCharge: property.serviceCharge || ("" as any),
             availableFrom: formattedAvailableFrom,
             amenities: property.amenities || [],
             videoLink: property.videoLink || "",
-            propertyType: property.propertyType || undefined,
+            propertyType: property.propertyType || "",
           });
           
           if (property.image) {
@@ -304,9 +316,9 @@ export default function EditPropertyPage() {
              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <div className="space-y-2">
                 <label className="text-sm font-medium text-slate-700">Category *</label>
-                <Select value={selectedCategory || undefined} onValueChange={(val) => setValue("categoryId", val ?? "", { shouldValidate: true })}>
+                <Select value={watch("categoryId") || ""} onValueChange={(val) => setValue("categoryId", val as string, { shouldValidate: true })}>
                   <SelectTrigger className="bg-white border-slate-200 h-12 rounded-xl focus:ring-sky-500">
-                    <SelectValue placeholder="Select category">{getCategoryName(selectedCategory || "")}</SelectValue>
+                    <SelectValue placeholder="Select category">{getCategoryName(watch("categoryId") || "")}</SelectValue>
                   </SelectTrigger>
                   <SelectContent className="rounded-xl">
                     {categories.map((cat) => (
@@ -319,7 +331,7 @@ export default function EditPropertyPage() {
 
               <div className="space-y-2">
                 <label className="text-sm font-medium text-slate-700">Property Type</label>
-                <Select value={currentPropertyType || undefined} onValueChange={(val) => setValue("propertyType", val ?? undefined)}>
+                <Select value={watch("propertyType") || ""} onValueChange={(val) => setValue("propertyType", val ?? undefined)}>
                   <SelectTrigger className="bg-white border-slate-200 h-12 rounded-xl focus:ring-sky-500">
                     <SelectValue placeholder="Select type" />
                   </SelectTrigger>
@@ -359,7 +371,7 @@ export default function EditPropertyPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <div className="space-y-2">
                 <label className="text-sm font-medium text-slate-700">Rent Type</label>
-                <Select value={currentRentType || undefined} onValueChange={(val) => setValue("rentType", val ?? undefined)}>
+               <Select value={watch("rentType") || ""} onValueChange={(val) => setValue("rentType", val ?? undefined)}>
                   <SelectTrigger className="bg-white border-slate-200 h-12 rounded-xl focus:ring-sky-500">
                     <SelectValue placeholder="Per Month" />
                   </SelectTrigger>
@@ -422,7 +434,7 @@ export default function EditPropertyPage() {
               <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-slate-700">Bedroom *</label>
-                    <Select value={currentBedrooms?.toString() || undefined} onValueChange={(val) => setValue("bedrooms", val ? Number(val) : undefined)}>
+                    <Select value={watch("bedrooms")?.toString() || ""} onValueChange={(val) => setValue("bedrooms", Number(val))}>
                         <SelectTrigger className="bg-white border-slate-200 h-12 rounded-xl focus:ring-sky-500">
                             <SelectValue placeholder="Choose" />
                         </SelectTrigger>
@@ -436,7 +448,7 @@ export default function EditPropertyPage() {
                   
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-slate-700">Bathroom *</label>
-                    <Select value={currentBathrooms?.toString() || undefined} onValueChange={(val) => setValue("bathrooms", val ? Number(val) : undefined)}>
+                    <Select value={watch("bathrooms")?.toString() || ""} onValueChange={(val) => setValue("bathrooms", Number(val))}>
                         <SelectTrigger className="bg-white border-slate-200 h-12 rounded-xl focus:ring-sky-500">
                             <SelectValue placeholder="Choose" />
                         </SelectTrigger>
@@ -450,7 +462,7 @@ export default function EditPropertyPage() {
 
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-slate-700">Balcony</label>
-                    <Select value={currentBalcony?.toString() || undefined} onValueChange={(val) => setValue("balcony", val ? Number(val) : undefined)}>
+                    <Select value={watch("balcony")?.toString() || ""} onValueChange={(val) => setValue("balcony", Number(val))}>
                         <SelectTrigger className="bg-white border-slate-200 h-12 rounded-xl focus:ring-sky-500">
                             <SelectValue placeholder="Choose" />
                         </SelectTrigger>
@@ -464,7 +476,7 @@ export default function EditPropertyPage() {
 
                    <div className="space-y-2">
                     <label className="text-sm font-medium text-slate-700">Floor Available On</label>
-                    <Select value={currentFloorLevel || undefined} onValueChange={(val) => setValue("floorLevel", val ?? undefined)}>
+<Select value={watch("floorLevel") || ""} onValueChange={(val) => setValue("floorLevel", val ?? undefined)}>
                         <SelectTrigger className="bg-white border-slate-200 h-12 rounded-xl focus:ring-sky-500">
                             <SelectValue placeholder="Choose" />
                         </SelectTrigger>
@@ -489,7 +501,7 @@ export default function EditPropertyPage() {
                <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-slate-700">Gas</label>
-                    <Select value={currentGas || undefined} onValueChange={(val) => setValue("gas", val ?? undefined)}>
+                   <Select value={watch("gas") || ""} onValueChange={(val) => setValue("gas", val ?? undefined)}>
                         <SelectTrigger className="bg-white border-slate-200 h-12 rounded-xl focus:ring-sky-500">
                             <SelectValue placeholder="Choose" />
                         </SelectTrigger>
@@ -502,7 +514,7 @@ export default function EditPropertyPage() {
                   
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-slate-700">Parking</label>
-                    <Select value={currentParking || undefined} onValueChange={(val) => setValue("parking", val ?? undefined)}>
+<Select value={watch("parking") || ""} onValueChange={(val) => setValue("parking", val ?? undefined)}>
                         <SelectTrigger className="bg-white border-slate-200 h-12 rounded-xl focus:ring-sky-500">
                             <SelectValue placeholder="Choose" />
                         </SelectTrigger>
@@ -517,7 +529,7 @@ export default function EditPropertyPage() {
 
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-slate-700">Lift</label>
-                    <Select value={currentLift || undefined} onValueChange={(val) => setValue("lift", val ?? undefined)}>
+                   <Select value={watch("lift") || ""} onValueChange={(val) => setValue("lift", val ?? undefined)}>
                         <SelectTrigger className="bg-white border-slate-200 h-12 rounded-xl focus:ring-sky-500">
                             <SelectValue placeholder="Choose" />
                         </SelectTrigger>
@@ -532,7 +544,7 @@ export default function EditPropertyPage() {
 
                    <div className="space-y-2">
                     <label className="text-sm font-medium text-slate-700">Furnished</label>
-                    <Select value={currentFurnished || undefined} onValueChange={(val) => setValue("furnished", val ?? undefined)}>
+                   <Select value={watch("furnished") || ""} onValueChange={(val) => setValue("furnished", val ?? undefined)}>
                         <SelectTrigger className="bg-white border-slate-200 h-12 rounded-xl focus:ring-sky-500">
                             <SelectValue placeholder="Choose" />
                         </SelectTrigger>
@@ -548,7 +560,7 @@ export default function EditPropertyPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-slate-700">Facing</label>
-                    <Select value={currentFacing || undefined} onValueChange={(val) => setValue("facing", val ?? undefined)}>
+                    <Select value={watch("facing") || ""} onValueChange={(val) => setValue("facing", val ?? undefined)}>
                         <SelectTrigger className="bg-white border-slate-200 h-12 rounded-xl focus:ring-sky-500">
                             <SelectValue placeholder="Choose" />
                         </SelectTrigger>
