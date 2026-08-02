@@ -3,10 +3,15 @@
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
+import Link from "next/link";
 import { getPropertyById } from "@/lib/api/properties.api";
 import { Property } from "@/types";
 import { Button } from "@/components/ui/button";
-import { MapPin, User, CheckCircle2, Home, Share, Calendar, BedDouble, Bath, SquareSquare, MessageSquare, Phone, MessageCircle, Info, ChevronRight, Check } from "lucide-react";
+import { 
+  MapPin, User, CheckCircle2, Home, Share, Calendar, BedDouble, Bath, SquareSquare, 
+  MessageSquare, Phone, MessageCircle, Info, ChevronRight, Check, X, ChevronLeft, 
+  Flame, Car, ArrowUpDown, Armchair, Compass, Wrench, Users, Wind, Layers 
+} from "lucide-react";
 import { useAuthStore } from "@/lib/store/authStore";
 import { axiosInstance } from "@/lib/api/axiosInstance";
 import toast from "react-hot-toast";
@@ -20,6 +25,9 @@ export default function PropertyDetailsPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isTourLoading, setIsTourLoading] = useState(false);
   const [similarProperties, setSimilarProperties] = useState<Property[]>([]);
+  
+  const [isPhotoModalOpen, setIsPhotoModalOpen] = useState(false);
+  const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
 
   const fallbackImage = "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&q=80&w=2000";
 
@@ -86,9 +94,7 @@ export default function PropertyDetailsPage() {
   };
 
   const handleEmail = () => {
-    if (property?.landlord?.email) {
-      window.location.href = `mailto:${property.landlord.email}?subject=Inquiry about ${property.title}`;
-    }
+    window.location.href = `mailto:mdshamim.mern@gmail.com?subject=Inquiry about ${property?.title}`;
   };
 
   const handlePhone = () => {
@@ -104,6 +110,20 @@ export default function PropertyDetailsPage() {
     toast.success("Property link copied to clipboard!");
   };
 
+  const nextPhoto = () => {
+    const images = property?.images || [];
+    if (images.length > 0) {
+      setCurrentPhotoIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
+    }
+  };
+
+  const prevPhoto = () => {
+    const images = property?.images || [];
+    if (images.length > 0) {
+      setCurrentPhotoIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-50/50">
@@ -116,11 +136,47 @@ export default function PropertyDetailsPage() {
   }
   if (!property) return null;
 
-  const smallImage1 = property.images && property.images.length > 0 ? property.images[0] : fallbackImage;
-  const smallImage2 = property.images && property.images.length > 1 ? property.images[1] : fallbackImage;
+  const propertyImages = property.images || [];
+  const smallImage1 = propertyImages.length > 0 ? propertyImages[0] : fallbackImage;
+  const smallImage2 = propertyImages.length > 1 ? propertyImages[1] : fallbackImage;
 
   return (
     <div className="min-h-screen bg-linear-to-br from-slate-50 via-sky-50/40 to-slate-100 py-12">
+      
+      {isPhotoModalOpen && propertyImages.length > 0 && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/95 backdrop-blur-sm">
+          <button 
+            onClick={() => setIsPhotoModalOpen(false)} 
+            className="absolute top-6 right-6 text-white/70 hover:text-white transition-colors"
+          >
+            <X className="h-10 w-10" />
+          </button>
+          <button onClick={prevPhoto} className="absolute left-6 p-2 text-white/70 hover:text-white hover:bg-white/10 rounded-full transition-all">
+            <ChevronLeft className="h-12 w-12" />
+          </button>
+          <div className="relative w-full max-w-5xl h-[80vh]">
+             <Image 
+               src={propertyImages[currentPhotoIndex] || fallbackImage} 
+               alt={`Property Photo ${currentPhotoIndex + 1}`} 
+               fill 
+               className="object-contain" 
+             />
+          </div>
+          <button onClick={nextPhoto} className="absolute right-6 p-2 text-white/70 hover:text-white hover:bg-white/10 rounded-full transition-all">
+            <ChevronRight className="h-12 w-12" />
+          </button>
+          <div className="absolute bottom-6 flex gap-3 bg-black/40 px-4 py-2 rounded-full">
+             {propertyImages.map((_, idx) => (
+                <button 
+                  key={idx} 
+                  onClick={() => setCurrentPhotoIndex(idx)} 
+                  className={`w-2.5 h-2.5 rounded-full transition-colors ${currentPhotoIndex === idx ? 'bg-sky-500 scale-125' : 'bg-white/50 hover:bg-white'}`} 
+                />
+             ))}
+          </div>
+        </div>
+      )}
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 h-[50vh] md:h-[60vh] rounded-[2.5rem] overflow-hidden shadow-2xl shadow-sky-100/50">
@@ -155,14 +211,14 @@ export default function PropertyDetailsPage() {
                 className="object-cover group-hover:scale-110 transition-transform duration-700"
               />
             </div>
-            <div className="relative w-full h-full overflow-hidden group">
+            <div className="relative w-full h-full overflow-hidden group cursor-pointer" onClick={() => setIsPhotoModalOpen(true)}>
               <Image 
                 src={smallImage2} 
                 alt="Interior view 2" 
                 fill 
                 className="object-cover group-hover:scale-110 transition-transform duration-700"
               />
-              <div className="absolute inset-0 bg-slate-900/20 group-hover:bg-slate-900/40 transition-colors flex items-center justify-center cursor-pointer">
+              <div className="absolute inset-0 bg-slate-900/30 group-hover:bg-slate-900/50 transition-colors flex items-center justify-center">
                 <span className="bg-white/90 backdrop-blur-md px-6 py-2 rounded-full font-bold text-slate-900 hover:bg-sky-500 hover:text-white transition-colors">
                   View All Photos
                 </span>
@@ -194,39 +250,39 @@ export default function PropertyDetailsPage() {
               <h2 className="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-2"><Info className="h-6 w-6 text-sky-500" /> Property Features</h2>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-y-6 gap-x-4 bg-white/60 backdrop-blur-xl p-8 rounded-3xl border border-white/50 shadow-sm">
                  <div>
-                    <p className="text-sm text-slate-500 font-medium mb-1">Rent For</p>
+                    <p className="text-sm text-slate-500 font-medium mb-1 flex items-center gap-1.5"><Users className="h-4 w-4 text-sky-500"/> Rent For</p>
                     <p className="font-bold text-slate-800">{property.rentFor?.join(', ') || "-"}</p>
                  </div>
                  <div>
-                    <p className="text-sm text-slate-500 font-medium mb-1">Balcony</p>
+                    <p className="text-sm text-slate-500 font-medium mb-1 flex items-center gap-1.5"><Wind className="h-4 w-4 text-sky-500"/> Balcony</p>
                     <p className="font-bold text-slate-800">{property.balcony || "-"}</p>
                  </div>
                  <div>
-                    <p className="text-sm text-slate-500 font-medium mb-1">Floor Available On</p>
+                    <p className="text-sm text-slate-500 font-medium mb-1 flex items-center gap-1.5"><Layers className="h-4 w-4 text-sky-500"/> Floor Available On</p>
                     <p className="font-bold text-slate-800">{property.floorLevel || "-"}</p>
                  </div>
                  <div>
-                    <p className="text-sm text-slate-500 font-medium mb-1">Gas</p>
+                    <p className="text-sm text-slate-500 font-medium mb-1 flex items-center gap-1.5"><Flame className="h-4 w-4 text-sky-500"/> Gas</p>
                     <p className="font-bold text-slate-800">{property.gas || "-"}</p>
                  </div>
                  <div>
-                    <p className="text-sm text-slate-500 font-medium mb-1">Parking</p>
+                    <p className="text-sm text-slate-500 font-medium mb-1 flex items-center gap-1.5"><Car className="h-4 w-4 text-sky-500"/> Parking</p>
                     <p className="font-bold text-slate-800">{property.parking || "-"}</p>
                  </div>
                  <div>
-                    <p className="text-sm text-slate-500 font-medium mb-1">Lift</p>
+                    <p className="text-sm text-slate-500 font-medium mb-1 flex items-center gap-1.5"><ArrowUpDown className="h-4 w-4 text-sky-500"/> Lift</p>
                     <p className="font-bold text-slate-800">{property.lift || "-"}</p>
                  </div>
                  <div>
-                    <p className="text-sm text-slate-500 font-medium mb-1">Furnished</p>
+                    <p className="text-sm text-slate-500 font-medium mb-1 flex items-center gap-1.5"><Armchair className="h-4 w-4 text-sky-500"/> Furnished</p>
                     <p className="font-bold text-slate-800">{property.furnished || "-"}</p>
                  </div>
                  <div>
-                    <p className="text-sm text-slate-500 font-medium mb-1">Facing</p>
+                    <p className="text-sm text-slate-500 font-medium mb-1 flex items-center gap-1.5"><Compass className="h-4 w-4 text-sky-500"/> Facing</p>
                     <p className="font-bold text-slate-800">{property.facing || "-"}</p>
                  </div>
                  <div>
-                    <p className="text-sm text-slate-500 font-medium mb-1">Service Charge</p>
+                    <p className="text-sm text-slate-500 font-medium mb-1 flex items-center gap-1.5"><Wrench className="h-4 w-4 text-sky-500"/> Service Charge</p>
                     <p className="font-bold text-slate-800">{property.serviceCharge ? `৳ ${property.serviceCharge}` : "-"}</p>
                  </div>
               </div>
@@ -263,12 +319,14 @@ export default function PropertyDetailsPage() {
                     alt="Map view" 
                     fill 
                     className="object-cover opacity-80"
-                  />
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <Button variant="secondary" className="rounded-full font-bold shadow-xl hover:scale-105 transition-transform h-12 px-6">
-                      <MapPin className="mr-2 h-5 w-5 text-sky-500" /> View on Google Maps
-                    </Button>
-                  </div>
+                 />
+                 <div className="absolute inset-0 flex items-center justify-center">
+                   <a href={`https://maps.google.com/?q=${encodeURIComponent(property.location)}`} target="_blank" rel="noreferrer">
+                     <Button variant="secondary" className="rounded-full font-bold shadow-xl hover:scale-105 transition-transform h-12 px-6">
+                       <MapPin className="mr-2 h-5 w-5 text-sky-500" /> View on Google Maps
+                     </Button>
+                   </a>
+                 </div>
               </div>
             </div>
 
@@ -363,9 +421,11 @@ export default function PropertyDetailsPage() {
              <div className="pt-12 border-t border-slate-200/60 mt-12">
                 <div className="flex justify-between items-center mb-8">
                     <h2 className="text-3xl font-bold text-slate-900">Similar Properties</h2>
-                    <Button variant="ghost" className="text-sky-600 font-bold hover:bg-sky-50 hover:text-sky-700">
-                        View All <ChevronRight className="ml-1 h-5 w-5" />
-                    </Button>
+                    <Link href="/properties">
+                      <Button variant="ghost" className="text-sky-600 font-bold hover:bg-sky-50 hover:text-sky-700">
+                          View All <ChevronRight className="ml-1 h-5 w-5" />
+                      </Button>
+                    </Link>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     {similarProperties.map(sim => (
