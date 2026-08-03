@@ -16,15 +16,14 @@ export default function Footer() {
     const fetchAdminInfo = async () => {
       try {
         const res = await getAdminInfo();
-        if (res.success && res.data) {
+        if (res?.success && res?.data) {
           setContactInfo({
-            phone: res.data.phone || contactInfo.phone,
+            phone: res.data.phone || res.data.profile?.phone || contactInfo.phone,
             email: res.data.email || contactInfo.email,
-            address: res.data.profile?.address || contactInfo.address,
+            address: res.data.address || res.data.profile?.address || contactInfo.address,
           });
         }
-      } catch (error) {
-      }
+      } catch (error) {}
     };
     fetchAdminInfo();
   }, []);
