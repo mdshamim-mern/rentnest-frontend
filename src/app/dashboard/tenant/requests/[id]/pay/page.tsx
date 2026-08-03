@@ -36,7 +36,7 @@ export default function PaymentPage() {
   const calculateTotalAmount = (startDate: string, endDate: string, monthlyPrice: number) => {
     const start = new Date(startDate);
     const end = new Date(endDate);
-    let months = (end.getFullYear() - start.getFullYear()) * 12 + (end.getMonth() - start.getMonth());
+    let months = (end.getFullYear() - start.getFullYear()) * 12 + (end.getMonth() - start.getMonth()) + 1;
     if (months <= 0) months = 1;
     return months * (monthlyPrice || 0);
   };
