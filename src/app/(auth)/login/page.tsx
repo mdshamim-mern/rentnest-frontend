@@ -12,6 +12,7 @@ import { useAuthStore } from "@/lib/store/authStore";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Eye, EyeOff } from "lucide-react";
 
 const loginSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -22,6 +23,7 @@ type LoginFormValues = z.infer<typeof loginSchema>;
 
 export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
   const login = useAuthStore((state) => state.login);
@@ -83,12 +85,25 @@ export default function LoginPage() {
               )}
             </div>
             <div className="space-y-2">
-              <Input
-                {...register("password")}
-                type="password"
-                placeholder="••••••••"
-                className="bg-white/60 border-slate-200/60 focus-visible:ring-primary h-12"
-              />
+              <div className="relative">
+                <Input
+                  {...register("password")}
+                  type={showPassword ? "text" : "password"}
+                  placeholder="••••••••"
+                  className="bg-white/60 border-slate-200/60 focus-visible:ring-primary h-12 pr-10"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 transition-colors"
+                >
+                  {showPassword ? (
+                    <EyeOff className="h-5 w-5" />
+                  ) : (
+                    <Eye className="h-5 w-5" />
+                  )}
+                </button>
+              </div>
               {errors.password && (
                 <p className="text-sm text-red-500 font-medium">{errors.password.message}</p>
               )}

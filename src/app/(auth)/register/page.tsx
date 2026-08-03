@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Eye, EyeOff } from "lucide-react";
 
 const registerSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -27,6 +28,7 @@ type RegisterFormValues = z.infer<typeof registerSchema>;
 
 export default function RegisterPage() {
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
   const login = useAuthStore((state: any) => state.login);
 
@@ -111,12 +113,25 @@ export default function RegisterPage() {
               )}
             </div>
             <div className="space-y-2">
-              <Input
-                {...register("password")}
-                type="password"
-                placeholder="Create a password"
-                className="bg-white/60 border-slate-200/60 focus-visible:ring-primary h-12"
-              />
+              <div className="relative">
+                <Input
+                  {...register("password")}
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Create a password"
+                  className="bg-white/60 border-slate-200/60 focus-visible:ring-primary h-12 pr-10"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 transition-colors"
+                >
+                  {showPassword ? (
+                    <EyeOff className="h-5 w-5" />
+                  ) : (
+                    <Eye className="h-5 w-5" />
+                  )}
+                </button>
+              </div>
               {errors.password && (
                 <p className="text-sm text-red-500 font-medium">{errors.password.message}</p>
               )}
