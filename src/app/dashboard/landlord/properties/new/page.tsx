@@ -220,11 +220,6 @@ export default function NewPropertyPage() {
     }
   };
 
-  const getCategoryName = (id: string) => {
-    const cat = categories.find(c => c.id === id);
-    return cat ? cat.name : "Select category";
-  };
-
   return (
     <div className="max-w-4xl mx-auto space-y-6 pb-24">
       <div>
@@ -241,22 +236,26 @@ export default function NewPropertyPage() {
           <CardContent className="p-6 space-y-6">
              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <div className="space-y-2">
-  <label className="text-sm font-medium text-slate-700">Property Category *</label>
-  <Select 
-    value={selectedCategory || undefined} 
-    onValueChange={(val: any) => setValue("categoryId", val, { shouldValidate: true })}
-  >
-    <SelectTrigger className="bg-white border-slate-200 h-12 rounded-xl focus:ring-sky-500">
-      <SelectValue placeholder="Select category" />
-    </SelectTrigger>
-    <SelectContent className="rounded-xl">
-      {categories.map((cat: any) => (
-        <SelectItem key={cat.id} value={cat.id}>{cat.name}</SelectItem>
-      ))}
-    </SelectContent>
-  </Select>
-  {errors.categoryId && <p className="text-sm text-red-500">{errors.categoryId.message as string}</p>}
-</div>
+                <label className="text-sm font-medium text-slate-700">Property Category *</label>
+                <select
+                  value={selectedCategory || ""}
+                  onChange={(e) => setValue("categoryId", e.target.value, { shouldValidate: true })}
+                  className="w-full bg-white border border-slate-200 h-12 rounded-xl px-3 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500 cursor-pointer"
+                >
+                  <option value="" disabled>Select category</option>
+                  {categories && categories.length > 0 ? (
+                    categories.map((cat: any) => (
+                      <option key={cat.id} value={cat.id}>{cat.name}</option>
+                    ))
+                  ) : (
+                    <>
+                      <option value="Residential">Residential</option>
+                      <option value="Commercial">Commercial</option>
+                    </>
+                  )}
+                </select>
+                {errors.categoryId && <p className="text-sm text-red-500">{errors.categoryId.message as string}</p>}
+              </div>
 
               <div className="space-y-2">
                 <label className="text-sm font-medium text-slate-700">Property Type</label>
