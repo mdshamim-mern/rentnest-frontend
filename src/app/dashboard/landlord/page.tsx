@@ -55,7 +55,7 @@ export default function LandlordDashboardOverview() {
   const activeRentalsCount = requests.filter(r => r.status === "ACTIVE").length;
   const estimatedEarnings = requests
     .filter(r => r.status === "ACTIVE" || r.status === "COMPLETED")
-    .reduce((sum, req) => sum + (req.property?.price || 0), 0);
+    .reduce((sum, req) => sum + ((req as any).totalPaid > 0 ? (req as any).totalPaid : (req.property?.price || 0)), 0);
 
   const recentRequests = [...requests].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).slice(0, 5);
 
