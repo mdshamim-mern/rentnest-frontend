@@ -108,15 +108,19 @@ export default function PropertyDetailsPage() {
   };
 
   const handleEmail = () => {
-    window.location.href = `mailto:mdshamim.mern@gmail.com?subject=Inquiry about ${property?.title}`;
+    const email = (property?.landlord as any)?.email || "admin@rentnest.com";
+    window.location.href = `mailto:${email}?subject=Inquiry about ${property?.title}`;
   };
 
   const handlePhone = () => {
-    window.location.href = `tel:+8801865190471`;
+    const phone = (property?.landlord as any)?.phone || (property?.landlord as any)?.profile?.phone || "+8801234567890";
+    window.location.href = `tel:${phone}`;
   };
 
   const handleWhatsApp = () => {
-    window.open(`https://wa.me/8801865190471`, '_blank');
+    const whatsapp = (property?.landlord as any)?.whatsapp || (property?.landlord as any)?.profile?.whatsapp || (property?.landlord as any)?.phone || "+8801234567890";
+    const cleanNumber = whatsapp.replace(/[^0-9]/g, '');
+    window.open(`https://wa.me/${cleanNumber}`, '_blank');
   };
 
   const handleShare = () => {
@@ -152,8 +156,7 @@ export default function PropertyDetailsPage() {
   const propertyImages = property.images || [];
   const smallImage1 = propertyImages.length > 0 ? propertyImages[0] : fallbackImage;
   const smallImage2 = propertyImages.length > 1 ? propertyImages[1] : fallbackImage;
-
-  return (
+return (
     <div className="min-h-screen bg-linear-to-br from-slate-50 via-sky-50/40 to-slate-100 py-12">
       
       {isPhotoModalOpen && propertyImages.length > 0 && (
@@ -400,7 +403,7 @@ export default function PropertyDetailsPage() {
                         )}
                       </div>
                       <div>
-                        <div className="font-bold text-slate-900 text-lg line-clamp-1">{property.landlord?.name || "Verified Owner"}</div>
+                        <div className="font-bold text-slate-900 text-lg line-clamp-1">{(property.landlord as any)?.name || "Verified Owner"}</div>
                       </div>
                     </div>
                     

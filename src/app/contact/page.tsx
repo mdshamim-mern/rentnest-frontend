@@ -12,6 +12,8 @@ export default function ContactPage() {
     phone: "+880 1234 567 890",
     email: "support@rentnest.com",
     address: "RentNest Headquarters\n123 Real Estate Avenue\nDhaka, Bangladesh 1212",
+    emailSupportText: "We typically reply within 24 hours.",
+    phoneSupportText: "Available Mon-Fri, 9am-6pm.",
   });
 
   useEffect(() => {
@@ -23,6 +25,8 @@ export default function ContactPage() {
             phone: res.data.phone || res.data.profile?.phone || contactInfo.phone,
             email: res.data.email || contactInfo.email,
             address: res.data.address || res.data.profile?.address || contactInfo.address,
+            emailSupportText: res.data.profile?.emailSupportText || contactInfo.emailSupportText,
+            phoneSupportText: res.data.profile?.phoneSupportText || contactInfo.phoneSupportText,
           });
         }
       } catch (error) {}
@@ -77,7 +81,7 @@ export default function ContactPage() {
               </div>
               <div>
                 <h3 className="text-lg font-bold text-slate-900">Email Us</h3>
-                <p className="text-slate-600 mb-1">We typically reply within 24 hours.</p>
+                <p className="text-slate-600 mb-1">{contactInfo.emailSupportText}</p>
                 <a href={`mailto:${contactInfo.email}`} className="text-primary font-medium hover:underline">
                   {contactInfo.email}
                 </a>
@@ -90,7 +94,7 @@ export default function ContactPage() {
               </div>
               <div>
                 <h3 className="text-lg font-bold text-slate-900">Call Us</h3>
-                <p className="text-slate-600 mb-1">Available Mon-Fri, 9am-6pm.</p>
+                <p className="text-slate-600 mb-1">{contactInfo.phoneSupportText}</p>
                 <a href={`tel:${contactInfo.phone}`} className="text-primary font-medium hover:underline">
                   {contactInfo.phone}
                 </a>

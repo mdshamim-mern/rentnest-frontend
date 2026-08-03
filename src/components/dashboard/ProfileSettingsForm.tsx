@@ -24,6 +24,8 @@ export default function ProfileSettingsForm({ userId }: ProfileSettingsFormProps
     bio: "",
     photo: "",
     address: "",
+    emailSupportText: "",
+    phoneSupportText: "",
     password: "",
   });
 
@@ -40,6 +42,8 @@ export default function ProfileSettingsForm({ userId }: ProfileSettingsFormProps
             bio: res.data.profile?.bio || "",
             photo: res.data.profile?.photo || "",
             address: res.data.profile?.address || "",
+            emailSupportText: res.data.profile?.emailSupportText || "",
+            phoneSupportText: res.data.profile?.phoneSupportText || "",
             password: "",
           });
         }
@@ -108,6 +112,8 @@ export default function ProfileSettingsForm({ userId }: ProfileSettingsFormProps
 
       if (user?.role === "ADMIN") {
         payload.address = formData.address;
+        payload.emailSupportText = formData.emailSupportText;
+        payload.phoneSupportText = formData.phoneSupportText;
       }
 
       if (formData.password.trim() !== "") {
@@ -249,19 +255,49 @@ export default function ProfileSettingsForm({ userId }: ProfileSettingsFormProps
           </div>
 
           {user?.role === "ADMIN" && (
-            <div className="space-y-2 md:col-span-2">
-              <label className="text-sm font-semibold text-slate-700 flex items-center gap-2">
-                <MapPin className="h-4 w-4 text-sky-500" /> Office Location / Address
-              </label>
-              <input
-                type="text"
-                name="address"
-                value={formData.address}
-                onChange={handleChange}
-                placeholder="e.g. 123 Real Estate Avenue, Dhaka"
-                className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-hidden focus:ring-2 focus:ring-sky-500 focus:border-transparent transition-all"
-              />
-            </div>
+            <>
+              <div className="space-y-2 md:col-span-2">
+                <label className="text-sm font-semibold text-slate-700 flex items-center gap-2">
+                  <MapPin className="h-4 w-4 text-sky-500" /> Office Location / Address
+                </label>
+                <input
+                  type="text"
+                  name="address"
+                  value={formData.address}
+                  onChange={handleChange}
+                  placeholder="e.g. 123 Real Estate Avenue, Dhaka"
+                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-hidden focus:ring-2 focus:ring-sky-500 focus:border-transparent transition-all"
+                />
+              </div>
+              
+              <div className="space-y-2 md:col-span-2">
+                <label className="text-sm font-semibold text-slate-700 flex items-center gap-2">
+                  <Mail className="h-4 w-4 text-sky-500" /> Email Support Text (For Contact Page)
+                </label>
+                <input
+                  type="text"
+                  name="emailSupportText"
+                  value={formData.emailSupportText}
+                  onChange={handleChange}
+                  placeholder="e.g. We typically reply within 24 hours."
+                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-hidden focus:ring-2 focus:ring-sky-500 focus:border-transparent transition-all"
+                />
+              </div>
+              
+              <div className="space-y-2 md:col-span-2">
+                <label className="text-sm font-semibold text-slate-700 flex items-center gap-2">
+                  <Phone className="h-4 w-4 text-sky-500" /> Phone Support Text (For Contact Page)
+                </label>
+                <input
+                  type="text"
+                  name="phoneSupportText"
+                  value={formData.phoneSupportText}
+                  onChange={handleChange}
+                  placeholder="e.g. Available Mon-Fri, 9am-6pm."
+                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-hidden focus:ring-2 focus:ring-sky-500 focus:border-transparent transition-all"
+                />
+              </div>
+            </>
           )}
 
           <div className="space-y-2 md:col-span-2">
