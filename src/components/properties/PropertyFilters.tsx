@@ -158,20 +158,16 @@ export default function PropertyFilters(props: PropertyFiltersProps) {
           ]} 
         />
 
-        <DropdownMenu 
-          label="Property Category" 
-          value={props.selectedCategory} 
-          onChange={props.setSelectedCategory}
-          type="single"
-          options={[
-            { label: "All Categories", value: "all" },
-            ...props.categories.map(c => ({ label: c.name, value: c.id })),
-            { label: "Residential", value: "residential" },
-            { label: "Commercial", value: "commercial" },
-            { label: "Industrial", value: "industrial" },
-            { label: "Land/Plot", value: "land" }
-          ]} 
-        />
+       <DropdownMenu 
+  label="Property Category" 
+  value={props.selectedCategory} 
+  onChange={props.setSelectedCategory}
+  type="single"
+  options={[
+    { label: "All Categories", value: "all" },
+    ...props.categories.map((c: any) => ({ label: c.name, value: c.id }))
+  ]} 
+/>
 
         <div className="group relative">
           <button className="h-10 px-4 flex items-center gap-2 bg-white border border-slate-200 hover:border-sky-300 hover:bg-sky-50 rounded-full text-sm font-medium text-slate-700 transition-colors shadow-sm">
