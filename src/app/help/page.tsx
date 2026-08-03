@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export default function HelpPage() {
   return (
-    <div className="min-h-screen bg-slate-50/50 pt-24 pb-20">
+    <div className="min-h-screen bg-slate-50/50 pt-10 pb-20">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-2xl mx-auto mb-16">
           <h1 className="text-4xl font-extrabold text-slate-900 mb-4 tracking-tight">How can we help you?</h1>

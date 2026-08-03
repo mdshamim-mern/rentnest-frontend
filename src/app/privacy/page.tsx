@@ -3,13 +3,15 @@ import Link from "next/link";
 
 export default function PrivacyPage() {
   return (
-    <div className="min-h-screen bg-slate-50/50 pt-24 pb-20">
+    <div className="min-h-screen bg-slate-50/50 pt-10 pb-20">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <div className="inline-flex items-center justify-center p-3 bg-green-100 rounded-2xl mb-4">
-            <Lock className="h-8 w-8 text-green-600" />
+          <div className="flex items-center justify-center gap-4 mb-4">
+            <h1 className="text-4xl font-extrabold text-slate-900 tracking-tight">Privacy Policy</h1>
+            <div className="inline-flex items-center justify-center p-3 bg-green-100 rounded-2xl">
+              <Lock className="h-8 w-8 text-green-600" />
+            </div>
           </div>
-          <h1 className="text-4xl font-extrabold text-slate-900 mb-4 tracking-tight">Privacy Policy</h1>
           <p className="text-lg text-slate-500">Your privacy is critically important to us.</p>
         </div>
 
