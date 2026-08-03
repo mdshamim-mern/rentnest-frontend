@@ -32,7 +32,7 @@ export default function Footer() {
 
   return (
     <footer className="bg-white/40 backdrop-blur-md border-t border-slate-200/60 mt-auto">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-4">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="col-span-1 md:col-span-1">
             <Link href="/" className="text-2xl font-extrabold tracking-tighter text-slate-900 flex items-center gap-2 mb-4">
@@ -43,22 +43,19 @@ export default function Footer() {
               Your trusted partner in finding the perfect rental home. We make the process simple, secure, and transparent.
             </p>
             <div className="flex space-x-4">
-              {/* Facebook */}
-              <Link href="https://www.facebook.com/share/1HJb2Cwxvt/" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-primary transition-colors">
+              <Link href="https://www.facebook.com/share/1HJb2Cwxvt/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-700 transition-colors">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
                   <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
                 </svg>
               </Link>
-              {/* LinkedIn */}
-              <Link href="https://www.linkedin.com/in/md-shamim471/" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-primary transition-colors">
+              <Link href="https://www.linkedin.com/in/md-shamim471/" target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:text-blue-600 transition-colors">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
                   <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
                   <rect x="2" y="9" width="4" height="12"></rect>
                   <circle cx="4" cy="4" r="2"></circle>
                 </svg>
               </Link>
-              {/* Telegram */}
-              <Link href="https://t.me/md_shamim71" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-primary transition-colors">
+              <Link href="https://t.me/md_shamim71" target="_blank" rel="noopener noreferrer" className="text-sky-500 hover:text-sky-600 transition-colors">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
                   <path d="m21.5 2-6.3 20-4.5-4.5-4.3 1.4-4.8-1.5 20-15.4Z"></path>
                   <path d="m21.5 2-13.4 11.2"></path>
@@ -114,21 +111,21 @@ export default function Footer() {
             <h3 className="text-sm font-semibold text-slate-900 tracking-wider uppercase mb-4">Contact Us</h3>
             <ul className="space-y-3">
               <li className="flex items-start">
-                <MapPin className="h-5 w-5 text-slate-400 mr-2 shrink-0" />
+                <MapPin className="h-5 w-5 text-red-500 mr-2 shrink-0" />
                 <span className="text-sm text-slate-500 whitespace-pre-wrap">{contactInfo.address}</span>
               </li>
               <li className="flex items-center">
-                <Phone className="h-5 w-5 text-slate-400 mr-2 shrink-0" />
+                <Phone className="h-5 w-5 text-green-500 mr-2 shrink-0" />
                 <span className="text-sm text-slate-500">{contactInfo.phone}</span>
               </li>
               <li className="flex items-center">
-                <Mail className="h-5 w-5 text-slate-400 mr-2 shrink-0" />
+                <Mail className="h-5 w-5 text-amber-500 mr-2 shrink-0" />
                 <span className="text-sm text-slate-500">{contactInfo.email}</span>
               </li>
             </ul>
           </div>
         </div>
-        <div className="mt-6 pt-4 border-t border-slate-200/60 flex flex-col md:flex-row justify-between items-center">
+        <div className="mt-8 pt-4 border-t border-slate-200/60 flex flex-col md:flex-row justify-between items-center">
           <p className="text-sm text-slate-400">
             &copy; {new Date().getFullYear()} RentNest. All rights reserved.
           </p>
