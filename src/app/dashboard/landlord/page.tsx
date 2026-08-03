@@ -5,18 +5,21 @@ import { axiosInstance } from "@/lib/api/axiosInstance";
 import { Property, RentalRequest } from "@/types";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Building2, FileText, CheckCircle2, DollarSign, Loader2 } from "lucide-react";
+import { useAuthStore } from "@/lib/store/authStore";
 
 export default function LandlordDashboardOverview() {
   const [properties, setProperties] = useState<Property[]>([]);
   const [requests, setRequests] = useState<RentalRequest[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const user = useAuthStore((state: any) => state.user);
 
   useEffect(() => {
     const fetchDashboardData = async () => {
+      if (!user?.id) return;
       setIsLoading(true);
       
       try {
-        const propsRes = await axiosInstance.get('/properties');
+        const propsRes = await axiosInstance.get(`/properties?landlordId=${user.id}`);
         const propsData = propsRes.data;
         
         if (Array.isArray(propsData)) {
@@ -49,7 +52,7 @@ export default function LandlordDashboardOverview() {
     };
     
     fetchDashboardData();
-  }, []);
+  }, [user?.id]);
 
   const pendingRequestsCount = requests.filter(r => r.status === "PENDING").length;
   const activeRentalsCount = requests.filter(r => r.status === "ACTIVE").length;

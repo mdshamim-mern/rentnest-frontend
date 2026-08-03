@@ -11,20 +11,24 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { PlusCircle, Edit, Trash2 } from "lucide-react";
 import toast from "react-hot-toast";
+import { useAuthStore } from "@/lib/store/authStore";
 
 export default function LandlordPropertiesPage() {
   const [properties, setProperties] = useState<Property[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
+  const user = useAuthStore((state: any) => state.user);
 
   useEffect(() => {
-    fetchProperties();
-  }, []);
+    if (user?.id) {
+      fetchProperties();
+    }
+  }, [user?.id]);
 
   const fetchProperties = async () => {
     try {
       setIsLoading(true);
-      const response = await axiosInstance.get('/properties');
+      const response = await axiosInstance.get(`/properties?landlordId=${user.id}`);
       if (response.data.success) {
         setProperties(response.data.data);
       }
