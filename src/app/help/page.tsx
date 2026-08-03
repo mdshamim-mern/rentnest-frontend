@@ -67,7 +67,7 @@ export default function HelpPage() {
               <Mail className="h-5 w-5" />
               Email Support
             </Link>
-            <Link href="mailto:mdshamim.mern@gmail.com" className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-white text-slate-700 border border-slate-200 rounded-xl font-medium hover:bg-slate-50 transition-colors shadow-sm">
+            <Link href="https://wa.me/8801865190471" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-white text-slate-700 border border-slate-200 rounded-xl font-medium hover:bg-slate-50 transition-colors shadow-sm">
               <MessageCircle className="h-5 w-5" />
               Live Chat
             </Link>
