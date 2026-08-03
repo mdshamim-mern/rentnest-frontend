@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { axiosInstance } from './axiosInstance';
 
 export const getUserProfile = async (userId: string) => {
@@ -11,6 +12,7 @@ export const updateUserProfile = async (userId: string, data: any) => {
 };
 
 export const getAdminInfo = async () => {
-  const response = await axiosInstance.get('/users/admin-info');
+  const baseURL = axiosInstance.defaults.baseURL;
+  const response = await axios.get(`${baseURL}/users/admin-info`);
   return response.data;
 };

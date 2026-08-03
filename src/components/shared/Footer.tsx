@@ -23,7 +23,9 @@ export default function Footer() {
             address: res.data.address || res.data.profile?.address || contactInfo.address,
           });
         }
-      } catch (error) {}
+      } catch (error) {
+        console.error("Error fetching admin info:", error);
+      }
     };
     fetchAdminInfo();
   }, []);

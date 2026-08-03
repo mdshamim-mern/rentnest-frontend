@@ -29,7 +29,9 @@ export default function ContactPage() {
             phoneSupportText: res.data.profile?.phoneSupportText || contactInfo.phoneSupportText,
           });
         }
-      } catch (error) {}
+      } catch (error) {
+        console.error("Error fetching admin info:", error);
+      }
     };
     fetchAdminInfo();
   }, []);
