@@ -267,13 +267,13 @@ export default function NewPropertyPage() {
                     <SelectValue placeholder="Select type" />
                   </SelectTrigger>
                   <SelectContent className="rounded-xl">
-                    <SelectItem value="Flat">Apartment</SelectItem>
-                    <SelectItem value="Single Room">Villa</SelectItem>
-                    <SelectItem value="Sublet Room">Duplex</SelectItem>
-                    <SelectItem value="Roommate">Penthouse</SelectItem>
-                    <SelectItem value="Girls Hostel">Townhouse</SelectItem>
-                    <SelectItem value="Boys Hostel">Studio</SelectItem>
-                  </SelectContent>
+  <SelectItem value="Apartment">Apartment</SelectItem>
+  <SelectItem value="Villa">Villa</SelectItem>
+  <SelectItem value="Duplex">Duplex</SelectItem>
+  <SelectItem value="Penthouse">Penthouse</SelectItem>
+  <SelectItem value="Townhouse">Townhouse</SelectItem>
+  <SelectItem value="Studio">Studio</SelectItem>
+</SelectContent>
                 </Select>
               </div>
             </div>
