@@ -26,12 +26,10 @@ export default function Navbar() {
   };
 
   const navLinks = [
-    { name: "Home", href: "/" },
-    { name: "About", href: "/about" },
-    { name: "Skills", href: "/skills" },
-    { name: "Projects", href: "/projects" },
-    { name: "Services", href: "/services" },
-    { name: "Contact", href: "/contact" },
+    { name: "Home", href: "/", icon: <Home className="w-4 h-4 mr-2" /> },
+    { name: "Properties", href: "/properties", icon: <Building className="w-4 h-4 mr-2" /> },
+    { name: "About", href: "/about", icon: <Info className="w-4 h-4 mr-2" /> },
+    { name: "Contact", href: "/contact", icon: <PhoneCall className="w-4 h-4 mr-2" /> },
   ];
 
   const isDashboard = pathname?.startsWith("/dashboard");
@@ -75,7 +73,7 @@ export default function Navbar() {
         <div className="flex justify-between items-center h-16">
           <div className="shrink-0 flex items-center">
             <Link href="/" className="text-xl font-extrabold tracking-tighter text-slate-900 flex items-center gap-2">
-              <span className="bg-primary text-white rounded-lg flex items-center justify-center text-sm font-bold w-10 h-10">RN</span>
+              <span className="bg-primary text-white rounded-lg flex items-center justify-center text-sm font-bold w-8 h-8">RN</span>
               <span className="text-xl font-black">RentNest</span>
             </Link>
           </div>
@@ -85,12 +83,13 @@ export default function Navbar() {
               <Link
                 key={link.name}
                 href={link.href}
-                className={`flex items-center px-5 py-2 rounded-full text-[15px] font-bold transition-all duration-300 ${
+                className={`flex items-center px-4 py-2 rounded-full text-[15px] font-bold transition-all duration-300 ${
                   pathname === link.href
                     ? "bg-white text-primary shadow-sm"
                     : "text-slate-500 hover:text-slate-800 hover:bg-slate-200/50"
                 }`}
               >
+                {link.icon}
                 {link.name}
               </Link>
             ))}
@@ -150,6 +149,7 @@ export default function Navbar() {
                     : "text-slate-500 hover:text-slate-800 hover:bg-slate-50"
                 }`}
               >
+                {link.icon}
                 {link.name}
               </Link>
             ))}
