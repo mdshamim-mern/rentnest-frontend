@@ -13,7 +13,9 @@ import { Star, X, Loader2 } from "lucide-react";
 import toast from "react-hot-toast";
 
 export default function TenantRequestsPage() {
+  const [activeTab, setActiveTab] = useState<'rental' | 'tour'>('rental');
   const [requests, setRequests] = useState<RentalRequest[]>([]);
+  const [tourRequests, setTourRequests] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
@@ -29,12 +31,22 @@ export default function TenantRequestsPage() {
   const fetchRequests = async () => {
     try {
       setIsLoading(true);
-      const response = await axiosInstance.get('/rentals');
-      if (response.data.success) {
-        setRequests(response.data.data);
+      
+      const rentalRes = await axiosInstance.get('/rentals');
+      if (rentalRes.data.success) {
+        setRequests(rentalRes.data.data);
+      } else if (Array.isArray(rentalRes.data)) {
+        setRequests(rentalRes.data);
+      }
+
+      const tourRes = await axiosInstance.get('/tours/my-tours');
+      if (tourRes.data.success) {
+        setTourRequests(tourRes.data.data);
+      } else if (Array.isArray(tourRes.data)) {
+        setTourRequests(tourRes.data);
       }
     } catch (error) {
-      toast.error("Failed to fetch rental requests");
+      toast.error("Failed to fetch requests");
     } finally {
       setIsLoading(false);
     }
@@ -88,7 +100,24 @@ export default function TenantRequestsPage() {
     <div className="space-y-6 relative">
       <div>
         <h1 className="text-3xl font-bold text-slate-900 tracking-tight">My Requests</h1>
-        <p className="text-slate-500 mt-2">Manage and track your property rental requests.</p>
+        <p className="text-slate-500 mt-2">Manage and track your property rental and tour requests.</p>
+      </div>
+
+      <div className="flex space-x-4 mb-4">
+        <Button
+          variant={activeTab === 'rental' ? 'default' : 'outline'}
+          onClick={() => setActiveTab('rental')}
+          className={activeTab === 'rental' ? 'bg-sky-500 hover:bg-sky-600 text-white shadow-md' : 'text-slate-600'}
+        >
+          Rental Requests
+        </Button>
+        <Button
+          variant={activeTab === 'tour' ? 'default' : 'outline'}
+          onClick={() => setActiveTab('tour')}
+          className={activeTab === 'tour' ? 'bg-sky-500 hover:bg-sky-600 text-white shadow-md' : 'text-slate-600'}
+        >
+          Tour Requests
+        </Button>
       </div>
 
       <Card className="bg-white/60 backdrop-blur-xl border border-white/50 shadow-xl shadow-sky-100/50 rounded-3xl overflow-hidden">
@@ -98,8 +127,14 @@ export default function TenantRequestsPage() {
               <TableHeader className="bg-white/40">
                 <TableRow>
                   <TableHead className="font-semibold text-slate-700">Property</TableHead>
-                  <TableHead className="font-semibold text-slate-700">Duration</TableHead>
-                  <TableHead className="font-semibold text-slate-700">Amount</TableHead>
+                  {activeTab === 'rental' ? (
+                    <>
+                      <TableHead className="font-semibold text-slate-700">Duration</TableHead>
+                      <TableHead className="font-semibold text-slate-700">Amount</TableHead>
+                    </>
+                  ) : (
+                    <TableHead className="font-semibold text-slate-700">Date Requested</TableHead>
+                  )}
                   <TableHead className="font-semibold text-slate-700">Status</TableHead>
                   <TableHead className="font-semibold text-slate-700 text-right">Action</TableHead>
                 </TableRow>
@@ -110,55 +145,84 @@ export default function TenantRequestsPage() {
                     <TableRow key={i}>
                       <TableCell><Skeleton className="h-6 w-32" /></TableCell>
                       <TableCell><Skeleton className="h-6 w-40" /></TableCell>
-                      <TableCell><Skeleton className="h-6 w-20" /></TableCell>
+                      {activeTab === 'rental' && <TableCell><Skeleton className="h-6 w-20" /></TableCell>}
                       <TableCell><Skeleton className="h-6 w-24" /></TableCell>
                       <TableCell className="text-right"><Skeleton className="h-8 w-24 ml-auto" /></TableCell>
                     </TableRow>
                   ))
-                ) : requests.length === 0 ? (
-                  <TableRow>
-                    <TableCell colSpan={5} className="text-center py-16 text-slate-500">
-                      No rental requests found. Browse properties to make a request.
-                    </TableCell>
-                  </TableRow>
-                ) : (
-                  requests.map((request) => (
-                    <TableRow key={request.id} className="hover:bg-white/60 transition-colors">
-                      <TableCell className="font-medium text-slate-900">
-                        {request.property?.title || "Unknown Property"}
-                      </TableCell>
-                      <TableCell className="text-slate-600">
-                        {new Date(request.startDate).toLocaleDateString()} - {new Date(request.endDate).toLocaleDateString()}
-                      </TableCell>
-                      <TableCell className="text-slate-900 font-bold">
-                        ৳ {calculateTotalAmount(request.startDate, request.endDate, request.property?.price || 0)}
-                      </TableCell>
-                      <TableCell>
-                        <span className={`px-3 py-1 rounded-full text-xs font-bold border ${getStatusColor(request.status)}`}>
-                          {request.status}
-                        </span>
-                      </TableCell>
-                      <TableCell className="text-right">
-                        {request.status === "APPROVED" && (
-                          <Link href={`/dashboard/tenant/requests/${request.id}/pay`}>
-                            <Button size="sm" className="bg-sky-500 hover:bg-sky-600 text-white rounded-xl shadow-lg shadow-sky-500/30">
-                              Pay Now
-                            </Button>
-                          </Link>
-                        )}
-                        {(request.status === "ACTIVE" || request.status === "COMPLETED") && (
-                          <Button 
-                            onClick={() => openReviewModal(request.id)}
-                            size="sm" 
-                            variant="outline" 
-                            className="bg-white/60 border-slate-300 hover:bg-sky-50 hover:text-sky-600 hover:border-sky-300 rounded-xl transition-all"
-                          >
-                            Leave Review
-                          </Button>
-                        )}
+                ) : activeTab === 'rental' ? (
+                  requests.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={5} className="text-center py-16 text-slate-500">
+                        No rental requests found.
                       </TableCell>
                     </TableRow>
-                  ))
+                  ) : (
+                    requests.map((request) => (
+                      <TableRow key={request.id} className="hover:bg-white/60 transition-colors">
+                        <TableCell className="font-medium text-slate-900">
+                          {request.property?.title || "Unknown Property"}
+                        </TableCell>
+                        <TableCell className="text-slate-600">
+                          {new Date(request.startDate).toLocaleDateString()} - {new Date(request.endDate).toLocaleDateString()}
+                        </TableCell>
+                        <TableCell className="text-slate-900 font-bold">
+                          ৳{calculateTotalAmount(request.startDate, request.endDate, request.property?.price || 0)}
+                        </TableCell>
+                        <TableCell>
+                          <span className={`px-3 py-1 rounded-full text-xs font-bold border ${getStatusColor(request.status)}`}>
+                            {request.status}
+                          </span>
+                        </TableCell>
+                        <TableCell className="text-right">
+                          {request.status === "APPROVED" && (
+                            <Link href={`/dashboard/tenant/requests/${request.id}/pay`}>
+                              <Button size="sm" className="bg-sky-500 hover:bg-sky-600 text-white rounded-xl shadow-lg shadow-sky-500/30">
+                                Pay Now
+                              </Button>
+                            </Link>
+                          )}
+                          {(request.status === "ACTIVE" || request.status === "COMPLETED") && (
+                            <Button 
+                              onClick={() => openReviewModal(request.id)}
+                              size="sm" 
+                              variant="outline" 
+                              className="bg-white/60 border-slate-300 hover:bg-sky-50 hover:text-sky-600 hover:border-sky-300 rounded-xl transition-all"
+                            >
+                              Leave Review
+                            </Button>
+                          )}
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  )
+                ) : (
+                  tourRequests.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={4} className="text-center py-16 text-slate-500">
+                        No tour requests found.
+                      </TableCell>
+                    </TableRow>
+                  ) : (
+                    tourRequests.map((request) => (
+                      <TableRow key={request.id} className="hover:bg-white/60 transition-colors">
+                        <TableCell className="font-medium text-slate-900">
+                          {request.property?.title || "Unknown Property"}
+                        </TableCell>
+                        <TableCell className="text-slate-600">
+                          {new Date(request.createdAt).toLocaleDateString()}
+                        </TableCell>
+                        <TableCell>
+                          <span className={`px-3 py-1 rounded-full text-xs font-bold border ${getStatusColor(request.status)}`}>
+                            {request.status}
+                          </span>
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <span className="text-slate-400 text-sm">N/A</span>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  )
                 )}
               </TableBody>
             </Table>

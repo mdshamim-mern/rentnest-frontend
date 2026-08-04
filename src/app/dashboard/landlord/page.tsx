@@ -153,7 +153,7 @@ export default function LandlordDashboardOverview() {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-4xl font-bold">৳{estimatedEarnings}</div>
+            <div className="text-4xl font-bold">${estimatedEarnings}</div>
           </CardContent>
         </Card>
       </div>
@@ -209,7 +209,7 @@ export default function LandlordDashboardOverview() {
                       <p className="text-sm text-slate-500 mt-1">{property.location}</p>
                     </div>
                     <div className="font-extrabold text-sky-600">
-                      ৳{property.price}
+                      ${property.price}
                     </div>
                   </div>
                 ))}

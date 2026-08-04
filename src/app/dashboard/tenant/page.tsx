@@ -9,16 +9,28 @@ import { axiosInstance } from "@/lib/api/axiosInstance";
 export default function TenantDashboard() {
   const { user } = useAuthStore();
   const [requests, setRequests] = useState<any[]>([]);
+  const [tourRequests, setTourRequests] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchRequests = async () => {
       try {
         setIsLoading(true);
-        const response = await axiosInstance.get('/rentals');
-        if (response.data.success) {
-          setRequests(response.data.data);
+        
+        const rentalRes = await axiosInstance.get('/rentals');
+        if (rentalRes.data.success) {
+          setRequests(rentalRes.data.data);
+        } else if (Array.isArray(rentalRes.data)) {
+          setRequests(rentalRes.data);
         }
+
+        const tourRes = await axiosInstance.get('/tours/my-tours');
+        if (tourRes.data.success) {
+          setTourRequests(tourRes.data.data);
+        } else if (Array.isArray(tourRes.data)) {
+          setTourRequests(tourRes.data);
+        }
+
       } catch (error) {
         console.error(error);
       } finally {
@@ -28,9 +40,14 @@ export default function TenantDashboard() {
     fetchRequests();
   }, []);
 
-  const pendingRequests = requests.filter(r => r.status === "PENDING").length;
-  const approvedRequests = requests.filter(r => r.status === "APPROVED").length;
-  const totalRequests = requests.length;
+  const allRequests = [...requests, ...tourRequests];
+  const pendingRequests = allRequests.filter(r => r.status === "PENDING").length;
+  const approvedRequests = allRequests.filter(r => r.status === "APPROVED").length;
+  const totalRequests = allRequests.length;
+
+  const recentRequests = [...allRequests]
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+    .slice(0, 5);
 
   const stats = [
     { title: "Total Requests", value: totalRequests, icon: <FileText className="h-6 w-6 text-blue-500" /> },
@@ -76,19 +93,19 @@ export default function TenantDashboard() {
                 <div key={i} className="h-16 bg-slate-200/50 animate-pulse rounded-xl" />
               ))}
             </div>
-          ) : requests.length > 0 ? (
+          ) : recentRequests.length > 0 ? (
             <div className="space-y-4">
-              {requests.slice(0, 5).map(req => (
+              {recentRequests.map(req => (
                 <div key={req.id} className="flex items-center justify-between p-4 bg-white/50 border border-white/60 rounded-xl">
                   <div>
                     <h4 className="font-semibold text-slate-900">{req.property?.title || "Property"}</h4>
                     <p className="text-sm text-slate-500 flex items-center mt-1">
-                      <Home className="w-3 h-3 mr-1" /> {req.property?.location || "N/A"}
+                      <Home className="w-3 h-3 mr-1" /> {req.property?.location || "N/A"} ({req.startDate ? "Rental" : "Tour"})
                     </p>
                   </div>
                   <div className="flex items-center gap-4">
                     <div className="font-bold text-primary">
-                      ${req.property?.price || 0}
+                      ৳{req.property?.price || 0}
                     </div>
                     <div className={`px-3 py-1 rounded-full text-xs font-bold ${
                       req.status === 'APPROVED' ? 'bg-green-100 text-green-700 border border-green-200' :
@@ -103,7 +120,7 @@ export default function TenantDashboard() {
             </div>
           ) : (
             <div className="text-center py-12 text-slate-500 bg-white/30 rounded-xl border border-dashed border-slate-300">
-              You haven't made any rental requests yet.
+              You haven't made any requests yet.
             </div>
           )}
         </CardContent>
