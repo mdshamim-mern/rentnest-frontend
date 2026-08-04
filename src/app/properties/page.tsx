@@ -15,7 +15,7 @@ export default function PropertiesPage() {
   const [isLoading, setIsLoading] = useState(true);
   
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedLocation, setSelectedLocation] = useState("United Arab Emirates / Dubai");
+  const [selectedLocation, setSelectedLocation] = useState("");
   const [searchMode, setSearchMode] = useState("ai");
   const [viewMode, setViewMode] = useState("list");
   const [selectedCategory, setSelectedCategory] = useState("all");
@@ -78,7 +78,7 @@ export default function PropertiesPage() {
 
   const handleResetFilters = () => {
     setSearchTerm("");
-    setSelectedLocation("United Arab Emirates / Dubai");
+    setSelectedLocation("");
     setSearchMode("ai");
     setViewMode("list");
     setSelectedCategory("all");
