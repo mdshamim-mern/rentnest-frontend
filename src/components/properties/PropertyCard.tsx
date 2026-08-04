@@ -114,7 +114,7 @@ export default function PropertyCard({ property }: PropertyCardProps) {
           
           <div className="mt-auto flex items-center justify-between">
             <div>
-              <span className="text-2xl font-black text-slate-900">৳ {property.price}</span>
+              <span className="text-2xl font-black text-slate-900">${property.price}</span>
               <span className="text-slate-500 text-sm font-medium"> {property.rentType === "Per Year" ? "/ yr" : "/ mo"}</span>
             </div>
             <Button className="rounded-xl px-6 bg-sky-50 hover:bg-sky-500 text-sky-600 hover:text-white transition-colors font-bold shadow-none hover:shadow-lg hover:shadow-sky-500/30">

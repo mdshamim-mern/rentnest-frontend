@@ -167,7 +167,7 @@ export default function TenantRequestsPage() {
                           {new Date(request.startDate).toLocaleDateString()} - {new Date(request.endDate).toLocaleDateString()}
                         </TableCell>
                         <TableCell className="text-slate-900 font-bold">
-                          ৳{calculateTotalAmount(request.startDate, request.endDate, request.property?.price || 0)}
+                          ${calculateTotalAmount(request.startDate, request.endDate, request.property?.price || 0)}
                         </TableCell>
                         <TableCell>
                           <span className={`px-3 py-1 rounded-full text-xs font-bold border ${getStatusColor(request.status)}`}>

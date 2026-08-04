@@ -105,7 +105,7 @@ export default function TenantDashboard() {
                   </div>
                   <div className="flex items-center gap-4">
                     <div className="font-bold text-primary">
-                      ৳{req.property?.price || 0}
+                      ${req.property?.price || 0}
                     </div>
                     <div className={`px-3 py-1 rounded-full text-xs font-bold ${
                       req.status === 'APPROVED' ? 'bg-green-100 text-green-700 border border-green-200' :
