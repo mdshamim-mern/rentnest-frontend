@@ -73,20 +73,20 @@ export default function Navbar() {
         <div className="flex justify-between items-center h-16">
           <div className="shrink-0 flex items-center">
             <Link href="/" className="text-2xl font-extrabold tracking-tighter text-slate-900 flex items-center gap-2">
-              <span className="bg-primary text-white p-1.5 rounded-lg">RN</span>
+              <span className="bg-primary text-white w-8 h-8 rounded-lg flex items-center justify-center text-sm">RN</span>
               RentNest
             </Link>
           </div>
 
-          <div className="hidden md:flex md:items-center md:space-x-6">
+          <div className="hidden md:flex md:items-center space-x-1 bg-slate-50 border border-slate-100 rounded-full p-1.5">
             {navLinks.map((link) => (
               <Link
                 key={link.name}
                 href={link.href}
-                className={`flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                className={`flex items-center px-4 py-2 rounded-full text-sm font-semibold transition-all duration-300 ${
                   pathname === link.href
-                    ? "text-primary bg-primary/10"
-                    : "text-slate-600 hover:text-primary hover:bg-slate-100/50"
+                    ? "bg-white text-primary shadow-sm"
+                    : "text-slate-500 hover:text-slate-800 hover:bg-slate-200/50"
                 }`}
               >
                 {link.icon}
@@ -143,10 +143,10 @@ export default function Navbar() {
                 key={link.name}
                 href={link.href}
                 onClick={() => setIsOpen(false)}
-                className={`flex items-center px-4 py-3 rounded-xl text-base font-medium ${
+                className={`flex items-center px-4 py-3 rounded-xl text-base font-semibold transition-all ${
                   pathname === link.href
-                    ? "text-primary bg-primary/10"
-                    : "text-slate-600 hover:text-primary hover:bg-slate-50"
+                    ? "bg-white text-primary shadow-sm border border-slate-100"
+                    : "text-slate-500 hover:text-slate-800 hover:bg-slate-50"
                 }`}
               >
                 {link.icon}
