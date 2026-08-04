@@ -9,7 +9,8 @@ import {
   FileText, 
   PlusCircle, 
   CreditCard,
-  User as UserIcon 
+  User as UserIcon,
+  MessageSquare
 } from "lucide-react";
 import { useAuthStore } from "@/lib/store/authStore";
 
@@ -26,6 +27,7 @@ export default function Sidebar({ onNavigate }: SidebarProps) {
     { name: "Users", href: "/dashboard/admin/users", icon: <Users className="w-5 h-5 mr-3 shrink-0" /> },
     { name: "Properties", href: "/dashboard/admin/properties", icon: <Building className="w-5 h-5 mr-3 shrink-0" /> },
     { name: "All Requests", href: "/dashboard/admin/requests", icon: <FileText className="w-5 h-5 mr-3 shrink-0" /> },
+    { name: "Messages", href: "/dashboard/admin/messages", icon: <MessageSquare className="w-5 h-5 mr-3 shrink-0" /> },
     { name: "Profile Settings", href: "/dashboard/admin/profile", icon: <UserIcon className="w-5 h-5 mr-3 shrink-0" /> },
   ];
 
