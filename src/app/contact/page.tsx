@@ -82,7 +82,7 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="min-h-screen pt-24 pb-16">
+    <div className="min-h-screen pt-20 pb-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-2xl mx-auto mb-16">
           <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight mb-4">
