@@ -42,6 +42,7 @@ interface PropertyFiltersProps {
   setMoreOptions: (value: string[]) => void;
   categories: Category[];
   onReset: () => void;
+  onSaveSearch: () => void;
 }
 
 export default function PropertyFilters(props: PropertyFiltersProps) {
@@ -94,7 +95,7 @@ export default function PropertyFilters(props: PropertyFiltersProps) {
 
         <div className="flex items-center gap-4 w-full xl:w-auto justify-between xl:justify-end">
           <button 
-            onClick={() => toast.success("Search Saved Successfully!")}
+            onClick={props.onSaveSearch}
             className="whitespace-nowrap h-12 px-6 bg-white border border-slate-200 rounded-2xl text-slate-800 font-bold hover:bg-slate-50 shadow-sm transition-colors"
           >
             Save Search
