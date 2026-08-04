@@ -4,12 +4,13 @@ import { useEffect, useState } from "react";
 import { axiosInstance } from "@/lib/api/axiosInstance";
 import { Property, RentalRequest } from "@/types";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Building2, FileText, CheckCircle2, DollarSign, Loader2 } from "lucide-react";
+import { Building2, FileText, CheckCircle2, DollarSign, Loader2, Calendar } from "lucide-react";
 import { useAuthStore } from "@/lib/store/authStore";
 
 export default function LandlordDashboardOverview() {
   const [properties, setProperties] = useState<Property[]>([]);
   const [requests, setRequests] = useState<RentalRequest[]>([]);
+  const [tourRequests, setTourRequests] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const user = useAuthStore((state: any) => state.user);
 
@@ -47,6 +48,21 @@ export default function LandlordDashboardOverview() {
       } catch (error) {
         console.error("Requests fetch error:", error);
       }
+
+      try {
+        const tourRes = await axiosInstance.get('/landlord/tour-requests');
+        const tourData = tourRes.data;
+        
+        if (Array.isArray(tourData)) {
+          setTourRequests(tourData);
+        } else if (tourData?.data && Array.isArray(tourData.data)) {
+          setTourRequests(tourData.data);
+        } else if (tourData?.requests && Array.isArray(tourData.requests)) {
+          setTourRequests(tourData.requests);
+        }
+      } catch (error) {
+        console.error("Tour requests fetch error:", error);
+      }
       
       setIsLoading(false);
     };
@@ -55,12 +71,15 @@ export default function LandlordDashboardOverview() {
   }, [user?.id]);
 
   const pendingRequestsCount = requests.filter(r => r.status === "PENDING").length;
+  const pendingToursCount = tourRequests.filter(r => r.status === "PENDING").length;
   const activeRentalsCount = requests.filter(r => r.status === "ACTIVE").length;
   const estimatedEarnings = requests
     .filter(r => r.status === "ACTIVE" || r.status === "COMPLETED")
     .reduce((sum, req) => sum + ((req as any).totalPaid > 0 ? (req as any).totalPaid : (req.property?.price || 0)), 0);
 
-  const recentRequests = [...requests].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).slice(0, 5);
+  const recentRequests = [...requests, ...tourRequests]
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+    .slice(0, 5);
 
   if (isLoading) {
     return (
@@ -77,7 +96,7 @@ export default function LandlordDashboardOverview() {
         <p className="text-slate-500 mt-2">Manage your properties, track requests, and view earnings.</p>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
         <Card className="bg-white/60 backdrop-blur-xl border-white/50 shadow-lg hover:shadow-xl transition-all rounded-3xl">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-slate-500">Total Properties</CardTitle>
@@ -92,13 +111,25 @@ export default function LandlordDashboardOverview() {
 
         <Card className="bg-white/60 backdrop-blur-xl border-white/50 shadow-lg hover:shadow-xl transition-all rounded-3xl">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-slate-500">Pending Requests</CardTitle>
+            <CardTitle className="text-sm font-medium text-slate-500">Pending Rentals</CardTitle>
             <div className="p-2 bg-orange-50 rounded-xl shadow-sm">
               <FileText className="h-5 w-5 text-orange-500" />
             </div>
           </CardHeader>
           <CardContent>
             <div className="text-4xl font-bold text-slate-900">{pendingRequestsCount}</div>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-white/60 backdrop-blur-xl border-white/50 shadow-lg hover:shadow-xl transition-all rounded-3xl">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium text-slate-500">Pending Tours</CardTitle>
+            <div className="p-2 bg-purple-50 rounded-xl shadow-sm">
+              <Calendar className="h-5 w-5 text-purple-500" />
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="text-4xl font-bold text-slate-900">{pendingToursCount}</div>
           </CardContent>
         </Card>
 
@@ -122,7 +153,7 @@ export default function LandlordDashboardOverview() {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-4xl font-bold">${estimatedEarnings}</div>
+            <div className="text-4xl font-bold">৳{estimatedEarnings}</div>
           </CardContent>
         </Card>
       </div>
@@ -135,7 +166,7 @@ export default function LandlordDashboardOverview() {
           <CardContent className="p-0">
             {recentRequests.length === 0 ? (
               <div className="p-8 text-center text-slate-500">
-                No rental requests received yet.
+                No requests received yet.
               </div>
             ) : (
               <div className="divide-y divide-white/40">
@@ -143,7 +174,7 @@ export default function LandlordDashboardOverview() {
                   <div key={request.id} className="p-6 hover:bg-white/40 transition-colors flex items-center justify-between">
                     <div>
                       <h4 className="font-bold text-slate-900 line-clamp-1">{request.property?.title || "Property"}</h4>
-                      <p className="text-sm text-slate-500 mt-1">Tenant: {request.tenant?.name || "Unknown"}</p>
+                      <p className="text-sm text-slate-500 mt-1">Tenant: {request.tenant?.name || "Unknown"} ({request.startDate ? "Rental" : "Tour"})</p>
                     </div>
                     <span className={`px-3 py-1 rounded-full text-xs font-bold border ${
                       request.status === 'PENDING' ? 'bg-orange-100 text-orange-700 border-orange-200' :
@@ -178,7 +209,7 @@ export default function LandlordDashboardOverview() {
                       <p className="text-sm text-slate-500 mt-1">{property.location}</p>
                     </div>
                     <div className="font-extrabold text-sky-600">
-                      ${property.price}
+                      ৳{property.price}
                     </div>
                   </div>
                 ))}

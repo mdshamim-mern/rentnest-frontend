@@ -11,7 +11,9 @@ import { Check, X, Loader2 } from "lucide-react";
 import toast from "react-hot-toast";
 
 export default function LandlordRequestsPage() {
+  const [activeTab, setActiveTab] = useState<'rental' | 'tour'>('rental');
   const [requests, setRequests] = useState<RentalRequest[]>([]);
+  const [tourRequests, setTourRequests] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [processingId, setProcessingId] = useState<string | null>(null);
 
@@ -23,20 +25,19 @@ export default function LandlordRequestsPage() {
     try {
       setIsLoading(true);
       const response = await axiosInstance.get('/landlord/requests');
-      
       const reqData = response.data;
-      if (Array.isArray(reqData)) {
-        setRequests(reqData);
-      } else if (reqData?.data && Array.isArray(reqData.data)) {
-        setRequests(reqData.data);
-      } else if (reqData?.requests && Array.isArray(reqData.requests)) {
-        setRequests(reqData.requests);
-      } else {
-        console.warn("Unexpected format:", reqData);
-      }
+      if (Array.isArray(reqData)) setRequests(reqData);
+      else if (reqData?.data && Array.isArray(reqData.data)) setRequests(reqData.data);
+      else if (reqData?.requests && Array.isArray(reqData.requests)) setRequests(reqData.requests);
+
+      const tourResponse = await axiosInstance.get('/landlord/tour-requests');
+      const tourData = tourResponse.data;
+      if (Array.isArray(tourData)) setTourRequests(tourData);
+      else if (tourData?.data && Array.isArray(tourData.data)) setTourRequests(tourData.data);
+      else if (tourData?.requests && Array.isArray(tourData.requests)) setTourRequests(tourData.requests);
+
     } catch (error) {
-      toast.error("Failed to fetch rental requests");
-      console.error(error);
+      toast.error("Failed to fetch requests");
     } finally {
       setIsLoading(false);
     }
@@ -45,18 +46,29 @@ export default function LandlordRequestsPage() {
   const handleUpdateStatus = async (id: string, status: "APPROVED" | "REJECTED") => {
     try {
       setProcessingId(id);
-      
-      setRequests(current => current.map(req => 
-        req.id === id ? { ...req, status } : req
-      ));
-
+      setRequests(current => current.map(req => req.id === id ? { ...req, status } : req));
       const response = await axiosInstance.patch(`/landlord/requests/${id}`, { status });
-      
       if (response.data?.success || response.status === 200) {
         toast.success(`Request ${status.toLowerCase()} successfully`);
       }
     } catch (error) {
       toast.error("Failed to update status");
+      fetchRequests();
+    } finally {
+      setProcessingId(null);
+    }
+  };
+
+  const handleUpdateTourStatus = async (id: string, status: "APPROVED" | "REJECTED") => {
+    try {
+      setProcessingId(id);
+      setTourRequests(current => current.map(req => req.id === id ? { ...req, status } : req));
+      const response = await axiosInstance.patch(`/landlord/tour-requests/${id}`, { status });
+      if (response.data?.success || response.status === 200) {
+        toast.success(`Tour request ${status.toLowerCase()} successfully`);
+      }
+    } catch (error) {
+      toast.error("Failed to update tour status");
       fetchRequests();
     } finally {
       setProcessingId(null);
@@ -77,8 +89,25 @@ export default function LandlordRequestsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Rental Requests</h1>
-        <p className="text-slate-500 mt-2">Review and manage requests from tenants.</p>
+        <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Requests Management</h1>
+        <p className="text-slate-500 mt-2">Review and manage rental and tour requests from tenants.</p>
+      </div>
+
+      <div className="flex space-x-4 mb-4">
+        <Button
+          variant={activeTab === 'rental' ? 'default' : 'outline'}
+          onClick={() => setActiveTab('rental')}
+          className={activeTab === 'rental' ? 'bg-sky-500 hover:bg-sky-600 text-white shadow-md' : 'text-slate-600'}
+        >
+          Rental Requests
+        </Button>
+        <Button
+          variant={activeTab === 'tour' ? 'default' : 'outline'}
+          onClick={() => setActiveTab('tour')}
+          className={activeTab === 'tour' ? 'bg-sky-500 hover:bg-sky-600 text-white shadow-md' : 'text-slate-600'}
+        >
+          Tour Requests
+        </Button>
       </div>
 
       <Card className="bg-white/60 backdrop-blur-xl border border-white/50 shadow-xl shadow-sky-100/50 rounded-3xl overflow-hidden">
@@ -105,59 +134,116 @@ export default function LandlordRequestsPage() {
                       <TableCell className="text-right"><Skeleton className="h-8 w-32 ml-auto" /></TableCell>
                     </TableRow>
                   ))
-                ) : requests.length === 0 ? (
-                  <TableRow>
-                    <TableCell colSpan={5} className="text-center py-16 text-slate-500">
-                      No rental requests received yet.
-                    </TableCell>
-                  </TableRow>
-                ) : (
-                  requests.map((request) => (
-                    <TableRow key={request.id} className="hover:bg-white/60 transition-colors">
-                      <TableCell className="font-medium text-slate-900">
-                        {request.property?.title || "Unknown Property"}
-                      </TableCell>
-                      <TableCell className="text-slate-600">
-                        {request.tenant?.name || "Unknown"}
-                      </TableCell>
-                      <TableCell className="text-slate-600">
-                        {new Date(request.startDate).toLocaleDateString()} - {new Date(request.endDate).toLocaleDateString()}
-                      </TableCell>
-                      <TableCell>
-                        <span className={`px-3 py-1 rounded-full text-xs font-bold border ${getStatusColor(request.status)}`}>
-                          {request.status}
-                        </span>
-                      </TableCell>
-                      <TableCell className="text-right">
-                        {request.status === "PENDING" && (
-                          <div className="flex justify-end gap-2">
-                            <Button 
-                              size="sm" 
-                              onClick={() => handleUpdateStatus(request.id, "APPROVED")}
-                              disabled={processingId === request.id}
-                              className="bg-green-500 hover:bg-green-600 text-white rounded-xl shadow-md"
-                            >
-                              {processingId === request.id ? <Loader2 className="h-4 w-4 animate-spin" /> : <Check className="h-4 w-4 mr-1" />}
-                              Approve
-                            </Button>
-                            <Button 
-                              size="sm" 
-                              variant="destructive"
-                              onClick={() => handleUpdateStatus(request.id, "REJECTED")}
-                              disabled={processingId === request.id}
-                              className="rounded-xl shadow-md"
-                            >
-                              {processingId === request.id ? <Loader2 className="h-4 w-4 animate-spin" /> : <X className="h-4 w-4 mr-1" />}
-                              Reject
-                            </Button>
-                          </div>
-                        )}
-                        {request.status !== "PENDING" && (
-                          <span className="text-sm text-slate-400 font-medium">Processed</span>
-                        )}
+                ) : activeTab === 'rental' ? (
+                  requests.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={5} className="text-center py-16 text-slate-500">
+                        No rental requests received yet.
                       </TableCell>
                     </TableRow>
-                  ))
+                  ) : (
+                    requests.map((request) => (
+                      <TableRow key={request.id} className="hover:bg-white/60 transition-colors">
+                        <TableCell className="font-medium text-slate-900">
+                          {request.property?.title || "Unknown Property"}
+                        </TableCell>
+                        <TableCell className="text-slate-600">
+                          {request.tenant?.name || "Unknown"}
+                        </TableCell>
+                        <TableCell className="text-slate-600">
+                          {new Date(request.startDate).toLocaleDateString()} - {new Date(request.endDate).toLocaleDateString()}
+                        </TableCell>
+                        <TableCell>
+                          <span className={`px-3 py-1 rounded-full text-xs font-bold border ${getStatusColor(request.status)}`}>
+                            {request.status}
+                          </span>
+                        </TableCell>
+                        <TableCell className="text-right">
+                          {request.status === "PENDING" && (
+                            <div className="flex justify-end gap-2">
+                              <Button 
+                                size="sm" 
+                                onClick={() => handleUpdateStatus(request.id, "APPROVED")}
+                                disabled={processingId === request.id}
+                                className="bg-green-500 hover:bg-green-600 text-white rounded-xl shadow-md"
+                              >
+                                {processingId === request.id ? <Loader2 className="h-4 w-4 animate-spin" /> : <Check className="h-4 w-4 mr-1" />}
+                                Approve
+                              </Button>
+                              <Button 
+                                size="sm" 
+                                variant="destructive"
+                                onClick={() => handleUpdateStatus(request.id, "REJECTED")}
+                                disabled={processingId === request.id}
+                                className="rounded-xl shadow-md"
+                              >
+                                {processingId === request.id ? <Loader2 className="h-4 w-4 animate-spin" /> : <X className="h-4 w-4 mr-1" />}
+                                Reject
+                              </Button>
+                            </div>
+                          )}
+                          {request.status !== "PENDING" && (
+                            <span className="text-sm text-slate-400 font-medium">Processed</span>
+                          )}
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  )
+                ) : (
+                  tourRequests.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={5} className="text-center py-16 text-slate-500">
+                        No tour requests received yet.
+                      </TableCell>
+                    </TableRow>
+                  ) : (
+                    tourRequests.map((request) => (
+                      <TableRow key={request.id} className="hover:bg-white/60 transition-colors">
+                        <TableCell className="font-medium text-slate-900">
+                          {request.property?.title || "Unknown Property"}
+                        </TableCell>
+                        <TableCell className="text-slate-600">
+                          {request.tenant?.name || "Unknown"}
+                        </TableCell>
+                        <TableCell className="text-slate-600">
+                          {request.date ? new Date(request.date).toLocaleDateString() : 'N/A'} {request.time && `at ${request.time}`}
+                        </TableCell>
+                        <TableCell>
+                          <span className={`px-3 py-1 rounded-full text-xs font-bold border ${getStatusColor(request.status)}`}>
+                            {request.status}
+                          </span>
+                        </TableCell>
+                        <TableCell className="text-right">
+                          {request.status === "PENDING" && (
+                            <div className="flex justify-end gap-2">
+                              <Button 
+                                size="sm" 
+                                onClick={() => handleUpdateTourStatus(request.id, "APPROVED")}
+                                disabled={processingId === request.id}
+                                className="bg-green-500 hover:bg-green-600 text-white rounded-xl shadow-md"
+                              >
+                                {processingId === request.id ? <Loader2 className="h-4 w-4 animate-spin" /> : <Check className="h-4 w-4 mr-1" />}
+                                Approve
+                              </Button>
+                              <Button 
+                                size="sm" 
+                                variant="destructive"
+                                onClick={() => handleUpdateTourStatus(request.id, "REJECTED")}
+                                disabled={processingId === request.id}
+                                className="rounded-xl shadow-md"
+                              >
+                                {processingId === request.id ? <Loader2 className="h-4 w-4 animate-spin" /> : <X className="h-4 w-4 mr-1" />}
+                                Reject
+                              </Button>
+                            </div>
+                          )}
+                          {request.status !== "PENDING" && (
+                            <span className="text-sm text-slate-400 font-medium">Processed</span>
+                          )}
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  )
                 )}
               </TableBody>
             </Table>
