@@ -26,10 +26,12 @@ export default function Navbar() {
   };
 
   const navLinks = [
-    { name: "Home", href: "/", icon: <Home className="w-4 h-4 mr-2" /> },
-    { name: "Properties", href: "/properties", icon: <Building className="w-4 h-4 mr-2" /> },
-    { name: "About", href: "/about", icon: <Info className="w-4 h-4 mr-2" /> },
-    { name: "Contact", href: "/contact", icon: <PhoneCall className="w-4 h-4 mr-2" /> },
+    { name: "Home", href: "/" },
+    { name: "About", href: "/about" },
+    { name: "Skills", href: "/skills" },
+    { name: "Projects", href: "/projects" },
+    { name: "Services", href: "/services" },
+    { name: "Contact", href: "/contact" },
   ];
 
   const isDashboard = pathname?.startsWith("/dashboard");
@@ -72,24 +74,23 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="shrink-0 flex items-center">
-            <Link href="/" className="text-2xl font-extrabold tracking-tighter text-slate-900 flex items-center gap-2">
-              <span className="bg-primary text-white w-8 h-8 rounded-lg flex items-center justify-center text-sm">RN</span>
-              RentNest
+            <Link href="/" className="text-xl font-extrabold tracking-tighter text-slate-900 flex items-center gap-2">
+              <span className="bg-primary text-white rounded-lg flex items-center justify-center text-sm font-bold w-10 h-10">RN</span>
+              <span className="text-xl font-black">RentNest</span>
             </Link>
           </div>
 
-          <div className="hidden md:flex md:items-center space-x-1 bg-slate-50 border border-slate-100 rounded-full p-1.5">
+          <div className="hidden md:flex md:items-center bg-slate-50 border border-slate-100 rounded-full p-1 shadow-sm">
             {navLinks.map((link) => (
               <Link
                 key={link.name}
                 href={link.href}
-                className={`flex items-center px-4 py-2 rounded-full text-sm font-semibold transition-all duration-300 ${
+                className={`flex items-center px-5 py-2 rounded-full text-[15px] font-bold transition-all duration-300 ${
                   pathname === link.href
                     ? "bg-white text-primary shadow-sm"
                     : "text-slate-500 hover:text-slate-800 hover:bg-slate-200/50"
                 }`}
               >
-                {link.icon}
                 {link.name}
               </Link>
             ))}
@@ -101,12 +102,12 @@ export default function Navbar() {
             {isAuthenticated ? (
               <>
                 <Link href={`/dashboard/${user?.role?.toLowerCase()}`}>
-                  <Button variant="outline" className="bg-white/50 backdrop-blur-sm border-slate-200">
+                  <Button variant="outline" className="bg-white/50 backdrop-blur-sm border-slate-200 text-[15px] font-semibold h-10 px-4 rounded-xl">
                     <LayoutDashboard className="w-4 h-4 mr-2" />
                     Dashboard
                   </Button>
                 </Link>
-                <Button onClick={handleLogout} variant="destructive" className="shadow-lg shadow-red-500/20">
+                <Button onClick={handleLogout} variant="destructive" className="shadow-lg shadow-red-500/20 text-[15px] font-semibold h-10 px-4 rounded-xl">
                   <LogOut className="w-4 h-4 mr-2" />
                   Logout
                 </Button>
@@ -114,7 +115,7 @@ export default function Navbar() {
             ) : (
               <>
                 <Link href="/login">
-                  <Button variant="ghost" className="text-slate-600 hover:text-slate-900">
+                  <Button variant="ghost" className="text-slate-600 hover:text-slate-900 text-[15px] font-semibold h-10 px-4 rounded-xl">
                     Login
                   </Button>
                 </Link>
@@ -143,13 +144,12 @@ export default function Navbar() {
                 key={link.name}
                 href={link.href}
                 onClick={() => setIsOpen(false)}
-                className={`flex items-center px-4 py-3 rounded-xl text-base font-semibold transition-all ${
+                className={`flex items-center px-4 py-3 rounded-xl text-base font-bold transition-all ${
                   pathname === link.href
                     ? "bg-white text-primary shadow-sm border border-slate-100"
                     : "text-slate-500 hover:text-slate-800 hover:bg-slate-50"
                 }`}
               >
-                {link.icon}
                 {link.name}
               </Link>
             ))}
@@ -160,12 +160,12 @@ export default function Navbar() {
               {isAuthenticated ? (
                 <>
                   <Link href={`/dashboard/${user?.role?.toLowerCase()}`} onClick={() => setIsOpen(false)}>
-                    <Button variant="outline" className="w-full justify-start">
+                    <Button variant="outline" className="w-full justify-start h-12 rounded-xl font-semibold">
                       <LayoutDashboard className="w-4 h-4 mr-2" />
                       Dashboard
                     </Button>
                   </Link>
-                  <Button onClick={() => { handleLogout(); setIsOpen(false); }} variant="destructive" className="w-full justify-start">
+                  <Button onClick={() => { handleLogout(); setIsOpen(false); }} variant="destructive" className="w-full justify-start h-12 rounded-xl font-semibold">
                     <LogOut className="w-4 h-4 mr-2" />
                     Logout
                   </Button>
@@ -173,12 +173,12 @@ export default function Navbar() {
               ) : (
                 <>
                   <Link href="/login" onClick={() => setIsOpen(false)}>
-                    <Button variant="outline" className="w-full justify-center">
+                    <Button variant="outline" className="w-full justify-center h-12 rounded-xl font-semibold">
                       Login
                     </Button>
                   </Link>
                   <Link href="/register" onClick={() => setIsOpen(false)}>
-                    <Button className="w-full justify-center">
+                    <Button className="w-full justify-center h-12 rounded-xl font-semibold">
                       Register
                     </Button>
                   </Link>

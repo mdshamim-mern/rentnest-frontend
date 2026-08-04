@@ -1,11 +1,13 @@
 "use client";
 
-import { Mail, Phone, MapPin } from "lucide-react";
+import { Mail, Phone, MapPin, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useState, useEffect } from "react";
 import { getAdminInfo } from "@/lib/api/user.api";
+import { axiosInstance } from "@/lib/api/axiosInstance";
+import toast from "react-hot-toast";
 
 export default function ContactPage() {
   const [contactInfo, setContactInfo] = useState({
@@ -15,6 +17,14 @@ export default function ContactPage() {
     emailSupportText: "We typically reply within 24 hours.",
     phoneSupportText: "Available Mon-Fri, 9am-6pm.",
   });
+
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    message: ""
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     const fetchAdminInfo = async () => {
@@ -36,6 +46,41 @@ export default function ContactPage() {
     fetchAdminInfo();
   }, []);
 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!formData.firstName || !formData.email || !formData.message) {
+      toast.error("Please fill in all required fields.");
+      return;
+    }
+
+    try {
+      setIsSubmitting(true);
+      const name = `${formData.firstName} ${formData.lastName}`.trim();
+      
+      const response = await axiosInstance.post('/contact', {
+        name,
+        email: formData.email,
+        message: formData.message
+      });
+
+      if (response.data.success) {
+        toast.success("Message sent successfully!");
+        setFormData({ firstName: "", lastName: "", email: "", message: "" });
+      } else {
+        toast.error("Failed to send message.");
+      }
+    } catch (error) {
+      console.error("Contact submit error:", error);
+      toast.error("Something went wrong. Please try again later.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <div className="min-h-screen pt-24 pb-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -51,27 +96,28 @@ export default function ContactPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           <div className="bg-white/60 backdrop-blur-xl border border-white/50 p-8 md:p-10 rounded-3xl shadow-lg">
             <h2 className="text-2xl font-bold text-slate-900 mb-6">Send us a message</h2>
-            <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
+            <form className="space-y-6" onSubmit={handleSubmit}>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-slate-700">First Name</label>
-                  <Input placeholder="John" className="bg-white/60 h-12" />
+                  <label className="text-sm font-medium text-slate-700">First Name <span className="text-red-500">*</span></label>
+                  <Input name="firstName" value={formData.firstName} onChange={handleChange} placeholder="John" className="bg-white/60 h-12" required />
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-slate-700">Last Name</label>
-                  <Input placeholder="Doe" className="bg-white/60 h-12" />
+                  <Input name="lastName" value={formData.lastName} onChange={handleChange} placeholder="Doe" className="bg-white/60 h-12" />
                 </div>
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-medium text-slate-700">Email Address</label>
-                <Input type="email" placeholder="john@example.com" className="bg-white/60 h-12" />
+                <label className="text-sm font-medium text-slate-700">Email Address <span className="text-red-500">*</span></label>
+                <Input name="email" type="email" value={formData.email} onChange={handleChange} placeholder="john@example.com" className="bg-white/60 h-12" required />
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-medium text-slate-700">Message</label>
-                <Textarea placeholder="How can we help you?" className="bg-white/60 min-h-30" />
+                <label className="text-sm font-medium text-slate-700">Message <span className="text-red-500">*</span></label>
+                <Textarea name="message" value={formData.message} onChange={handleChange} placeholder="How can we help you?" className="bg-white/60 min-h-32 resize-none" required />
               </div>
-              <Button className="w-full h-12 text-base font-semibold shadow-lg shadow-primary/20">
-                Send Message
+              <Button type="submit" disabled={isSubmitting} className="w-full h-12 text-base font-semibold shadow-lg shadow-primary/20">
+                {isSubmitting ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : null}
+                {isSubmitting ? "Sending..." : "Send Message"}
               </Button>
             </form>
           </div>
