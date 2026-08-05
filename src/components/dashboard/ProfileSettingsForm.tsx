@@ -192,7 +192,7 @@ export default function ProfileSettingsForm({ userId }: ProfileSettingsFormProps
                 />
                 <div className="flex items-center justify-center gap-2 bg-sky-50 text-sky-600 px-4 py-2.5 rounded-xl font-semibold text-sm hover:bg-sky-100 transition-colors w-full">
                   <ImagePlus className="h-4 w-4" />
-                  {isUploading ? "Uploading..." : "Upload from PC"}
+                  {isUploading ? "Uploading..." : "Upload Photo"}
                 </div>
               </div>
               
