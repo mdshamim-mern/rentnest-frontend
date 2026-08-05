@@ -180,18 +180,36 @@ export default function ProfileSettingsForm({ userId }: ProfileSettingsFormProps
                 </div>
               )}
             </div>
-            <div className="relative">
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleImageUpload}
-                disabled={isUploading}
-                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer disabled:cursor-not-allowed"
-              />
-              <div className="flex items-center gap-2 bg-sky-50 text-sky-600 px-4 py-2 rounded-xl font-semibold text-sm hover:bg-sky-100 transition-colors">
-                <ImagePlus className="h-4 w-4" />
-                {isUploading ? "Uploading..." : "Change Photo"}
+            
+            <div className="flex flex-col gap-3 w-full max-w-[220px]">
+              <div className="relative w-full">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                  disabled={isUploading}
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer disabled:cursor-not-allowed"
+                />
+                <div className="flex items-center justify-center gap-2 bg-sky-50 text-sky-600 px-4 py-2.5 rounded-xl font-semibold text-sm hover:bg-sky-100 transition-colors w-full">
+                  <ImagePlus className="h-4 w-4" />
+                  {isUploading ? "Uploading..." : "Upload from PC"}
+                </div>
               </div>
+              
+              <div className="flex items-center gap-2">
+                <div className="h-px bg-slate-200 flex-1"></div>
+                <span className="text-xs font-medium text-slate-400">OR</span>
+                <div className="h-px bg-slate-200 flex-1"></div>
+              </div>
+
+              <input
+                type="text"
+                name="photo"
+                value={formData.photo}
+                onChange={handleChange}
+                placeholder="Paste image URL here..."
+                className="w-full px-3 py-2 text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 transition-all text-slate-600"
+              />
             </div>
           </div>
           
@@ -205,7 +223,7 @@ export default function ProfileSettingsForm({ userId }: ProfileSettingsFormProps
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
-                className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-hidden focus:ring-2 focus:ring-sky-500 focus:border-transparent transition-all"
+                className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition-all"
                 required
               />
             </div>
@@ -236,7 +254,7 @@ export default function ProfileSettingsForm({ userId }: ProfileSettingsFormProps
               value={formData.phone}
               onChange={handleChange}
               placeholder="+8801..."
-              className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-hidden focus:ring-2 focus:ring-sky-500 focus:border-transparent transition-all"
+              className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition-all"
             />
           </div>
 
@@ -250,7 +268,7 @@ export default function ProfileSettingsForm({ userId }: ProfileSettingsFormProps
               value={formData.whatsapp}
               onChange={handleChange}
               placeholder="+8801..."
-              className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-hidden focus:ring-2 focus:ring-sky-500 focus:border-transparent transition-all"
+              className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition-all"
             />
           </div>
 
@@ -266,7 +284,7 @@ export default function ProfileSettingsForm({ userId }: ProfileSettingsFormProps
                   value={formData.address}
                   onChange={handleChange}
                   placeholder="e.g. 123 Real Estate Avenue, Dhaka"
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-hidden focus:ring-2 focus:ring-sky-500 focus:border-transparent transition-all"
+                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition-all"
                 />
               </div>
               
@@ -280,7 +298,7 @@ export default function ProfileSettingsForm({ userId }: ProfileSettingsFormProps
                   value={formData.emailSupportText}
                   onChange={handleChange}
                   placeholder="e.g. We typically reply within 24 hours."
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-hidden focus:ring-2 focus:ring-sky-500 focus:border-transparent transition-all"
+                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition-all"
                 />
               </div>
               
@@ -294,7 +312,7 @@ export default function ProfileSettingsForm({ userId }: ProfileSettingsFormProps
                   value={formData.phoneSupportText}
                   onChange={handleChange}
                   placeholder="e.g. Available Mon-Fri, 9am-6pm."
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-hidden focus:ring-2 focus:ring-sky-500 focus:border-transparent transition-all"
+                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition-all"
                 />
               </div>
             </>
@@ -310,7 +328,7 @@ export default function ProfileSettingsForm({ userId }: ProfileSettingsFormProps
               onChange={handleChange}
               rows={4}
               placeholder="Write something about yourself..."
-              className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-hidden focus:ring-2 focus:ring-sky-500 focus:border-transparent transition-all resize-none"
+              className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition-all resize-none"
             />
           </div>
 
@@ -324,7 +342,7 @@ export default function ProfileSettingsForm({ userId }: ProfileSettingsFormProps
               value={formData.password}
               onChange={handleChange}
               placeholder="Leave blank to keep current password"
-              className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-hidden focus:ring-2 focus:ring-sky-500 focus:border-transparent transition-all"
+              className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition-all"
             />
           </div>
         </div>
