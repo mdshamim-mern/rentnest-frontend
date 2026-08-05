@@ -129,10 +129,16 @@ export default function PropertyFilters(props: PropertyFiltersProps) {
             type="single"
             options={[
               { label: "All Locations", value: "" },
-              { label: "United Arab Emirates / Dubai", value: "United Arab Emirates / Dubai" },
-              { label: "United Arab Emirates / Abu Dhabi", value: "United Arab Emirates / Abu Dhabi" },
-              { label: "United Arab Emirates / Sharjah", value: "United Arab Emirates / Sharjah" },
-              { label: "Bangladesh / Dhaka", value: "Bangladesh / Dhaka" }
+              { label: "Dhanmondi, Dhaka", value: "Dhanmondi" },
+              { label: "Mohammadpur, Dhaka", value: "Mohammadpur" },
+              { label: "Gulshan, Dhaka", value: "Gulshan" },
+              { label: "Banani, Dhaka", value: "Banani" },
+              { label: "Uttara, Dhaka", value: "Uttara" },
+              { label: "Bashundhara, Dhaka", value: "Bashundhara" },
+              { label: "Mirpur, Dhaka", value: "Mirpur" },
+              { label: "Shyamoli, Dhaka", value: "Shyamoli" },
+              { label: "Badda, Dhaka", value: "Badda" },
+              { label: "Khilgaon, Dhaka", value: "Khilgaon" }
             ]} 
           />
         </div>
