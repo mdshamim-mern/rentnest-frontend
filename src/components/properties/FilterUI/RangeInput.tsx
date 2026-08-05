@@ -9,9 +9,10 @@ interface RangeInputProps {
   placeholder?: string;
   maxAllowed?: number;
   step?: number;
+  onClose?: () => void;
 }
 
-export default function RangeInput({ minVal, maxVal, setMinVal, setMaxVal, placeholder = "Value", maxAllowed = 100000, step = 100 }: RangeInputProps) {
+export default function RangeInput({ minVal, maxVal, setMinVal, setMaxVal, placeholder = "Value", maxAllowed = 100000, step = 100, onClose }: RangeInputProps) {
   const [sliderVal, setSliderVal] = useState(Number(maxVal) || (maxAllowed / 2));
 
   const handleSliderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -61,7 +62,10 @@ export default function RangeInput({ minVal, maxVal, setMinVal, setMaxVal, place
         </div>
       </div>
 
-      <button className="w-full h-10 bg-slate-900 hover:bg-sky-500 text-white font-bold rounded-xl transition-colors">
+      <button 
+        onClick={onClose}
+        className="w-full h-10 bg-slate-900 hover:bg-sky-500 text-white font-bold rounded-xl transition-colors"
+      >
         Apply Range
       </button>
     </div>

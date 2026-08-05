@@ -1,6 +1,7 @@
 import { Search, Map, List, ChevronDown, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Category } from "@/types";
+import { useState } from "react";
 import MainFilterButton from "./FilterUI/MainFilterButton";
 import DropdownMenu from "./FilterUI/DropdownMenu";
 import RangeInput from "./FilterUI/RangeInput";
@@ -44,6 +45,9 @@ interface PropertyFiltersProps {
 }
 
 export default function PropertyFilters(props: PropertyFiltersProps) {
+  const [isPricingOpen, setIsPricingOpen] = useState(false);
+  const [isAreaOpen, setIsAreaOpen] = useState(false);
+
   return (
     <div className="relative z-50 bg-white/60 backdrop-blur-2xl border border-white/60 p-6 rounded-3xl shadow-xl shadow-sky-100/40 mb-12 flex flex-col gap-6">
       
@@ -154,12 +158,12 @@ export default function PropertyFilters(props: PropertyFiltersProps) {
           type="single"
           options={[
             { label: "All Types", value: "all" },
-            { label: "Apartment", value: "apartment" },
-            { label: "Villa", value: "villa" },
-            { label: "Duplex", value: "duplex" },
-            { label: "Penthouse", value: "penthouse" },
-            { label: "Townhouse", value: "townhouse" },
-            { label: "Studio", value: "studio" }
+            { label: "Apartment", value: "Apartment" },
+            { label: "Villa", value: "Villa" },
+            { label: "Duplex", value: "Duplex" },
+            { label: "Penthouse", value: "Penthouse" },
+            { label: "Townhouse", value: "Townhouse" },
+            { label: "Studio", value: "Studio" }
           ]} 
         />
 
@@ -174,32 +178,46 @@ export default function PropertyFilters(props: PropertyFiltersProps) {
           ]} 
         />
 
-        <div className="group relative">
-          <button className="h-10 px-4 flex items-center gap-2 bg-white border border-slate-200 hover:border-sky-300 hover:bg-sky-50 rounded-full text-sm font-medium text-slate-700 transition-colors shadow-sm">
-            Pricing (৳) <ChevronDown className="h-4 w-4 text-slate-400" />
+        <div className="relative">
+          <button 
+            onClick={() => {
+              setIsPricingOpen(!isPricingOpen);
+              setIsAreaOpen(false);
+            }}
+            className="h-10 px-4 flex items-center gap-2 bg-white border border-slate-200 hover:border-sky-300 hover:bg-sky-50 rounded-full text-sm font-medium text-slate-700 transition-colors shadow-sm"
+          >
+            Pricing ($) <ChevronDown className="h-4 w-4 text-slate-400" />
           </button>
-          <div className="absolute top-full left-0 mt-2 hidden group-hover:block z-100">
+          <div className={`absolute top-full left-0 mt-2 z-100 ${isPricingOpen ? 'block' : 'hidden'}`}>
             <RangeInput 
               minVal={props.minPrice} setMinVal={props.setMinPrice} 
               maxVal={props.maxPrice} setMaxVal={props.setMaxPrice} 
               placeholder="Price" 
-              maxAllowed={500000}
-              step={5000}
+              maxAllowed={10000}
+              step={100}
+              onClose={() => setIsPricingOpen(false)}
             />
           </div>
         </div>
 
-        <div className="group relative">
-          <button className="h-10 px-4 flex items-center gap-2 bg-white border border-slate-200 hover:border-sky-300 hover:bg-sky-50 rounded-full text-sm font-medium text-slate-700 transition-colors shadow-sm">
+        <div className="relative">
+          <button 
+            onClick={() => {
+              setIsAreaOpen(!isAreaOpen);
+              setIsPricingOpen(false);
+            }}
+            className="h-10 px-4 flex items-center gap-2 bg-white border border-slate-200 hover:border-sky-300 hover:bg-sky-50 rounded-full text-sm font-medium text-slate-700 transition-colors shadow-sm"
+          >
             Area (sqft) <ChevronDown className="h-4 w-4 text-slate-400" />
           </button>
-          <div className="absolute top-full left-0 mt-2 hidden group-hover:block z-100">
+          <div className={`absolute top-full left-0 mt-2 z-100 ${isAreaOpen ? 'block' : 'hidden'}`}>
             <RangeInput 
               minVal={props.minArea} setMinVal={props.setMinArea} 
               maxVal={props.maxArea} setMaxVal={props.setMaxArea} 
               placeholder="Sqft" 
               maxAllowed={10000}
               step={100}
+              onClose={() => setIsAreaOpen(false)}
             />
           </div>
         </div>
