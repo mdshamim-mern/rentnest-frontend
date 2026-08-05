@@ -15,8 +15,8 @@ export default function PropertiesPage() {
   const [isLoading, setIsLoading] = useState(true);
   
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedLocation, setSelectedLocation] = useState("");
-  const [searchMode, setSearchMode] = useState("ai");
+  const [selectedLocation, setSelectedLocation] = useState("Bangladesh / Dhaka");
+  const [searchMode, setSearchMode] = useState("classic");
   const [viewMode, setViewMode] = useState("list");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [propertyType, setPropertyType] = useState("all");
@@ -24,7 +24,6 @@ export default function PropertiesPage() {
   const [maxPrice, setMaxPrice] = useState("");
   const [minArea, setMinArea] = useState("");
   const [maxArea, setMaxArea] = useState("");
-  const [rooms, setRooms] = useState<string[]>([]);
   const [beds, setBeds] = useState("all");
   const [baths, setBaths] = useState("all");
   const [amenities, setAmenities] = useState<string[]>([]);
@@ -62,6 +61,7 @@ export default function PropertiesPage() {
         if (newBuilds && newBuilds !== "all") params.newBuilds = newBuilds;
         if (selectedLocation) params.location = selectedLocation;
         if (searchTerm) params.searchTerm = searchTerm;
+        if (searchMode) params.searchMode = searchMode;
 
         const response = await axiosInstance.get('/properties', { params });
         if (response.data.success) {
@@ -74,12 +74,12 @@ export default function PropertiesPage() {
       }
     };
     fetchProperties();
-  }, [selectedCategory, propertyType, minPrice, maxPrice, minArea, maxArea, beds, baths, amenities, newBuilds, selectedLocation, searchTerm]);
+  }, [selectedCategory, propertyType, minPrice, maxPrice, minArea, maxArea, beds, baths, amenities, newBuilds, selectedLocation, searchTerm, searchMode]);
 
   const handleResetFilters = () => {
     setSearchTerm("");
-    setSelectedLocation("");
-    setSearchMode("ai");
+    setSelectedLocation("Bangladesh / Dhaka");
+    setSearchMode("classic");
     setViewMode("list");
     setSelectedCategory("all");
     setPropertyType("all");
@@ -87,7 +87,6 @@ export default function PropertiesPage() {
     setMaxPrice("");
     setMinArea("");
     setMaxArea("");
-    setRooms([]);
     setBeds("all");
     setBaths("all");
     setAmenities([]);
@@ -131,7 +130,6 @@ export default function PropertiesPage() {
           maxPrice={maxPrice} setMaxPrice={setMaxPrice}
           minArea={minArea} setMinArea={setMinArea}
           maxArea={maxArea} setMaxArea={setMaxArea}
-          rooms={rooms} setRooms={setRooms}
           beds={beds} setBeds={setBeds}
           baths={baths} setBaths={setBaths}
           amenities={amenities} setAmenities={setAmenities}

@@ -28,8 +28,6 @@ interface PropertyFiltersProps {
   setMinArea: (value: string) => void;
   maxArea: string;
   setMaxArea: (value: string) => void;
-  rooms: string[];
-  setRooms: (value: string[]) => void;
   beds: string;
   setBeds: (value: string) => void;
   baths: string;
@@ -66,12 +64,11 @@ export default function PropertyFilters(props: PropertyFiltersProps) {
         </div>
         
         <div className="relative grow w-full h-12">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-sky-500 h-5 w-5" />
           <Input 
-            placeholder="Dubai, United Arab Emirates" 
+            placeholder="Search your location..." 
             value={props.searchTerm}
             onChange={(e) => props.setSearchTerm(e.target.value)}
-            className="pl-12 pr-24 h-full bg-white/80 border-white/50 rounded-2xl text-base text-slate-800 shadow-sm focus-visible:ring-sky-500 w-full"
+            className="pl-6 pr-24 h-full bg-white/80 border-white/50 rounded-2xl text-base text-slate-800 shadow-sm focus-visible:ring-sky-500 w-full"
           />
           <div className="absolute right-1.5 top-1/2 -translate-y-1/2 flex items-center gap-1 h-9">
             {props.searchTerm && (
@@ -122,7 +119,7 @@ export default function PropertyFilters(props: PropertyFiltersProps) {
         <span>|</span>
         <span className="hover:text-sky-500 cursor-pointer transition-colors">Property Search</span>
         <span>/</span>
-        <span className="text-slate-800 font-bold">{props.selectedLocation}</span>
+        <span className="text-slate-800 font-bold">{props.selectedLocation || "All Locations"}</span>
         <span>/</span>
         <div className="relative flex items-center">
           <DropdownMenu 
@@ -131,6 +128,7 @@ export default function PropertyFilters(props: PropertyFiltersProps) {
             onChange={props.setSelectedLocation}
             type="single"
             options={[
+              { label: "All Locations", value: "" },
               { label: "United Arab Emirates / Dubai", value: "United Arab Emirates / Dubai" },
               { label: "United Arab Emirates / Abu Dhabi", value: "United Arab Emirates / Abu Dhabi" },
               { label: "United Arab Emirates / Sharjah", value: "United Arab Emirates / Sharjah" },
@@ -160,15 +158,15 @@ export default function PropertyFilters(props: PropertyFiltersProps) {
         />
 
        <DropdownMenu 
-  label="Property Category" 
-  value={props.selectedCategory} 
-  onChange={props.setSelectedCategory}
-  type="single"
-  options={[
-    { label: "All Categories", value: "all" },
-    ...props.categories.map((c: any) => ({ label: c.name, value: c.id }))
-  ]} 
-/>
+          label="Property Category" 
+          value={props.selectedCategory} 
+          onChange={props.setSelectedCategory}
+          type="single"
+          options={[
+            { label: "All Categories", value: "all" },
+            ...props.categories.map((c: any) => ({ label: c.name, value: c.id }))
+          ]} 
+        />
 
         <div className="group relative">
           <button className="h-10 px-4 flex items-center gap-2 bg-white border border-slate-200 hover:border-sky-300 hover:bg-sky-50 rounded-full text-sm font-medium text-slate-700 transition-colors shadow-sm">
@@ -195,18 +193,6 @@ export default function PropertyFilters(props: PropertyFiltersProps) {
             />
           </div>
         </div>
-
-        <DropdownMenu 
-          label="Room" 
-          value={props.rooms} 
-          onChange={props.setRooms}
-          type="grid"
-          options={[
-            { label: "1", value: "1" }, { label: "2", value: "2" }, 
-            { label: "3", value: "3" }, { label: "4", value: "4" },
-            { label: "5", value: "5" }, { label: "6+", value: "6+" }
-          ]} 
-        />
 
         <DropdownMenu 
           label="Beds" 
