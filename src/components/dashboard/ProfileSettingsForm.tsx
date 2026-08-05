@@ -181,7 +181,7 @@ export default function ProfileSettingsForm({ userId }: ProfileSettingsFormProps
               )}
             </div>
             
-            <div className="flex flex-col gap-3 w-full max-w-[220px]">
+            <div className="flex flex-col gap-3 w-full max-w-55">
               <div className="relative w-full">
                 <input
                   type="file"
