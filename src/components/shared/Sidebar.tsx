@@ -10,7 +10,8 @@ import {
   PlusCircle, 
   CreditCard,
   User as UserIcon,
-  MessageSquare
+  MessageSquare,
+  Search
 } from "lucide-react";
 import { useAuthStore } from "@/lib/store/authStore";
 
@@ -41,6 +42,7 @@ export default function Sidebar({ onNavigate }: SidebarProps) {
 
   const tenantLinks = [
     { name: "Overview", href: "/dashboard/tenant", icon: <LayoutDashboard className="w-5 h-5 mr-3 shrink-0" /> },
+    { name: "Saved Searches", href: "/dashboard/tenant/saved-searches", icon: <Search className="w-5 h-5 mr-3 shrink-0" /> },
     { name: "My Requests", href: "/dashboard/tenant/requests", icon: <FileText className="w-5 h-5 mr-3 shrink-0" /> },
     { name: "Payment History", href: "/dashboard/tenant/payments", icon: <CreditCard className="w-5 h-5 mr-3 shrink-0" /> },
     { name: "Profile Settings", href: "/dashboard/tenant/profile", icon: <UserIcon className="w-5 h-5 mr-3 shrink-0" /> },
