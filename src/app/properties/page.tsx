@@ -27,8 +27,8 @@ export default function PropertiesPage() {
   const [beds, setBeds] = useState("all");
   const [baths, setBaths] = useState("all");
   const [amenities, setAmenities] = useState<string[]>([]);
-  const [newBuilds, setNewBuilds] = useState("all");
-  const [moreOptions, setMoreOptions] = useState<string[]>([]);
+  const [rentFor, setRentFor] = useState("all");
+  const [furnished, setFurnished] = useState("all");
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -58,7 +58,8 @@ export default function PropertiesPage() {
         if (beds && beds !== "all") params.beds = beds;
         if (baths && baths !== "all") params.baths = baths;
         if (amenities.length > 0) params.amenities = amenities.join(',');
-        if (newBuilds && newBuilds !== "all") params.newBuilds = newBuilds;
+        if (rentFor && rentFor !== "all") params.rentFor = rentFor;
+        if (furnished && furnished !== "all") params.furnished = furnished;
         if (selectedLocation) params.location = selectedLocation;
         if (searchTerm) params.searchTerm = searchTerm;
         if (searchMode) params.searchMode = searchMode;
@@ -74,7 +75,7 @@ export default function PropertiesPage() {
       }
     };
     fetchProperties();
-  }, [selectedCategory, propertyType, minPrice, maxPrice, minArea, maxArea, beds, baths, amenities, newBuilds, selectedLocation, searchTerm, searchMode]);
+  }, [selectedCategory, propertyType, minPrice, maxPrice, minArea, maxArea, beds, baths, amenities, rentFor, furnished, selectedLocation, searchTerm, searchMode]);
 
   const handleResetFilters = () => {
     setSearchTerm("");
@@ -90,8 +91,8 @@ export default function PropertiesPage() {
     setBeds("all");
     setBaths("all");
     setAmenities([]);
-    setNewBuilds("all");
-    setMoreOptions([]);
+    setRentFor("all");
+    setFurnished("all");
   };
 
   const handleSaveSearch = async () => {
@@ -133,8 +134,8 @@ export default function PropertiesPage() {
           beds={beds} setBeds={setBeds}
           baths={baths} setBaths={setBaths}
           amenities={amenities} setAmenities={setAmenities}
-          newBuilds={newBuilds} setNewBuilds={setNewBuilds}
-          moreOptions={moreOptions} setMoreOptions={setMoreOptions}
+          rentFor={rentFor} setRentFor={setRentFor}
+          furnished={furnished} setFurnished={setFurnished}
           categories={categories}
           onReset={handleResetFilters}
           onSaveSearch={handleSaveSearch}

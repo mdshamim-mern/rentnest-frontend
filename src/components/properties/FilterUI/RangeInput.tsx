@@ -7,10 +7,12 @@ interface RangeInputProps {
   setMinVal: (val: string) => void;
   setMaxVal: (val: string) => void;
   placeholder?: string;
+  maxAllowed?: number;
+  step?: number;
 }
 
-export default function RangeInput({ minVal, maxVal, setMinVal, setMaxVal, placeholder = "Value" }: RangeInputProps) {
-  const [sliderVal, setSliderVal] = useState(Number(maxVal) || 50000);
+export default function RangeInput({ minVal, maxVal, setMinVal, setMaxVal, placeholder = "Value", maxAllowed = 100000, step = 100 }: RangeInputProps) {
+  const [sliderVal, setSliderVal] = useState(Number(maxVal) || (maxAllowed / 2));
 
   const handleSliderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSliderVal(Number(e.target.value));
@@ -47,15 +49,15 @@ export default function RangeInput({ minVal, maxVal, setMinVal, setMaxVal, place
         <input 
           type="range" 
           min="0" 
-          max="100000" 
-          step="100"
+          max={maxAllowed} 
+          step={step}
           value={sliderVal} 
           onChange={handleSliderChange}
           className="w-full accent-sky-500"
         />
         <div className="flex justify-between text-xs font-medium text-slate-400 mt-2">
           <span>0</span>
-          <span>100,000+</span>
+          <span>{maxAllowed.toLocaleString()}+</span>
         </div>
       </div>
 

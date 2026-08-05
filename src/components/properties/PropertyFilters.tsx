@@ -34,10 +34,10 @@ interface PropertyFiltersProps {
   setBaths: (value: string) => void;
   amenities: string[];
   setAmenities: (value: string[]) => void;
-  newBuilds: string;
-  setNewBuilds: (value: string) => void;
-  moreOptions: string[];
-  setMoreOptions: (value: string[]) => void;
+  rentFor: string;
+  setRentFor: (value: string) => void;
+  furnished: string;
+  setFurnished: (value: string) => void;
   categories: Category[];
   onReset: () => void;
   onSaveSearch: () => void;
@@ -176,13 +176,15 @@ export default function PropertyFilters(props: PropertyFiltersProps) {
 
         <div className="group relative">
           <button className="h-10 px-4 flex items-center gap-2 bg-white border border-slate-200 hover:border-sky-300 hover:bg-sky-50 rounded-full text-sm font-medium text-slate-700 transition-colors shadow-sm">
-            Pricing <ChevronDown className="h-4 w-4 text-slate-400" />
+            Pricing (৳) <ChevronDown className="h-4 w-4 text-slate-400" />
           </button>
           <div className="absolute top-full left-0 mt-2 hidden group-hover:block z-100">
             <RangeInput 
               minVal={props.minPrice} setMinVal={props.setMinPrice} 
               maxVal={props.maxPrice} setMaxVal={props.setMaxPrice} 
               placeholder="Price" 
+              maxAllowed={500000}
+              step={5000}
             />
           </div>
         </div>
@@ -196,6 +198,8 @@ export default function PropertyFilters(props: PropertyFiltersProps) {
               minVal={props.minArea} setMinVal={props.setMinArea} 
               maxVal={props.maxArea} setMaxVal={props.setMaxArea} 
               placeholder="Sqft" 
+              maxAllowed={10000}
+              step={100}
             />
           </div>
         </div>
@@ -224,48 +228,54 @@ export default function PropertyFilters(props: PropertyFiltersProps) {
         />
 
         <DropdownMenu 
+          label="Rent For" 
+          value={props.rentFor} 
+          onChange={props.setRentFor}
+          type="single"
+          options={[
+            { label: "Any", value: "all" },
+            { label: "Family", value: "Family" },
+            { label: "Bachelor", value: "Bachelor" }
+          ]} 
+        />
+
+        <DropdownMenu 
+          label="Furnished" 
+          value={props.furnished} 
+          onChange={props.setFurnished}
+          type="single"
+          options={[
+            { label: "Any", value: "all" },
+            { label: "Fully Furnished", value: "Fully Furnished" },
+            { label: "Semi Furnished", value: "Semi Furnished" },
+            { label: "Unfurnished", value: "Unfurnished" }
+          ]} 
+        />
+
+        <DropdownMenu 
           label="Amenities" 
           value={props.amenities} 
           onChange={props.setAmenities}
           type="multiple"
           options={[
-            { label: "Swimming Pool", value: "pool" },
-            { label: "Gym", value: "gym" },
-            { label: "Parking", value: "parking" },
-            { label: "Balcony", value: "balcony" },
-            { label: "Elevator", value: "elevator" },
-            { label: "Security", value: "security" },
-            { label: "Garden", value: "garden" },
-            { label: "Furnished", value: "furnished" }
+            { label: "Security Guard", value: "Security Guard" },
+            { label: "CCTV Camera", value: "CCTV Camera" },
+            { label: "Generator", value: "Generator" },
+            { label: "Community Hall", value: "Community Hall" },
+            { label: "Prayer Room", value: "Prayer Room" },
+            { label: "GYM", value: "GYM" },
+            { label: "Swimming Pool", value: "Swimming Pool" },
+            { label: "Barbeque Area", value: "Barbeque Area" },
+            { label: "Garden", value: "Garden" },
+            { label: "Intercom", value: "Intercom" },
+            { label: "Fire Exit", value: "Fire Exit" },
+            { label: "Fire Exitinguisher", value: "Fire Exitinguisher" },
+            { label: "Wi-Fi Connectivity", value: "Wi-Fi Connectivity" },
+            { label: "WASA Connection", value: "WASA Connection" },
+            { label: "Submersible Pump", value: "Submersible Pump" }
           ]} 
         />
 
-        <DropdownMenu 
-          label="New Builds" 
-          value={props.newBuilds} 
-          onChange={props.setNewBuilds}
-          type="single"
-          options={[
-            { label: "Any", value: "all" },
-            { label: "Yes / Brand New", value: "yes" },
-            { label: "No / Pre-owned", value: "no" },
-            { label: "Under Construction", value: "under_construction" },
-            { label: "Ready to Move", value: "ready" }
-          ]} 
-        />
-
-        <DropdownMenu 
-          label="More Options" 
-          value={props.moreOptions} 
-          onChange={props.setMoreOptions}
-          type="multiple"
-          options={[
-            { label: "Year Built", value: "year_built" },
-            { label: "Floor Level", value: "floor_level" },
-            { label: "Pet Friendly", value: "pet_friendly" },
-            { label: "Virtual Tour Available", value: "virtual_tour" }
-          ]} 
-        />
       </div>
     </div>
   );
