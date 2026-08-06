@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { axiosInstance } from "@/lib/api/axiosInstance";
 import { Property, Category } from "@/types";
@@ -12,6 +12,7 @@ import toast from "react-hot-toast";
 
 export default function PropertiesPage() {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const [isReady, setIsReady] = useState(false);
   const [properties, setProperties] = useState<Property[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -130,6 +131,7 @@ export default function PropertiesPage() {
     setAmenities([]);
     setRentFor("all");
     setFurnished("all");
+    router.push('/properties');
   };
 
   const handleSaveSearch = async () => {
