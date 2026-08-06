@@ -64,7 +64,11 @@ export default function PropertiesPage() {
     if (amens) setAmenities(amens.split(','));
     
     setIsReady(true);
-  }, [searchParams]);
+
+    if (searchParams.toString() !== "") {
+      router.replace('/properties', { scroll: false });
+    }
+  }, [searchParams, router]);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -131,7 +135,7 @@ export default function PropertiesPage() {
     setAmenities([]);
     setRentFor("all");
     setFurnished("all");
-    router.push('/properties');
+    router.replace('/properties', { scroll: false });
   };
 
   const handleSaveSearch = async () => {

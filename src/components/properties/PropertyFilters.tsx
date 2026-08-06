@@ -96,6 +96,72 @@ export default function PropertyFilters(props: PropertyFiltersProps) {
     }
   };
 
+  const handleSearchSubmit = () => {
+    if (!props.searchTerm) return;
+
+    if (props.searchMode === "ai") {
+      const lowerText = props.searchTerm.toLowerCase();
+      let filtersApplied = 0;
+
+      props.setSelectedCategory("all");
+      props.setPropertyType("all");
+      props.setMinPrice("");
+      props.setMaxPrice("");
+      props.setMinArea("");
+      props.setMaxArea("");
+      props.setBeds("all");
+      props.setBaths("all");
+      props.setRentFor("all");
+      props.setFurnished("all");
+      props.setSelectedLocation("");
+
+      const locationMatch = lowerText.match(/(banani|gulshan|dhanmondi|bashundhara|mirpur|mohammadpur|uttara|shyamoli|badda|khilgaon)/i);
+      if (locationMatch) {
+        const loc = locationMatch[1].charAt(0).toUpperCase() + locationMatch[1].slice(1).toLowerCase();
+        props.setSelectedLocation(loc);
+        filtersApplied++;
+      }
+
+      const typeMatch = lowerText.match(/(apartment|villa|duplex|penthouse|townhouse|studio)/i);
+      if (typeMatch) {
+        const type = typeMatch[1].charAt(0).toUpperCase() + typeMatch[1].slice(1).toLowerCase();
+        props.setPropertyType(type);
+        filtersApplied++;
+      }
+
+      const bedMatch = lowerText.match(/(\d+)\s*(?:bed|bhk|bedroom)/i);
+      if (bedMatch) {
+        props.setBeds(bedMatch[1]);
+        filtersApplied++;
+      }
+
+      const priceMatch = lowerText.match(/(?:under|below|max)\s*(?:tk|bdt|\$)?\s*(\d+)(k| thousand)?/i);
+      if (priceMatch) {
+        let price = parseInt(priceMatch[1], 10);
+        if (priceMatch[2] && priceMatch[2].toLowerCase().startsWith('k')) {
+          price *= 1000;
+        }
+        props.setMaxPrice(price.toString());
+        filtersApplied++;
+      }
+
+      props.setSearchTerm("");
+
+      if (filtersApplied > 0) {
+        toast.dismiss();
+        toast.success(`✨ AI Magic: Applied ${filtersApplied} filters!`);
+      } else {
+        toast.dismiss();
+        toast.error("Couldn't understand. Try '2 bed apartment in Banani'");
+      }
+    } else {
+      props.setSelectedLocation(props.searchTerm);
+      props.setSearchTerm("");
+      toast.dismiss();
+      toast.success("Location updated!");
+    }
+  };
+
   return (
     <div className="relative z-50 bg-white/60 backdrop-blur-2xl border border-white/60 p-6 rounded-3xl shadow-xl shadow-sky-100/40 mb-12 flex flex-col gap-6">
       
@@ -108,7 +174,10 @@ export default function PropertyFilters(props: PropertyFiltersProps) {
             AI Search
           </button>
           <button 
-            onClick={() => props.setSearchMode("classic")}
+            onClick={() => {
+              props.setSearchMode("classic");
+              props.setSearchTerm("");
+            }}
             className={`whitespace-nowrap px-5 h-full rounded-full text-sm font-semibold transition-colors ${props.searchMode === "classic" ? "bg-sky-500 text-white shadow-md" : "text-slate-600 hover:bg-slate-100"}`}
           >
             Classic
@@ -117,9 +186,14 @@ export default function PropertyFilters(props: PropertyFiltersProps) {
         
         <div className="relative grow w-full h-12">
           <Input 
-            placeholder={props.searchMode === "ai" ? "Try: '2 bed apartment in Banani under 50k'" : "Search your location..."} 
+            placeholder={props.searchMode === "ai" ? "Try: '2 bed apartment in Dhanmondi under 50k'" : "Search your location..."} 
             value={props.searchTerm}
             onChange={(e) => props.setSearchTerm(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                handleSearchSubmit();
+              }
+            }}
             className="pl-6 pr-24 h-full bg-white/80 border-white/50 rounded-2xl text-base text-slate-800 shadow-sm focus-visible:ring-sky-500 w-full"
           />
           <div className="absolute right-1.5 top-1/2 -translate-y-1/2 flex items-center gap-1 h-9">
@@ -129,13 +203,7 @@ export default function PropertyFilters(props: PropertyFiltersProps) {
               </button>
             )}
             <button 
-              onClick={() => {
-                if (props.searchTerm && props.searchMode === "classic") {
-                  props.setSelectedLocation(props.searchTerm);
-                  toast.dismiss();
-                  toast.success("Location updated!");
-                }
-              }}
+              onClick={handleSearchSubmit}
               className="flex items-center justify-center px-3 h-full bg-sky-500 hover:bg-sky-600 text-white rounded-xl shadow-sm transition-colors"
             >
               <Search className="h-4 w-4" />
@@ -183,16 +251,16 @@ export default function PropertyFilters(props: PropertyFiltersProps) {
             type="single"
             options={[
               { label: "All Locations", value: "" },
-              { label: "Dhanmondi, Dhaka", value: "Dhanmondi" },
-              { label: "Mohammadpur, Dhaka", value: "Mohammadpur" },
-              { label: "Gulshan, Dhaka", value: "Gulshan" },
-              { label: "Banani, Dhaka", value: "Banani" },
-              { label: "Uttara, Dhaka", value: "Uttara" },
-              { label: "Bashundhara, Dhaka", value: "Bashundhara" },
-              { label: "Mirpur, Dhaka", value: "Mirpur" },
-              { label: "Shyamoli, Dhaka", value: "Shyamoli" },
-              { label: "Badda, Dhaka", value: "Badda" },
-              { label: "Khilgaon, Dhaka", value: "Khilgaon" }
+              { label: "Dhanmondi", value: "Dhanmondi" },
+              { label: "Mohammadpur", value: "Mohammadpur" },
+              { label: "Gulshan", value: "Gulshan" },
+              { label: "Banani", value: "Banani" },
+              { label: "Uttara", value: "Uttara" },
+              { label: "Bashundhara", value: "Bashundhara" },
+              { label: "Mirpur", value: "Mirpur" },
+              { label: "Shyamoli", value: "Shyamoli" },
+              { label: "Badda", value: "Badda" },
+              { label: "Khilgaon", value: "Khilgaon" }
             ]} 
           />
         </div>
@@ -243,8 +311,8 @@ export default function PropertyFilters(props: PropertyFiltersProps) {
               minVal={props.minPrice} setMinVal={props.setMinPrice} 
               maxVal={props.maxPrice} setMaxVal={props.setMaxPrice} 
               placeholder="Price" 
-              maxAllowed={10000}
-              step={100}
+              maxAllowed={100000}
+              step={500}
               onClose={() => setIsPricingOpen(false)}
             />
           </div>
