@@ -43,7 +43,7 @@ interface PropertyFiltersProps {
   setFurnished: (value: string) => void;
   categories: Category[];
   onReset: () => void;
-  onSaveSearch: () => void;
+  onSaveSearch?: () => void;
 }
 
 export default function PropertyFilters(props: PropertyFiltersProps) {
@@ -82,9 +82,6 @@ export default function PropertyFilters(props: PropertyFiltersProps) {
       await saveSearch(searchData);
       toast.dismiss();
       toast.success("Search Saved Successfully!");
-      if (props.onSaveSearch) {
-        props.onSaveSearch();
-      }
     } catch (error: any) {
       toast.dismiss();
       toast.error(error.message || "Failed to save search. Please try again.");

@@ -36,9 +36,21 @@ export default function PropertiesPage() {
   useEffect(() => {
     const loc = searchParams.get('location');
     const type = searchParams.get('type');
+    const minP = searchParams.get('minPrice');
+    const maxP = searchParams.get('maxPrice');
+    const bds = searchParams.get('beds');
+    const bths = searchParams.get('baths');
+    const mode = searchParams.get('searchMode');
+    const cat = searchParams.get('categoryId');
     
     if (loc) setSelectedLocation(loc);
     if (type) setPropertyType(type);
+    if (minP) setMinPrice(minP);
+    if (maxP) setMaxPrice(maxP);
+    if (bds) setBeds(bds);
+    if (bths) setBaths(bths);
+    if (mode) setSearchMode(mode);
+    if (cat) setSelectedCategory(cat);
     
     setIsReady(true);
   }, [searchParams]);
@@ -111,27 +123,7 @@ export default function PropertiesPage() {
   };
 
   const handleSaveSearch = async () => {
-    try {
-      const searchPayload = {
-        searchTerm,
-        selectedLocation,
-        searchMode,
-        selectedCategory,
-        propertyType,
-        minPrice,
-        maxPrice,
-        beds,
-        baths
-      };
-      const res = await axiosInstance.post('/saved-searches', searchPayload);
-      if (res.data.success) {
-        toast.dismiss();
-        toast.success("Search Saved Successfully!");
-      }
-    } catch (error) {
-      toast.dismiss();
-      toast.error("Failed to save search");
-    }
+    
   };
 
   return (

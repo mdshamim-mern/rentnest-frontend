@@ -15,6 +15,9 @@ interface SavedSearchData {
   propertyType: string;
   minPrice: string;
   maxPrice: string;
+  beds?: string;
+  baths?: string;
+  selectedCategory?: string;
   createdAt: string;
   user?: {
     name: string;
@@ -173,7 +176,7 @@ export default function AdminSavedSearchesPage() {
               
               <div className="mt-6 pt-4 border-t border-slate-100">
                 <Link 
-                  href={`/properties?location=${search.selectedLocation || ''}&type=${search.propertyType || ''}`} 
+                  href={`/properties?location=${search.selectedLocation || ''}&type=${search.propertyType || ''}&minPrice=${search.minPrice || ''}&maxPrice=${search.maxPrice || ''}&beds=${search.beds || ''}&baths=${search.baths || ''}&searchMode=${search.searchMode || ''}&categoryId=${search.selectedCategory || ''}`} 
                   className="w-full flex items-center justify-center gap-2 text-sm font-semibold text-sky-600 hover:text-sky-700 bg-sky-50 hover:bg-sky-100 py-2.5 rounded-xl transition-colors"
                 >
                   <Search className="h-4 w-4" />
