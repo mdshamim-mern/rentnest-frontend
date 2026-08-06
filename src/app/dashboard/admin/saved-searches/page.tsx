@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Loader2, Search, Calendar, MapPin, Trash2 } from "lucide-react";
+import { Loader2, Search, Calendar, MapPin, Trash2, User as UserIcon } from "lucide-react";
 import { getSavedSearches, deleteSavedSearch } from "@/lib/api/savedSearch.api";
 import { useAuthStore } from "@/lib/store/authStore";
 import toast from "react-hot-toast";
@@ -16,6 +16,10 @@ interface SavedSearchData {
   minPrice: string;
   maxPrice: string;
   createdAt: string;
+  user?: {
+    name: string;
+    email: string;
+  };
 }
 
 export default function AdminSavedSearchesPage() {
@@ -27,8 +31,7 @@ export default function AdminSavedSearchesPage() {
     if (!user) return;
     
     try {
-      const userId = user.id || (user as any).userId;
-      const response = await getSavedSearches(userId);
+      const response = await getSavedSearches();
       if (response.success) {
         setSearches(response.data);
       }
@@ -56,8 +59,8 @@ export default function AdminSavedSearchesPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-slate-900">My Saved Searches</h1>
-        <p className="text-slate-500 mt-1">View and manage your saved property searches.</p>
+        <h1 className="text-3xl font-bold text-slate-900">All Saved Searches</h1>
+        <p className="text-slate-500 mt-1">View and manage all users' saved property searches.</p>
       </div>
 
       {isLoading ? (
@@ -68,10 +71,7 @@ export default function AdminSavedSearchesPage() {
         <div className="bg-white rounded-2xl p-8 border border-slate-100 text-center shadow-sm">
           <Search className="h-12 w-12 text-slate-300 mx-auto mb-3" />
           <h3 className="text-lg font-bold text-slate-800">No saved searches yet</h3>
-          <p className="text-slate-500 mt-1 mb-4">When you save a search from the properties page, it will appear here.</p>
-          <Link href="/properties" className="inline-flex items-center justify-center px-4 py-2 bg-sky-500 text-white rounded-xl hover:bg-sky-600 transition-colors">
-            Browse Properties
-          </Link>
+          <p className="text-slate-500 mt-1 mb-4">No users have saved any searches yet.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -87,7 +87,7 @@ export default function AdminSavedSearchesPage() {
               <div className="flex items-start justify-between mb-3">
                 <div className="flex items-center gap-2">
                   <span className={`text-xs font-bold px-2.5 py-1 rounded-full uppercase tracking-wide ${search.searchMode === 'ai' ? 'bg-indigo-100 text-indigo-700' : 'bg-sky-100 text-sky-700'}`}>
-                    {search.searchMode || 'classic'} Search
+                    {search.searchMode || 'classic'}
                   </span>
                 </div>
                 <div className="flex items-center text-xs text-slate-400 mr-8">
@@ -95,8 +95,18 @@ export default function AdminSavedSearchesPage() {
                   {new Date(search.createdAt).toLocaleDateString()}
                 </div>
               </div>
+
+              {search.user && (
+                <div className="mb-4 pb-3 border-b border-slate-100">
+                  <p className="text-sm font-semibold text-slate-800 flex items-center gap-1.5">
+                    <UserIcon className="h-4 w-4 text-sky-500" />
+                    {search.user.name}
+                  </p>
+                  <p className="text-xs text-slate-500 ml-5.5">{search.user.email}</p>
+                </div>
+              )}
               
-              <div className="space-y-3 mt-4">
+              <div className="space-y-3 mt-2">
                 {search.searchTerm && (
                   <p className="font-semibold text-slate-800 flex items-center gap-2">
                     <Search className="h-4 w-4 text-slate-400" />
@@ -129,7 +139,7 @@ export default function AdminSavedSearchesPage() {
                   href={`/properties?location=${search.selectedLocation || ''}&type=${search.propertyType || ''}`} 
                   className="w-full block text-center text-sm font-semibold text-sky-600 hover:text-sky-700 bg-sky-50 hover:bg-sky-100 py-2 rounded-xl transition-colors"
                 >
-                  Search Now
+                  View Search Results
                 </Link>
               </div>
             </div>

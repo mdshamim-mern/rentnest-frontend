@@ -9,9 +9,10 @@ export const saveSearch = async (data: any) => {
   }
 };
 
-export const getSavedSearches = async (userId: string) => {
+export const getSavedSearches = async (userId?: string) => {
   try {
-    const response = await axiosInstance.get(`/saved-searches?userId=${userId}`);
+    const url = userId ? `/saved-searches?userId=${userId}` : '/saved-searches';
+    const response = await axiosInstance.get(url);
     return response.data;
   } catch (error: any) {
     throw new Error(error.response?.data?.message || 'Failed to fetch saved searches');

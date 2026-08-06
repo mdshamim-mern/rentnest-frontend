@@ -53,6 +53,8 @@ export default function PropertyFilters(props: PropertyFiltersProps) {
   const { user } = useAuthStore();
 
   const handleSaveSearchClick = async () => {
+    if (isSaving) return;
+    
     if (!user) {
       toast.error("Please login to save your search");
       return;
@@ -79,8 +81,8 @@ export default function PropertyFilters(props: PropertyFiltersProps) {
       if (props.onSaveSearch) {
         props.onSaveSearch();
       }
-    } catch (error) {
-      toast.error("Failed to save search. Please try again.");
+    } catch (error: any) {
+      toast.error(error.message || "Failed to save search. Please try again.");
     } finally {
       setIsSaving(false);
     }
