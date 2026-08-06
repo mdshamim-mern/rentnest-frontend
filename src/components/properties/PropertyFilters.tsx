@@ -57,6 +57,7 @@ export default function PropertyFilters(props: PropertyFiltersProps) {
     if (isSavingRef.current) return;
     
     if (!user) {
+      toast.dismiss();
       toast.error("Please login to save your search");
       return;
     }
@@ -79,11 +80,13 @@ export default function PropertyFilters(props: PropertyFiltersProps) {
       };
 
       await saveSearch(searchData);
+      toast.dismiss();
       toast.success("Search Saved Successfully!");
       if (props.onSaveSearch) {
         props.onSaveSearch();
       }
     } catch (error: any) {
+      toast.dismiss();
       toast.error(error.message || "Failed to save search. Please try again.");
     } finally {
       isSavingRef.current = false;
@@ -127,6 +130,7 @@ export default function PropertyFilters(props: PropertyFiltersProps) {
               onClick={() => {
                 if (props.searchTerm) {
                   props.setSelectedLocation(props.searchTerm);
+                  toast.dismiss();
                   toast.success("Location updated!");
                 }
               }}

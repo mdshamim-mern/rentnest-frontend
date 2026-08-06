@@ -12,6 +12,7 @@ import toast from "react-hot-toast";
 
 export default function PropertiesPage() {
   const searchParams = useSearchParams();
+  const [isReady, setIsReady] = useState(false);
   const [properties, setProperties] = useState<Property[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -38,6 +39,8 @@ export default function PropertiesPage() {
     
     if (loc) setSelectedLocation(loc);
     if (type) setPropertyType(type);
+    
+    setIsReady(true);
   }, [searchParams]);
 
   useEffect(() => {
@@ -55,6 +58,8 @@ export default function PropertiesPage() {
   }, []);
 
   useEffect(() => {
+    if (!isReady) return;
+
     const fetchProperties = async () => {
       try {
         setIsLoading(true);
@@ -85,7 +90,7 @@ export default function PropertiesPage() {
       }
     };
     fetchProperties();
-  }, [selectedCategory, propertyType, minPrice, maxPrice, minArea, maxArea, beds, baths, amenities, rentFor, furnished, selectedLocation, searchTerm, searchMode]);
+  }, [selectedCategory, propertyType, minPrice, maxPrice, minArea, maxArea, beds, baths, amenities, rentFor, furnished, selectedLocation, searchTerm, searchMode, isReady]);
 
   const handleResetFilters = () => {
     setSearchTerm("");
@@ -120,16 +125,18 @@ export default function PropertiesPage() {
       };
       const res = await axiosInstance.post('/saved-searches', searchPayload);
       if (res.data.success) {
+        toast.dismiss();
         toast.success("Search Saved Successfully!");
       }
     } catch (error) {
-      toast.success("Search Saved Successfully!");
+      toast.dismiss();
+      toast.error("Failed to save search");
     }
   };
 
   return (
     <div className="min-h-screen bg-slate-50/50 pt-8 pb-24">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-10">
         <PropertyFilters 
           searchTerm={searchTerm} setSearchTerm={setSearchTerm}
           selectedLocation={selectedLocation} setSelectedLocation={setSelectedLocation}
@@ -163,7 +170,7 @@ export default function PropertiesPage() {
             <p className="text-slate-500 mt-2">Try adjusting your search or filters.</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
             {properties.map((property) => (
               <PropertyCard key={property.id} property={property} />
             ))}

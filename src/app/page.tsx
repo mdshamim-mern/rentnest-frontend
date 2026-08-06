@@ -9,13 +9,13 @@ export default function HomePage() {
         <div className="absolute inset-0 bg-linear-to-br from-primary/10 via-slate-100 to-secondary/10 z-0" />
         <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=2075&auto=format&fit=crop')] bg-cover bg-center opacity-5" />
         
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center text-center">
-          <div className="bg-white/40 backdrop-blur-2xl border border-white/60 p-8 md:p-14 rounded-[2.5rem] shadow-2xl max-w-4xl">
+        <div className="relative z-10 max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-10 flex flex-col items-center text-center">
+          <div className="bg-white/40 backdrop-blur-2xl border border-white/60 p-8 md:p-14 rounded-[2.5rem] shadow-2xl max-w-5xl">
             <h1 className="text-5xl md:text-7xl font-extrabold text-slate-900 tracking-tight mb-6 leading-tight">
               Find Your Perfect <br className="hidden md:block" />
               <span className="bg-clip-text text-transparent bg-linear-to-r from-primary to-blue-600">Rental Home</span>
             </h1>
-            <p className="text-lg md:text-xl text-slate-600 mb-10 max-w-2xl mx-auto font-medium">
+            <p className="text-lg md:text-xl text-slate-600 mb-10 max-w-3xl mx-auto font-medium">
               Discover thousands of premium rental properties. From cozy apartments to luxury estates, your next home is just a click away.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -35,7 +35,7 @@ export default function HomePage() {
       </section>
 
       <section className="py-24 bg-slate-50 relative">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-10">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Why Choose RentNest?</h2>
             <p className="text-slate-500 max-w-2xl mx-auto">We provide the best rental experience with secure payments and verified landlords.</p>

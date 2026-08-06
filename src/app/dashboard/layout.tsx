@@ -30,8 +30,8 @@ export default function DashboardLayout({
 
   return (
     <div className="w-full bg-slate-50/50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex min-h-[calc(100vh-5rem)] relative">
-        <div className="hidden md:block sticky top-20 h-[calc(100vh-5rem)] z-10">
+      <div className="w-full flex min-h-[calc(100vh-5rem)] relative">
+        <div className="hidden md:block sticky top-20 h-[calc(100vh-5rem)] z-10 shrink-0">
           <Sidebar />
         </div>
 
@@ -47,13 +47,13 @@ export default function DashboardLayout({
             isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
           }`}
         >
-          <div className="h-full pt-16">
+          <div className="h-full pt-16 bg-slate-50">
             <Sidebar onNavigate={() => setIsMobileMenuOpen(false)} />
           </div>
         </div>
 
         <div className="flex-1 flex flex-col min-w-0">
-          <div className="md:hidden flex items-center justify-between py-4 bg-slate-50/90 backdrop-blur-xl border-b border-slate-200/50 sticky top-16 z-30">
+          <div className="md:hidden flex items-center justify-between py-4 px-4 bg-slate-50/90 backdrop-blur-xl border-b border-slate-200/50 sticky top-16 z-30">
             <span className="font-semibold text-slate-900">Dashboard Menu</span>
             <Button 
               variant="ghost" 
@@ -64,7 +64,7 @@ export default function DashboardLayout({
             </Button>
           </div>
 
-          <main className="flex-1 py-4 sm:py-6 md:py-8 lg:py-10 md:pl-8 overflow-x-hidden">
+          <main className="flex-1 py-4 px-4 sm:py-6 sm:px-6 md:py-8 md:px-8 lg:py-10 lg:px-10 overflow-x-hidden">
             <div className="h-full w-full">
               {children}
             </div>

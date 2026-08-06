@@ -32,12 +32,12 @@ export default function Footer() {
 
   return (
     <footer className="bg-white/40 backdrop-blur-md border-t border-slate-200/60 mt-auto">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-4">
+      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-10 pt-12 pb-4">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="col-span-1 md:col-span-1">
             <Link href="/" className="text-2xl font-extrabold tracking-tighter text-slate-900 flex items-center gap-2 mb-4">
-              <span className="bg-primary text-white flex items-center justify-center h-8 w-10 rounded-lg text-lg">RN</span>
-              <span className="leading-none mt-1">RentNest</span>
+              <span className="bg-primary text-white rounded-lg flex items-center justify-center text-sm font-bold w-8 h-8">RN</span>
+              <span className="text-xl font-black">RentNest</span>
             </Link>
             <p className="text-slate-500 text-sm leading-relaxed mb-6">
               Your trusted partner in finding the perfect rental home. We make the process simple, secure, and transparent.
