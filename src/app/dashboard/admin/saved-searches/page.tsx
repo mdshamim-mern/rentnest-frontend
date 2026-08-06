@@ -97,6 +97,9 @@ export default function AdminSavedSearchesPage() {
           <Search className="h-12 w-12 text-slate-300 mx-auto mb-3" />
           <h3 className="text-lg font-bold text-slate-800">No saved searches yet</h3>
           <p className="text-slate-500 mt-1 mb-4">No {activeTab.toLowerCase()} users have saved any searches yet.</p>
+          <Link href="/properties" className="inline-flex items-center justify-center px-4 py-2 bg-sky-500 text-white rounded-xl hover:bg-sky-600 transition-colors">
+            Browse Properties
+          </Link>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
