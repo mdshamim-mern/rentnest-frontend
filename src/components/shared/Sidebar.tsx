@@ -55,7 +55,7 @@ export default function Sidebar({ onNavigate }: SidebarProps) {
   if (user?.role === "LANDLORD") links = landlordLinks;
 
   return (
-    <div className="h-full flex flex-col bg-white/40 backdrop-blur-2xl border-r border-white/60 shadow-[4px_0_24px_-12px_rgba(0,0,0,0.1)] w-64 md:w-72 shrink-0">
+    <div className="h-screen overflow-y-auto flex flex-col justify-between bg-white/40 backdrop-blur-2xl border-r border-white/60 shadow-[4px_0_24px_-12px_rgba(0,0,0,0.1)] w-64 md:w-72 shrink-0">
       <div className="p-6">
         <h2 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">
           Menu
@@ -82,7 +82,7 @@ export default function Sidebar({ onNavigate }: SidebarProps) {
         </nav>
       </div>
 
-      <div className="mt-auto p-6 border-t border-slate-200/50">
+      <div className="p-6 border-t border-slate-200/50">
         <div className="flex items-center bg-white/50 backdrop-blur-sm p-4 rounded-2xl border border-white/60">
           <div className="w-10 h-10 rounded-full bg-linear-to-br from-primary to-blue-600 flex items-center justify-center text-white font-bold text-lg shrink-0 overflow-hidden">
             {(user as any)?.profile?.photo ? (

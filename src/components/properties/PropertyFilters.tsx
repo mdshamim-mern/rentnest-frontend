@@ -1,7 +1,7 @@
 import { Search, Map, List, ChevronDown, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Category } from "@/types";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import MainFilterButton from "./FilterUI/MainFilterButton";
 import DropdownMenu from "./FilterUI/DropdownMenu";
 import RangeInput from "./FilterUI/RangeInput";
@@ -50,16 +50,18 @@ export default function PropertyFilters(props: PropertyFiltersProps) {
   const [isPricingOpen, setIsPricingOpen] = useState(false);
   const [isAreaOpen, setIsAreaOpen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const isSavingRef = useRef(false);
   const { user } = useAuthStore();
 
   const handleSaveSearchClick = async () => {
-    if (isSaving) return;
+    if (isSavingRef.current) return;
     
     if (!user) {
       toast.error("Please login to save your search");
       return;
     }
 
+    isSavingRef.current = true;
     setIsSaving(true);
     
     try {
@@ -84,6 +86,7 @@ export default function PropertyFilters(props: PropertyFiltersProps) {
     } catch (error: any) {
       toast.error(error.message || "Failed to save search. Please try again.");
     } finally {
+      isSavingRef.current = false;
       setIsSaving(false);
     }
   };

@@ -19,12 +19,14 @@ interface SavedSearchData {
   user?: {
     name: string;
     email: string;
+    role: string;
   };
 }
 
 export default function AdminSavedSearchesPage() {
   const [searches, setSearches] = useState<SavedSearchData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState("TENANT");
   const { user } = useAuthStore();
 
   const fetchSearches = async () => {
@@ -56,6 +58,8 @@ export default function AdminSavedSearchesPage() {
     }
   };
 
+  const filteredSearches = searches.filter((search) => search.user?.role === activeTab);
+
   return (
     <div className="space-y-6">
       <div>
@@ -63,19 +67,40 @@ export default function AdminSavedSearchesPage() {
         <p className="text-slate-500 mt-1">View and manage all users' saved property searches.</p>
       </div>
 
+      <div className="flex gap-3 border-b border-slate-200 pb-2">
+        <button 
+          onClick={() => setActiveTab("TENANT")}
+          className={`px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${activeTab === "TENANT" ? "bg-sky-100 text-sky-700" : "text-slate-600 hover:bg-slate-50"}`}
+        >
+          Tenant Searches
+        </button>
+        <button 
+          onClick={() => setActiveTab("LANDLORD")}
+          className={`px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${activeTab === "LANDLORD" ? "bg-sky-100 text-sky-700" : "text-slate-600 hover:bg-slate-50"}`}
+        >
+          Landlord Searches
+        </button>
+        <button 
+          onClick={() => setActiveTab("ADMIN")}
+          className={`px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${activeTab === "ADMIN" ? "bg-sky-100 text-sky-700" : "text-slate-600 hover:bg-slate-50"}`}
+        >
+          Admin Searches
+        </button>
+      </div>
+
       {isLoading ? (
         <div className="flex justify-center items-center py-20">
           <Loader2 className="animate-spin text-sky-500 h-10 w-10" />
         </div>
-      ) : searches.length === 0 ? (
+      ) : filteredSearches.length === 0 ? (
         <div className="bg-white rounded-2xl p-8 border border-slate-100 text-center shadow-sm">
           <Search className="h-12 w-12 text-slate-300 mx-auto mb-3" />
           <h3 className="text-lg font-bold text-slate-800">No saved searches yet</h3>
-          <p className="text-slate-500 mt-1 mb-4">No users have saved any searches yet.</p>
+          <p className="text-slate-500 mt-1 mb-4">No {activeTab.toLowerCase()} users have saved any searches yet.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {searches.map((search) => (
+          {filteredSearches.map((search) => (
             <div key={search.id} className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow relative group">
               <button 
                 onClick={() => handleDelete(search.id)}

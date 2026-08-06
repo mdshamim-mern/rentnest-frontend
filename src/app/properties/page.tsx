@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { axiosInstance } from "@/lib/api/axiosInstance";
 import { Property, Category } from "@/types";
@@ -10,6 +11,7 @@ import PropertyMap from "@/components/properties/PropertyMap";
 import toast from "react-hot-toast";
 
 export default function PropertiesPage() {
+  const searchParams = useSearchParams();
   const [properties, setProperties] = useState<Property[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -29,6 +31,14 @@ export default function PropertiesPage() {
   const [amenities, setAmenities] = useState<string[]>([]);
   const [rentFor, setRentFor] = useState("all");
   const [furnished, setFurnished] = useState("all");
+
+  useEffect(() => {
+    const loc = searchParams.get('location');
+    const type = searchParams.get('type');
+    
+    if (loc) setSelectedLocation(loc);
+    if (type) setPropertyType(type);
+  }, [searchParams]);
 
   useEffect(() => {
     const fetchCategories = async () => {
