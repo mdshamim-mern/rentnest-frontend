@@ -25,6 +25,7 @@ export default function Sidebar({ onNavigate }: SidebarProps) {
 
   const adminLinks = [
     { name: "Overview", href: "/dashboard/admin", icon: <LayoutDashboard className="w-5 h-5 mr-3 shrink-0" /> },
+    { name: "Saved Searches", href: "/dashboard/admin/saved-searches", icon: <Search className="w-5 h-5 mr-3 shrink-0" /> },
     { name: "Users", href: "/dashboard/admin/users", icon: <Users className="w-5 h-5 mr-3 shrink-0" /> },
     { name: "Properties", href: "/dashboard/admin/properties", icon: <Building className="w-5 h-5 mr-3 shrink-0" /> },
     { name: "All Requests", href: "/dashboard/admin/requests", icon: <FileText className="w-5 h-5 mr-3 shrink-0" /> },
@@ -34,6 +35,7 @@ export default function Sidebar({ onNavigate }: SidebarProps) {
 
   const landlordLinks = [
     { name: "Overview", href: "/dashboard/landlord", icon: <LayoutDashboard className="w-5 h-5 mr-3 shrink-0" /> },
+    { name: "Saved Searches", href: "/dashboard/landlord/saved-searches", icon: <Search className="w-5 h-5 mr-3 shrink-0" /> },
     { name: "My Properties", href: "/dashboard/landlord/properties", icon: <Building className="w-5 h-5 mr-3 shrink-0" /> },
     { name: "Add Property", href: "/dashboard/landlord/properties/new", icon: <PlusCircle className="w-5 h-5 mr-3 shrink-0" /> },
     { name: "Rental Requests", href: "/dashboard/landlord/requests", icon: <FileText className="w-5 h-5 mr-3 shrink-0" /> },
