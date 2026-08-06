@@ -7,6 +7,8 @@ import DropdownMenu from "./FilterUI/DropdownMenu";
 import RangeInput from "./FilterUI/RangeInput";
 import toast from "react-hot-toast";
 import Link from "next/link";
+import { saveSearch } from "@/lib/api/savedSearch.api";
+import { useAuthStore } from "@/lib/store/authStore";
 
 interface PropertyFiltersProps {
   searchTerm: string;
@@ -47,6 +49,42 @@ interface PropertyFiltersProps {
 export default function PropertyFilters(props: PropertyFiltersProps) {
   const [isPricingOpen, setIsPricingOpen] = useState(false);
   const [isAreaOpen, setIsAreaOpen] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const { user } = useAuthStore();
+
+  const handleSaveSearchClick = async () => {
+    if (!user) {
+      toast.error("Please login to save your search");
+      return;
+    }
+
+    setIsSaving(true);
+    
+    try {
+      const searchData = {
+        userId: user.id || (user as any).userId,
+        searchTerm: props.searchTerm,
+        selectedLocation: props.selectedLocation,
+        searchMode: props.searchMode,
+        selectedCategory: props.selectedCategory,
+        propertyType: props.propertyType,
+        minPrice: props.minPrice,
+        maxPrice: props.maxPrice,
+        beds: props.beds,
+        baths: props.baths
+      };
+
+      await saveSearch(searchData);
+      toast.success("Search Saved Successfully!");
+      if (props.onSaveSearch) {
+        props.onSaveSearch();
+      }
+    } catch (error) {
+      toast.error("Failed to save search. Please try again.");
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
   return (
     <div className="relative z-50 bg-white/60 backdrop-blur-2xl border border-white/60 p-6 rounded-3xl shadow-xl shadow-sky-100/40 mb-12 flex flex-col gap-6">
@@ -96,10 +134,11 @@ export default function PropertyFilters(props: PropertyFiltersProps) {
 
         <div className="flex items-center gap-4 w-full xl:w-auto justify-between xl:justify-end">
           <button 
-            onClick={props.onSaveSearch}
-            className="whitespace-nowrap h-12 px-6 bg-white border border-slate-200 rounded-2xl text-slate-800 font-bold hover:bg-slate-50 shadow-sm transition-colors"
+            onClick={handleSaveSearchClick}
+            disabled={isSaving}
+            className="whitespace-nowrap h-12 px-6 bg-white border border-slate-200 rounded-2xl text-slate-800 font-bold hover:bg-slate-50 shadow-sm transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
           >
-            Save Search
+            {isSaving ? "Saving..." : "Save Search"}
           </button>
           <div className="flex items-center gap-1 bg-white/80 p-1 rounded-2xl border border-white/50 shadow-sm h-12">
             <button 
