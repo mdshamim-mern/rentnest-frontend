@@ -55,8 +55,8 @@ export default function Sidebar({ onNavigate }: SidebarProps) {
   if (user?.role === "LANDLORD") links = landlordLinks;
 
   return (
-    <div className="h-screen flex flex-col bg-white/40 backdrop-blur-2xl border-r border-white/60 shadow-[4px_0_24px_-12px_rgba(0,0,0,0.1)] w-64 md:w-72 shrink-0">
-      <div className="flex-1 overflow-y-auto p-6">
+    <div className="flex flex-col h-[calc(100vh-4rem)] bg-white/40 backdrop-blur-2xl border-r border-white/60 shadow-[4px_0_24px_-12px_rgba(0,0,0,0.1)] w-64 md:w-72 shrink-0 sticky top-16">
+      <div className="flex-1 overflow-y-auto p-6 scrollbar-thin scrollbar-thumb-slate-200">
         <h2 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">
           Menu
         </h2>
@@ -82,9 +82,9 @@ export default function Sidebar({ onNavigate }: SidebarProps) {
         </nav>
       </div>
 
-      <div className="p-6 border-t border-slate-200/50 mt-auto">
-        <div className="flex items-center bg-white/50 backdrop-blur-sm p-4 rounded-2xl border border-white/60">
-          <div className="w-10 h-10 rounded-full bg-linear-to-br from-primary to-blue-600 flex items-center justify-center text-white font-bold text-lg shrink-0 overflow-hidden">
+      <div className="p-6 border-t border-slate-200/50 mt-auto bg-white/40">
+        <div className="flex items-center bg-white/50 backdrop-blur-sm p-4 rounded-2xl border border-white/60 shadow-sm hover:shadow-md transition-shadow">
+          <div className="w-10 h-10 rounded-full bg-linear-to-br from-primary to-blue-600 flex items-center justify-center text-white font-bold text-lg shrink-0 overflow-hidden shadow-inner">
             {(user as any)?.profile?.photo ? (
               <img src={(user as any).profile.photo} alt={user?.name || "User"} className="w-full h-full object-cover" />
             ) : (
@@ -93,7 +93,7 @@ export default function Sidebar({ onNavigate }: SidebarProps) {
           </div>
           <div className="ml-3 overflow-hidden">
             <p className="text-sm font-bold text-slate-900 truncate">{user?.name}</p>
-            <p className="text-xs text-slate-500 capitalize">{user?.role?.toLowerCase()}</p>
+            <p className="text-xs font-medium text-slate-500 capitalize bg-slate-100/80 px-2 py-0.5 rounded-full inline-block mt-1">{user?.role?.toLowerCase()}</p>
           </div>
         </div>
       </div>
