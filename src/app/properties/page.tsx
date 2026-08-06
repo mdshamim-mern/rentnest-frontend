@@ -42,6 +42,11 @@ export default function PropertiesPage() {
     const bths = searchParams.get('baths');
     const mode = searchParams.get('searchMode');
     const cat = searchParams.get('categoryId');
+    const minA = searchParams.get('minArea');
+    const maxA = searchParams.get('maxArea');
+    const rFor = searchParams.get('rentFor');
+    const furn = searchParams.get('furnished');
+    const amens = searchParams.get('amenities');
     
     if (loc) setSelectedLocation(loc);
     if (type) setPropertyType(type);
@@ -51,6 +56,11 @@ export default function PropertiesPage() {
     if (bths) setBaths(bths);
     if (mode) setSearchMode(mode);
     if (cat) setSelectedCategory(cat);
+    if (minA) setMinArea(minA);
+    if (maxA) setMaxArea(maxA);
+    if (rFor) setRentFor(rFor);
+    if (furn) setFurnished(furn);
+    if (amens) setAmenities(amens.split(','));
     
     setIsReady(true);
   }, [searchParams]);

@@ -76,7 +76,12 @@ export default function PropertyFilters(props: PropertyFiltersProps) {
         minPrice: props.minPrice,
         maxPrice: props.maxPrice,
         beds: props.beds,
-        baths: props.baths
+        baths: props.baths,
+        minArea: props.minArea,
+        maxArea: props.maxArea,
+        rentFor: props.rentFor,
+        furnished: props.furnished,
+        amenities: props.amenities,
       };
 
       await saveSearch(searchData);
@@ -97,14 +102,8 @@ export default function PropertyFilters(props: PropertyFiltersProps) {
       <div className="flex flex-col xl:flex-row gap-4 items-center justify-between w-full">
         <div className="flex items-center gap-1 bg-white/80 p-1 rounded-full border border-white/50 shadow-sm w-full xl:w-auto h-12">
           <button 
-            onClick={() => props.setSearchMode("ai")}
-            className={`whitespace-nowrap px-5 h-full rounded-full text-sm font-semibold transition-colors ${props.searchMode === "ai" ? "bg-sky-500 text-white shadow-md" : "text-slate-600 hover:bg-slate-100"}`}
-          >
-            AI Search
-          </button>
-          <button 
             onClick={() => props.setSearchMode("classic")}
-            className={`whitespace-nowrap px-5 h-full rounded-full text-sm font-semibold transition-colors ${props.searchMode === "classic" ? "bg-sky-500 text-white shadow-md" : "text-slate-600 hover:bg-slate-100"}`}
+            className="whitespace-nowrap px-5 h-full rounded-full text-sm font-semibold transition-colors bg-sky-500 text-white shadow-md"
           >
             Classic
           </button>

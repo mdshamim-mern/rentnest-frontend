@@ -18,6 +18,11 @@ interface SavedSearchData {
   beds?: string;
   baths?: string;
   selectedCategory?: string;
+  minArea?: string;
+  maxArea?: string;
+  rentFor?: string;
+  furnished?: string;
+  amenities?: string[];
   createdAt: string;
 }
 
@@ -129,7 +134,7 @@ export default function SavedSearchesPage() {
               
               <div className="mt-5 pt-4 border-t border-slate-100">
                 <Link 
-                  href={`/properties?location=${search.selectedLocation || ''}&type=${search.propertyType || ''}&minPrice=${search.minPrice || ''}&maxPrice=${search.maxPrice || ''}&beds=${search.beds || ''}&baths=${search.baths || ''}&searchMode=${search.searchMode || ''}&categoryId=${search.selectedCategory || ''}`} 
+                  href={`/properties?location=${search.selectedLocation || ''}&type=${search.propertyType || ''}&minPrice=${search.minPrice || ''}&maxPrice=${search.maxPrice || ''}&beds=${search.beds || ''}&baths=${search.baths || ''}&searchMode=${search.searchMode || ''}&categoryId=${search.selectedCategory || ''}&minArea=${search.minArea || ''}&maxArea=${search.maxArea || ''}&rentFor=${search.rentFor || ''}&furnished=${search.furnished || ''}&amenities=${search.amenities ? search.amenities.join(',') : ''}`} 
                   className="w-full block text-center text-sm font-semibold text-sky-600 hover:text-sky-700 bg-sky-50 hover:bg-sky-100 py-2 rounded-xl transition-colors"
                 >
                   Search Now
