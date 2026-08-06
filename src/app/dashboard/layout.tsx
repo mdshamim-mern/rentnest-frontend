@@ -30,8 +30,8 @@ export default function DashboardLayout({
 
   return (
     <div className="w-full bg-slate-50/50">
-      <div className="w-full flex min-h-[calc(100vh-5rem)] relative">
-        <div className="hidden md:block sticky top-20 h-[calc(100vh-5rem)] z-10 shrink-0">
+      <div className="w-full flex min-h-[calc(100vh-4rem)] relative">
+        <div className="hidden md:block sticky top-16 h-[calc(100vh-4rem)] shrink-0 z-10">
           <Sidebar />
         </div>
 
@@ -65,7 +65,7 @@ export default function DashboardLayout({
           </div>
 
           <main className="flex-1 py-4 px-4 sm:py-6 sm:px-6 md:py-8 md:px-8 lg:py-10 lg:px-10 overflow-x-hidden">
-            <div className="h-full w-full">
+            <div className="h-full w-full max-w-[1600px] mx-auto">
               {children}
             </div>
           </main>
