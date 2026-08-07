@@ -8,7 +8,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Text is required' }, { status: 400 });
     }
 
-    const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY as string);
+    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY as string);
     const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
 
     const prompt = `
@@ -20,12 +20,20 @@ export async function POST(req: Request) {
     `;
 
     const result = await model.generateContent(prompt);
-    const responseText = result.response.text().replace(/```json/g, '').replace(/```/g, '').trim();
+    let responseText = result.response.text();
+    responseText = responseText.replace(/```json/gi, '').replace(/```/g, '').trim();
 
-    const parsedData = JSON.parse(responseText);
+    let parsedData = { location: "", propertyType: "", beds: "", maxPrice: "" };
+    
+    try {
+      parsedData = JSON.parse(responseText);
+    } catch (parseError) {
+      console.error(parseError);
+    }
+
     return NextResponse.json(parsedData);
   } catch (error) {
-    console.error("AI Search Error:", error);
-    return NextResponse.json({ error: 'AI Server Error: Could not process request' }, { status: 500 });
+    console.error(error);
+    return NextResponse.json({ location: "", propertyType: "", beds: "", maxPrice: "" });
   }
 }
