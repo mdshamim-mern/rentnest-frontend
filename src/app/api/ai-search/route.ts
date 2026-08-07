@@ -20,13 +20,15 @@ export async function POST(req: Request) {
     `;
 
     const result = await model.generateContent(prompt);
-    let responseText = result.response.text();
-    responseText = responseText.replace(/```json/gi, '').replace(/```/g, '').trim();
+    const responseText = result.response.text();
 
     let parsedData = { location: "", propertyType: "", beds: "", maxPrice: "" };
     
     try {
-      parsedData = JSON.parse(responseText);
+      const jsonMatch = responseText.match(/\{[\s\S]*\}/);
+      if (jsonMatch) {
+        parsedData = JSON.parse(jsonMatch[0]);
+      }
     } catch (parseError) {
       console.error(parseError);
     }
