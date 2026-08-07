@@ -96,24 +96,64 @@ export default function PropertyFilters(props: PropertyFiltersProps) {
     }
   };
 
-  const handleSearchSubmit = () => {
+  const handleSearchSubmit = async () => {
     if (!props.searchTerm) return;
 
     if (props.searchMode === "ai") {
-      props.setSelectedCategory("all");
-      props.setPropertyType("all");
-      props.setMinPrice("");
-      props.setMaxPrice("");
-      props.setMinArea("");
-      props.setMaxArea("");
-      props.setBeds("all");
-      props.setBaths("all");
-      props.setRentFor("all");
-      props.setFurnished("all");
-      props.setSelectedLocation("");
+      const loadingToastId = toast.loading("✨ AI is analyzing your request...");
+      
+      try {
+        const response = await fetch('/api/ai-search', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text: props.searchTerm })
+        });
+        
+        const data = await response.json();
+        
+        let filtersApplied = 0;
 
-      toast.dismiss();
-      toast.success("✨ AI is finding the best matches...");
+        props.setSelectedCategory("all");
+        props.setPropertyType("all");
+        props.setMinPrice("");
+        props.setMaxPrice("");
+        props.setMinArea("");
+        props.setMaxArea("");
+        props.setBeds("all");
+        props.setBaths("all");
+        props.setRentFor("all");
+        props.setFurnished("all");
+        props.setSelectedLocation("");
+
+        if (data.location) {
+          props.setSelectedLocation(data.location);
+          filtersApplied++;
+        }
+        if (data.propertyType) {
+          props.setPropertyType(data.propertyType);
+          filtersApplied++;
+        }
+        if (data.beds) {
+          props.setBeds(data.beds);
+          filtersApplied++;
+        }
+        if (data.maxPrice) {
+          props.setMaxPrice(data.maxPrice);
+          filtersApplied++;
+        }
+
+        props.setSearchTerm("");
+        toast.dismiss(loadingToastId);
+
+        if (filtersApplied > 0) {
+          toast.success(`✨ AI Magic: Applied ${filtersApplied} filters!`);
+        } else {
+          toast.error("Couldn't understand. Try '2 bed apartment in Banani'");
+        }
+      } catch (error) {
+        toast.dismiss(loadingToastId);
+        toast.error("AI service error. Please try again.");
+      }
     } else {
       props.setSelectedLocation(props.searchTerm);
       props.setSearchTerm("");
