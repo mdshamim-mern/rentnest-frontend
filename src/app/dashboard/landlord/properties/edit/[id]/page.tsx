@@ -10,7 +10,7 @@ import { Category } from "@/types";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Loader2 } from "lucide-react";
 import toast from "react-hot-toast";
@@ -27,6 +27,8 @@ const propertySchema = z.object({
   title: z.string().min(5, "Title must be at least 5 characters"),
   description: z.string().min(20, "Description must be at least 20 characters"),
   location: z.string().min(5, "Location must be at least 5 characters"),
+  lat: z.coerce.number().min(-90).max(90).optional().or(z.literal("")),
+  lng: z.coerce.number().min(-180).max(180).optional().or(z.literal("")),
   price: z.coerce.number().positive("Price must be a positive number"),
   categoryId: z.string().min(1, "Please select a category"),
   isAvailable: z.boolean(),
@@ -76,6 +78,8 @@ export default function EditPropertyPage() {
       title: "",
       description: "",
       location: "",
+      lat: "" as any,
+      lng: "" as any,
       categoryId: "",
       isAvailable: true,
       rentType: "",
@@ -125,6 +129,8 @@ export default function EditPropertyPage() {
             title: property.title || "",
             description: property.description || "",
             location: property.location || "",
+            lat: property.lat !== null && property.lat !== undefined ? property.lat : ("" as any),
+            lng: property.lng !== null && property.lng !== undefined ? property.lng : ("" as any),
             price: property.price || ("" as any),
             categoryId: property.categoryId || "",
             isAvailable: property.isAvailable !== false,
@@ -201,7 +207,6 @@ export default function EditPropertyPage() {
     
     setImagePreviews(prev => prev.filter((_, i) => i !== index));
   };
-
   const onSubmit = async (data: PropertyFormValues) => {
     try {
       setIsSubmitting(true);
@@ -242,6 +247,8 @@ export default function EditPropertyPage() {
         title: data.title,
         description: data.description,
         location: data.location,
+        lat: (data.lat !== undefined && data.lat !== "") ? Number(data.lat) : null,
+        lng: (data.lng !== undefined && data.lng !== "") ? Number(data.lng) : null,
         price: Number(data.price),
         categoryId: data.categoryId,
         isAvailable: data.isAvailable,
@@ -369,6 +376,19 @@ export default function EditPropertyPage() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div className="space-y-2">
+                    <label className="text-sm font-medium text-slate-700">Latitude (for map) </label>
+                    <Input {...register("lat")} type="number" step="any" placeholder="e.g. 23.7937" className="bg-white border-slate-200 h-12 rounded-xl" />
+                    {errors.lat && <p className="text-sm text-red-500">{errors.lat.message}</p>}
+                </div>
+                <div className="space-y-2">
+                    <label className="text-sm font-medium text-slate-700">Longitude (for map) </label>
+                    <Input {...register("lng")} type="number" step="any" placeholder="e.g. 90.4066" className="bg-white border-slate-200 h-12 rounded-xl" />
+                    {errors.lng && <p className="text-sm text-red-500">{errors.lng.message}</p>}
+                </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <div className="space-y-2">
                 <label className="text-sm font-medium text-slate-700">Rent Type</label>
                <Select value={watch("rentType") || ""} onValueChange={(val) => setValue("rentType", val ?? undefined)}>
@@ -404,8 +424,7 @@ export default function EditPropertyPage() {
                     <label className="text-sm font-medium text-slate-700">Available From</label>
                     <Input {...register("availableFrom")} type="date" className="bg-white border-slate-200 h-12 rounded-xl" />
                 </div>
-            </div>
-
+            </div> 
             <div className="space-y-3">
                  <label className="text-sm font-medium text-slate-700">Rent For *</label>
                  <div className="flex gap-6">
@@ -589,11 +608,11 @@ export default function EditPropertyPage() {
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                   {AMENITIES_LIST.map((amenity) => (
                        <label key={amenity} className="flex items-center gap-2 cursor-pointer bg-white/50 p-3 rounded-xl border border-slate-100 hover:border-sky-200 transition-colors">
-                            <input 
-                                type="checkbox" 
+                            <input
+                                type="checkbox"
                                 value={amenity}
                                 {...register("amenities")}
-                                className="w-4 h-4 rounded border-slate-300 text-sky-500 focus:ring-sky-500" 
+                                className="w-4 h-4 rounded border-slate-300 text-sky-500 focus:ring-sky-500"
                             />
                             <span className="text-sm text-slate-700">{amenity}</span>
                         </label>

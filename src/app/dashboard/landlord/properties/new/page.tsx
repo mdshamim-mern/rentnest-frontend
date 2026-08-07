@@ -27,6 +27,8 @@ const propertySchema = z.object({
   title: z.string().min(5, "Title must be at least 5 characters"),
   description: z.string().min(20, "Description must be at least 20 characters"),
   location: z.string().min(5, "Location must be at least 5 characters"),
+  lat: z.coerce.number().min(-90).max(90).optional().or(z.literal("")),
+  lng: z.coerce.number().min(-180).max(180).optional().or(z.literal("")),
   price: z.coerce.number().positive("Price must be a positive number"),
   categoryId: z.string().min(1, "Please select a category"),
   isAvailable: z.boolean(),
@@ -73,6 +75,8 @@ export default function NewPropertyPage() {
       title: "",
       description: "",
       location: "",
+      lat: "" as any,
+      lng: "" as any,
       categoryId: "",
       isAvailable: true,
       rentType: "",
@@ -164,6 +168,8 @@ export default function NewPropertyPage() {
         title: data.title,
         description: data.description,
         location: data.location,
+        lat: (data.lat !== undefined && data.lat !== "") ? Number(data.lat) : undefined,
+        lng: (data.lng !== undefined && data.lng !== "") ? Number(data.lng) : undefined,
         price: Number(data.price),
         categoryId: data.categoryId,
         isAvailable: data.isAvailable,
@@ -197,8 +203,7 @@ export default function NewPropertyPage() {
             formData.append(key, String(submitData[key]));
           }
         }
-      });
-
+      });    
       formData.append("image", imageFile);
 
       imageFiles.forEach(file => {
@@ -267,13 +272,13 @@ export default function NewPropertyPage() {
                     <SelectValue placeholder="Select type" />
                   </SelectTrigger>
                   <SelectContent className="rounded-xl">
-  <SelectItem value="Apartment">Apartment</SelectItem>
-  <SelectItem value="Villa">Villa</SelectItem>
-  <SelectItem value="Duplex">Duplex</SelectItem>
-  <SelectItem value="Penthouse">Penthouse</SelectItem>
-  <SelectItem value="Townhouse">Townhouse</SelectItem>
-  <SelectItem value="Studio">Studio</SelectItem>
-</SelectContent>
+                    <SelectItem value="Apartment">Apartment</SelectItem>
+                    <SelectItem value="Villa">Villa</SelectItem>
+                    <SelectItem value="Duplex">Duplex</SelectItem>
+                    <SelectItem value="Penthouse">Penthouse</SelectItem>
+                    <SelectItem value="Townhouse">Townhouse</SelectItem>
+                    <SelectItem value="Studio">Studio</SelectItem>
+                  </SelectContent>
                 </Select>
               </div>
             </div>
@@ -295,6 +300,19 @@ export default function NewPropertyPage() {
               <label className="text-sm font-medium text-slate-700">Location *</label>
               <Input {...register("location")} placeholder="e.g. House-08, Road-11, Block-A, Dhanmondi, Dhaka" className="bg-white border-slate-200 h-12 rounded-xl" />
               {errors.location && <p className="text-sm text-red-500">{errors.location.message}</p>}
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div className="space-y-2">
+                    <label className="text-sm font-medium text-slate-700">Latitude (for map) </label>
+                    <Input {...register("lat")} type="number" step="any" placeholder="e.g. 23.7937" className="bg-white border-slate-200 h-12 rounded-xl" />
+                    {errors.lat && <p className="text-sm text-red-500">{errors.lat.message}</p>}
+                </div>
+                <div className="space-y-2">
+                    <label className="text-sm font-medium text-slate-700">Longitude (for map) </label>
+                    <Input {...register("lng")} type="number" step="any" placeholder="e.g. 90.4066" className="bg-white border-slate-200 h-12 rounded-xl" />
+                    {errors.lng && <p className="text-sm text-red-500">{errors.lng.message}</p>}
+                </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -424,8 +442,7 @@ export default function NewPropertyPage() {
                         </SelectContent>
                     </Select>
                   </div>
-              </div>
-
+              </div>   
                <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-slate-700">Gas</label>
