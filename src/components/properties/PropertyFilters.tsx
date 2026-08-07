@@ -100,9 +100,6 @@ export default function PropertyFilters(props: PropertyFiltersProps) {
     if (!props.searchTerm) return;
 
     if (props.searchMode === "ai") {
-      const lowerText = props.searchTerm.toLowerCase();
-      let filtersApplied = 0;
-
       props.setSelectedCategory("all");
       props.setPropertyType("all");
       props.setMinPrice("");
@@ -115,45 +112,8 @@ export default function PropertyFilters(props: PropertyFiltersProps) {
       props.setFurnished("all");
       props.setSelectedLocation("");
 
-      const locationMatch = lowerText.match(/(banani|gulshan|dhanmondi|bashundhara|mirpur|mohammadpur|uttara|shyamoli|badda|khilgaon)/i);
-      if (locationMatch) {
-        const loc = locationMatch[1].charAt(0).toUpperCase() + locationMatch[1].slice(1).toLowerCase();
-        props.setSelectedLocation(loc);
-        filtersApplied++;
-      }
-
-      const typeMatch = lowerText.match(/(apartment|villa|duplex|penthouse|townhouse|studio)/i);
-      if (typeMatch) {
-        const type = typeMatch[1].charAt(0).toUpperCase() + typeMatch[1].slice(1).toLowerCase();
-        props.setPropertyType(type);
-        filtersApplied++;
-      }
-
-      const bedMatch = lowerText.match(/(\d+)\s*(?:bed|bhk|bedroom)/i);
-      if (bedMatch) {
-        props.setBeds(bedMatch[1]);
-        filtersApplied++;
-      }
-
-      const priceMatch = lowerText.match(/(?:under|below|max)\s*(?:tk|bdt|\$)?\s*(\d+)(k| thousand)?/i);
-      if (priceMatch) {
-        let price = parseInt(priceMatch[1], 10);
-        if (priceMatch[2] && priceMatch[2].toLowerCase().startsWith('k')) {
-          price *= 1000;
-        }
-        props.setMaxPrice(price.toString());
-        filtersApplied++;
-      }
-
-      props.setSearchTerm("");
-
-      if (filtersApplied > 0) {
-        toast.dismiss();
-        toast.success(`✨ AI Magic: Applied ${filtersApplied} filters!`);
-      } else {
-        toast.dismiss();
-        toast.error("Couldn't understand. Try '2 bed apartment in Banani'");
-      }
+      toast.dismiss();
+      toast.success("✨ AI is finding the best matches...");
     } else {
       props.setSelectedLocation(props.searchTerm);
       props.setSearchTerm("");
