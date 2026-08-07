@@ -15,7 +15,7 @@ export async function POST(req: Request) {
       Extract the following details from the text: location, propertyType, beds, and maxPrice.
       If the location has a typo, correct it to the nearest valid Dhaka location (e.g., Banani, Gulshan, Dhanmondi, Bashundhara, Mirpur, Mohammadpur, Uttara, Shyamoli, Badda, Khilgaon).
       Return the output strictly as a JSON object with keys: "location", "propertyType", "beds", "maxPrice".
-      Do not include any markdown tags.
+      OUTPUT ONLY VALID JSON. Do not include any markdown tags, backticks, or explanation.
       Text: "${text}"
     `;
 
@@ -25,6 +25,7 @@ export async function POST(req: Request) {
     const parsedData = JSON.parse(responseText);
     return NextResponse.json(parsedData);
   } catch (error) {
-    return NextResponse.json({ location: "", propertyType: "", beds: "", maxPrice: "" });
+    console.error("AI Search Error:", error);
+    return NextResponse.json({ error: 'AI Server Error: Could not process request' }, { status: 500 });
   }
 }

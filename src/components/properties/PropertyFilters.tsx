@@ -110,6 +110,10 @@ export default function PropertyFilters(props: PropertyFiltersProps) {
         });
         
         const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || "AI service failed");
+        }
         
         let filtersApplied = 0;
 
@@ -150,9 +154,9 @@ export default function PropertyFilters(props: PropertyFiltersProps) {
         } else {
           toast.error("Couldn't understand. Try '2 bed apartment in Banani'");
         }
-      } catch (error) {
+      } catch (error: any) {
         toast.dismiss(loadingToastId);
-        toast.error("AI service error. Please try again.");
+        toast.error(error.message || "AI service error. Please try again.");
       }
     } else {
       props.setSelectedLocation(props.searchTerm);
