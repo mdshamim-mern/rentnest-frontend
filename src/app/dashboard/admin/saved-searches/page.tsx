@@ -72,9 +72,14 @@ export default function AdminSavedSearchesPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold text-slate-900">All Saved Searches</h1>
-        <p className="text-slate-500 mt-1">View and manage all users' saved property searches.</p>
+      <div className="flex justify-between items-center">
+        <div>
+          <h1 className="text-3xl font-bold text-slate-900">All Saved Searches</h1>
+          <p className="text-slate-500 mt-1">View and manage all users' saved property searches.</p>
+        </div>
+        <Link href="/properties" className="hidden sm:flex items-center justify-center px-6 py-2.5 bg-sky-500 text-white font-medium rounded-xl hover:bg-sky-600 transition-colors shadow-sm hover:shadow">
+          Browse Properties
+        </Link>
       </div>
 
       <div className="flex gap-3 border-b border-slate-200 pb-2 overflow-x-auto">
@@ -109,7 +114,7 @@ export default function AdminSavedSearchesPage() {
           </div>
           <h3 className="text-xl font-bold text-slate-800">No saved searches yet</h3>
           <p className="text-slate-500 mt-2 mb-6">No {activeTab.toLowerCase()} users have saved any searches yet.</p>
-          <Link href="/properties" className="inline-flex items-center justify-center px-6 py-2.5 bg-sky-500 text-white font-medium rounded-xl hover:bg-sky-600 transition-colors shadow-sm hover:shadow">
+          <Link href="/properties" className="sm:hidden inline-flex items-center justify-center px-6 py-2.5 bg-sky-500 text-white font-medium rounded-xl hover:bg-sky-600 transition-colors shadow-sm hover:shadow">
             Browse Properties
           </Link>
         </div>
@@ -185,7 +190,7 @@ export default function AdminSavedSearchesPage() {
                   className="w-full flex items-center justify-center gap-2 text-sm font-semibold text-sky-600 hover:text-sky-700 bg-sky-50 hover:bg-sky-100 py-2.5 rounded-xl transition-colors"
                 >
                   <Search className="h-4 w-4" />
-                  View Search Results
+                  Browse Property
                 </Link>
               </div>
             </div>

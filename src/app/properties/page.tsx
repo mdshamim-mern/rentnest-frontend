@@ -7,8 +7,17 @@ import { axiosInstance } from "@/lib/api/axiosInstance";
 import { Property, Category } from "@/types";
 import PropertyCard from "@/components/properties/PropertyCard";
 import PropertyFilters from "@/components/properties/PropertyFilters";
-import PropertyMap from "@/components/properties/PropertyMap";
 import toast from "react-hot-toast";
+import dynamic from "next/dynamic";
+
+const PropertyMap = dynamic(() => import("@/components/properties/PropertyMap"), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-150 bg-slate-100 animate-pulse rounded-3xl flex items-center justify-center">
+      <Loader2 className="animate-spin text-sky-500 h-10 w-10" />
+    </div>
+  ),
+});
 
 export default function PropertiesPage() {
   const searchParams = useSearchParams();

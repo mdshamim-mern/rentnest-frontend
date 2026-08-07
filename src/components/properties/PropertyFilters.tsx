@@ -66,23 +66,24 @@ export default function PropertyFilters(props: PropertyFiltersProps) {
     setIsSaving(true);
     
     try {
-      const searchData = {
+      const searchData: any = {
         userId: user.id || (user as any).userId,
-        searchTerm: props.searchTerm,
-        selectedLocation: props.selectedLocation,
         searchMode: props.searchMode,
-        selectedCategory: props.selectedCategory,
-        propertyType: props.propertyType,
-        minPrice: props.minPrice,
-        maxPrice: props.maxPrice,
-        beds: props.beds,
-        baths: props.baths,
-        minArea: props.minArea,
-        maxArea: props.maxArea,
-        rentFor: props.rentFor,
-        furnished: props.furnished,
-        amenities: props.amenities,
       };
+
+      if (props.searchTerm) searchData.searchTerm = props.searchTerm;
+      if (props.selectedLocation && props.selectedLocation !== "all") searchData.selectedLocation = props.selectedLocation;
+      if (props.selectedCategory && props.selectedCategory !== "all") searchData.selectedCategory = props.selectedCategory;
+      if (props.propertyType && props.propertyType !== "all") searchData.propertyType = props.propertyType;
+      if (props.minPrice) searchData.minPrice = props.minPrice;
+      if (props.maxPrice) searchData.maxPrice = props.maxPrice;
+      if (props.beds && props.beds !== "all") searchData.beds = props.beds;
+      if (props.baths && props.baths !== "all") searchData.baths = props.baths;
+      if (props.minArea) searchData.minArea = props.minArea;
+      if (props.maxArea) searchData.maxArea = props.maxArea;
+      if (props.rentFor && props.rentFor !== "all") searchData.rentFor = props.rentFor;
+      if (props.furnished && props.furnished !== "all") searchData.furnished = props.furnished;
+      if (props.amenities && props.amenities.length > 0) searchData.amenities = props.amenities;
 
       await saveSearch(searchData);
       toast.dismiss();
@@ -159,7 +160,8 @@ export default function PropertyFilters(props: PropertyFiltersProps) {
         toast.error(error.message || "AI service error. Please try again.");
       }
     } else {
-      props.setSelectedLocation(props.searchTerm);
+      const formattedLocation = props.searchTerm.charAt(0).toUpperCase() + props.searchTerm.slice(1).toLowerCase();
+      props.setSelectedLocation(formattedLocation);
       props.setSearchTerm("");
       toast.dismiss();
       toast.success("Location updated!");

@@ -63,9 +63,14 @@ export default function LandlordSavedSearchesPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold text-slate-900">My Saved Searches</h1>
-        <p className="text-slate-500 mt-1">View and manage your saved property searches.</p>
+      <div className="flex justify-between items-center">
+        <div>
+          <h1 className="text-3xl font-bold text-slate-900">My Saved Searches</h1>
+          <p className="text-slate-500 mt-1">View and manage your saved property searches.</p>
+        </div>
+        <Link href="/properties" className="hidden sm:flex items-center justify-center px-6 py-2.5 bg-sky-500 text-white font-medium rounded-xl hover:bg-sky-600 transition-colors shadow-sm hover:shadow">
+          Browse Properties
+        </Link>
       </div>
 
       {isLoading ? (
@@ -77,7 +82,7 @@ export default function LandlordSavedSearchesPage() {
           <Search className="h-12 w-12 text-slate-300 mx-auto mb-3" />
           <h3 className="text-lg font-bold text-slate-800">No saved searches yet</h3>
           <p className="text-slate-500 mt-1 mb-4">When you save a search from the properties page, it will appear here.</p>
-          <Link href="/properties" className="inline-flex items-center justify-center px-4 py-2 bg-sky-500 text-white rounded-xl hover:bg-sky-600 transition-colors">
+          <Link href="/properties" className="sm:hidden inline-flex items-center justify-center px-4 py-2 bg-sky-500 text-white rounded-xl hover:bg-sky-600 transition-colors">
             Browse Properties
           </Link>
         </div>
@@ -137,7 +142,7 @@ export default function LandlordSavedSearchesPage() {
                   href={`/properties?location=${search.selectedLocation || ''}&type=${search.propertyType || ''}&minPrice=${search.minPrice || ''}&maxPrice=${search.maxPrice || ''}&beds=${search.beds || ''}&baths=${search.baths || ''}&searchMode=${search.searchMode || ''}&categoryId=${search.selectedCategory || ''}&minArea=${search.minArea || ''}&maxArea=${search.maxArea || ''}&rentFor=${search.rentFor || ''}&furnished=${search.furnished || ''}&amenities=${search.amenities ? search.amenities.join(',') : ''}`} 
                   className="w-full block text-center text-sm font-semibold text-sky-600 hover:text-sky-700 bg-sky-50 hover:bg-sky-100 py-2 rounded-xl transition-colors"
                 >
-                  Search Now
+                  Browse Property
                 </Link>
               </div>
             </div>
