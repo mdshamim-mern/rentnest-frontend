@@ -162,14 +162,32 @@ export default function NewPropertyPage() {
         return;
       }
 
+      let finalLat = undefined;
+      let finalLng = undefined;
+
+      if (data.location) {
+        try {
+          const token = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
+          if (token) {
+            const geoRes = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(data.location)}.json?access_token=${token}`);
+            const geoData = await geoRes.json();
+            if (geoData.features && geoData.features.length > 0) {
+              finalLng = geoData.features[0].center[0];
+              finalLat = geoData.features[0].center[1];
+            }
+          }
+        } catch (error) {
+        }
+      }
+
       const formData = new FormData();
 
       const submitData: any = {
         title: data.title,
         description: data.description,
         location: data.location,
-        lat: (data.lat !== undefined && data.lat !== "") ? Number(data.lat) : undefined,
-        lng: (data.lng !== undefined && data.lng !== "") ? Number(data.lng) : undefined,
+        lat: finalLat,
+        lng: finalLng,
         price: Number(data.price),
         categoryId: data.categoryId,
         isAvailable: data.isAvailable,
@@ -224,7 +242,7 @@ export default function NewPropertyPage() {
       setIsSubmitting(false);
     }
   };
-
+  
   const getCategoryName = (id: string) => {
     const cat = categories.find(c => c.id === id);
     return cat ? cat.name : "Select category";
@@ -300,19 +318,6 @@ export default function NewPropertyPage() {
               <label className="text-sm font-medium text-slate-700">Location *</label>
               <Input {...register("location")} placeholder="e.g. House-08, Road-11, Block-A, Dhanmondi, Dhaka" className="bg-white border-slate-200 h-12 rounded-xl" />
               {errors.location && <p className="text-sm text-red-500">{errors.location.message}</p>}
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                <div className="space-y-2">
-                    <label className="text-sm font-medium text-slate-700">Latitude (for map) </label>
-                    <Input {...register("lat")} type="number" step="any" placeholder="e.g. 23.7937" className="bg-white border-slate-200 h-12 rounded-xl" />
-                    {errors.lat && <p className="text-sm text-red-500">{errors.lat.message}</p>}
-                </div>
-                <div className="space-y-2">
-                    <label className="text-sm font-medium text-slate-700">Longitude (for map) </label>
-                    <Input {...register("lng")} type="number" step="any" placeholder="e.g. 90.4066" className="bg-white border-slate-200 h-12 rounded-xl" />
-                    {errors.lng && <p className="text-sm text-red-500">{errors.lng.message}</p>}
-                </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
