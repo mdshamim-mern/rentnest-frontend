@@ -266,7 +266,7 @@ export default function NewPropertyPage() {
               <div className="space-y-2">
                 <label className="text-sm font-medium text-slate-700">Property Category *</label>
                 <Select
-                  value={selectedCategory || undefined}
+                  value={selectedCategory || ""}
                   onValueChange={(val: any) => setValue("categoryId", val, { shouldValidate: true })}
                 >
                   <SelectTrigger className="bg-white border-slate-200 h-12 rounded-xl focus:ring-sky-500">
