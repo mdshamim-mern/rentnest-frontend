@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Loader2, Search, Calendar, MapPin, Trash2 } from "lucide-react";
+import { Loader2, Search, Calendar, MapPin, Trash2, Building } from "lucide-react";
 import { getSavedSearches, deleteSavedSearch } from "@/lib/api/savedSearch.api";
 import { useAuthStore } from "@/lib/store/authStore";
 import toast from "react-hot-toast";
@@ -22,7 +22,7 @@ interface SavedSearchData {
   maxArea?: string;
   rentFor?: string;
   furnished?: string;
-  amenities?: string[];
+  amenities?: string;
   createdAt: string;
 }
 
@@ -117,21 +117,58 @@ export default function LandlordSavedSearchesPage() {
                   </p>
                 )}
                 
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-2 mt-2">
                   {search.selectedLocation && (
-                    <span className="inline-flex items-center gap-1 bg-slate-50 border border-slate-200 text-slate-600 text-xs px-2 py-1 rounded-md">
-                      <MapPin className="h-3 w-3" />
+                    <span className="inline-flex items-center gap-1.5 bg-slate-50 border border-slate-200 text-slate-600 text-xs font-medium px-2.5 py-1.5 rounded-lg">
+                      <MapPin className="h-3.5 w-3.5 text-slate-400" />
                       {search.selectedLocation}
                     </span>
                   )}
                   {search.propertyType && search.propertyType !== 'all' && (
-                    <span className="inline-flex items-center gap-1 bg-slate-50 border border-slate-200 text-slate-600 text-xs px-2 py-1 rounded-md">
-                      Type: {search.propertyType}
+                    <span className="inline-flex items-center gap-1.5 bg-slate-50 border border-slate-200 text-slate-600 text-xs font-medium px-2.5 py-1.5 rounded-lg">
+                      <Building className="h-3.5 w-3.5 text-slate-400" />
+                      {search.propertyType}
+                    </span>
+                  )}
+                  {search.selectedCategory && search.selectedCategory !== 'all' && (
+                    <span className="inline-flex items-center gap-1.5 bg-slate-50 border border-slate-200 text-slate-600 text-xs font-medium px-2.5 py-1.5 rounded-lg">
+                      Category: {search.selectedCategory}
                     </span>
                   )}
                   {(search.minPrice || search.maxPrice) && (
-                    <span className="inline-flex items-center gap-1 bg-slate-50 border border-slate-200 text-slate-600 text-xs px-2 py-1 rounded-md">
-                      Price: {search.minPrice ? `$${search.minPrice}` : '$0'} - {search.maxPrice ? `$${search.maxPrice}` : 'Any'}
+                    <span className="inline-flex items-center gap-1.5 bg-slate-50 border border-slate-200 text-slate-600 text-xs font-medium px-2.5 py-1.5 rounded-lg">
+                      <span className="text-slate-400 font-bold">$</span>
+                      {search.minPrice ? `${search.minPrice}` : '0'} - {search.maxPrice ? `${search.maxPrice}` : 'Any'}
+                    </span>
+                  )}
+                  {(search.minArea || search.maxArea) && (
+                    <span className="inline-flex items-center gap-1.5 bg-slate-50 border border-slate-200 text-slate-600 text-xs font-medium px-2.5 py-1.5 rounded-lg">
+                      Area: {search.minArea || '0'} - {search.maxArea || 'Any'} sqft
+                    </span>
+                  )}
+                  {search.beds && search.beds !== 'all' && (
+                    <span className="inline-flex items-center gap-1.5 bg-slate-50 border border-slate-200 text-slate-600 text-xs font-medium px-2.5 py-1.5 rounded-lg">
+                      Beds: {search.beds}
+                    </span>
+                  )}
+                  {search.baths && search.baths !== 'all' && (
+                    <span className="inline-flex items-center gap-1.5 bg-slate-50 border border-slate-200 text-slate-600 text-xs font-medium px-2.5 py-1.5 rounded-lg">
+                      Baths: {search.baths}
+                    </span>
+                  )}
+                  {search.rentFor && search.rentFor !== 'all' && (
+                    <span className="inline-flex items-center gap-1.5 bg-slate-50 border border-slate-200 text-slate-600 text-xs font-medium px-2.5 py-1.5 rounded-lg">
+                      For: {search.rentFor}
+                    </span>
+                  )}
+                  {search.furnished && search.furnished !== 'all' && (
+                    <span className="inline-flex items-center gap-1.5 bg-slate-50 border border-slate-200 text-slate-600 text-xs font-medium px-2.5 py-1.5 rounded-lg">
+                      {search.furnished}
+                    </span>
+                  )}
+                  {search.amenities && (
+                    <span className="inline-flex items-center gap-1.5 bg-slate-50 border border-slate-200 text-slate-600 text-xs font-medium px-2.5 py-1.5 rounded-lg truncate max-w-50">
+                      Amenities: {search.amenities}
                     </span>
                   )}
                 </div>
@@ -139,7 +176,7 @@ export default function LandlordSavedSearchesPage() {
               
               <div className="mt-5 pt-4 border-t border-slate-100">
                 <Link 
-                  href={`/properties?location=${search.selectedLocation || ''}&type=${search.propertyType || ''}&minPrice=${search.minPrice || ''}&maxPrice=${search.maxPrice || ''}&beds=${search.beds || ''}&baths=${search.baths || ''}&searchMode=${search.searchMode || ''}&categoryId=${search.selectedCategory || ''}&minArea=${search.minArea || ''}&maxArea=${search.maxArea || ''}&rentFor=${search.rentFor || ''}&furnished=${search.furnished || ''}&amenities=${search.amenities ? search.amenities.join(',') : ''}`} 
+                  href={`/properties?location=${search.selectedLocation || ''}&type=${search.propertyType || ''}&minPrice=${search.minPrice || ''}&maxPrice=${search.maxPrice || ''}&beds=${search.beds || ''}&baths=${search.baths || ''}&searchMode=${search.searchMode || ''}&categoryId=${search.selectedCategory || ''}&minArea=${search.minArea || ''}&maxArea=${search.maxArea || ''}&rentFor=${search.rentFor || ''}&furnished=${search.furnished || ''}&amenities=${search.amenities || ''}`} 
                   className="w-full block text-center text-sm font-semibold text-sky-600 hover:text-sky-700 bg-sky-50 hover:bg-sky-100 py-2 rounded-xl transition-colors"
                 >
                   Browse Property

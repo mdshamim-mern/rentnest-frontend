@@ -22,7 +22,7 @@ interface SavedSearchData {
   maxArea?: string;
   rentFor?: string;
   furnished?: string;
-  amenities?: string[];
+  amenities?: string;
   createdAt: string;
   user?: {
     name: string;
@@ -175,10 +175,45 @@ export default function AdminSavedSearchesPage() {
                       {search.propertyType}
                     </span>
                   )}
+                  {search.selectedCategory && search.selectedCategory !== 'all' && (
+                    <span className="inline-flex items-center gap-1.5 bg-slate-50 border border-slate-200 text-slate-600 text-xs font-medium px-2.5 py-1.5 rounded-lg">
+                      Category: {search.selectedCategory}
+                    </span>
+                  )}
                   {(search.minPrice || search.maxPrice) && (
                     <span className="inline-flex items-center gap-1.5 bg-slate-50 border border-slate-200 text-slate-600 text-xs font-medium px-2.5 py-1.5 rounded-lg">
                       <span className="text-slate-400 font-bold">$</span>
                       {search.minPrice ? `${search.minPrice}` : '0'} - {search.maxPrice ? `${search.maxPrice}` : 'Any'}
+                    </span>
+                  )}
+                  {(search.minArea || search.maxArea) && (
+                    <span className="inline-flex items-center gap-1.5 bg-slate-50 border border-slate-200 text-slate-600 text-xs font-medium px-2.5 py-1.5 rounded-lg">
+                      Area: {search.minArea || '0'} - {search.maxArea || 'Any'} sqft
+                    </span>
+                  )}
+                  {search.beds && search.beds !== 'all' && (
+                    <span className="inline-flex items-center gap-1.5 bg-slate-50 border border-slate-200 text-slate-600 text-xs font-medium px-2.5 py-1.5 rounded-lg">
+                      Beds: {search.beds}
+                    </span>
+                  )}
+                  {search.baths && search.baths !== 'all' && (
+                    <span className="inline-flex items-center gap-1.5 bg-slate-50 border border-slate-200 text-slate-600 text-xs font-medium px-2.5 py-1.5 rounded-lg">
+                      Baths: {search.baths}
+                    </span>
+                  )}
+                  {search.rentFor && search.rentFor !== 'all' && (
+                    <span className="inline-flex items-center gap-1.5 bg-slate-50 border border-slate-200 text-slate-600 text-xs font-medium px-2.5 py-1.5 rounded-lg">
+                      For: {search.rentFor}
+                    </span>
+                  )}
+                  {search.furnished && search.furnished !== 'all' && (
+                    <span className="inline-flex items-center gap-1.5 bg-slate-50 border border-slate-200 text-slate-600 text-xs font-medium px-2.5 py-1.5 rounded-lg">
+                      {search.furnished}
+                    </span>
+                  )}
+                  {search.amenities && (
+                    <span className="inline-flex items-center gap-1.5 bg-slate-50 border border-slate-200 text-slate-600 text-xs font-medium px-2.5 py-1.5 rounded-lg truncate max-w-50">
+                      Amenities: {search.amenities}
                     </span>
                   )}
                 </div>
@@ -186,7 +221,7 @@ export default function AdminSavedSearchesPage() {
               
               <div className="mt-6 pt-4 border-t border-slate-100">
                 <Link 
-                  href={`/properties?location=${search.selectedLocation || ''}&type=${search.propertyType || ''}&minPrice=${search.minPrice || ''}&maxPrice=${search.maxPrice || ''}&beds=${search.beds || ''}&baths=${search.baths || ''}&searchMode=${search.searchMode || ''}&categoryId=${search.selectedCategory || ''}&minArea=${search.minArea || ''}&maxArea=${search.maxArea || ''}&rentFor=${search.rentFor || ''}&furnished=${search.furnished || ''}&amenities=${search.amenities ? search.amenities.join(',') : ''}`} 
+                  href={`/properties?location=${search.selectedLocation || ''}&type=${search.propertyType || ''}&minPrice=${search.minPrice || ''}&maxPrice=${search.maxPrice || ''}&beds=${search.beds || ''}&baths=${search.baths || ''}&searchMode=${search.searchMode || ''}&categoryId=${search.selectedCategory || ''}&minArea=${search.minArea || ''}&maxArea=${search.maxArea || ''}&rentFor=${search.rentFor || ''}&furnished=${search.furnished || ''}&amenities=${search.amenities || ''}`} 
                   className="w-full flex items-center justify-center gap-2 text-sm font-semibold text-sky-600 hover:text-sky-700 bg-sky-50 hover:bg-sky-100 py-2.5 rounded-xl transition-colors"
                 >
                   <Search className="h-4 w-4" />
