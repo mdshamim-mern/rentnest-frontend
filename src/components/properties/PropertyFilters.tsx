@@ -1,7 +1,8 @@
 import { Search, Map, List, ChevronDown, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Category } from "@/types";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import MainFilterButton from "./FilterUI/MainFilterButton";
 import DropdownMenu from "./FilterUI/DropdownMenu";
 import RangeInput from "./FilterUI/RangeInput";
@@ -47,11 +48,61 @@ interface PropertyFiltersProps {
 }
 
 export default function PropertyFilters(props: PropertyFiltersProps) {
+  const searchParams = useSearchParams();
   const [isPricingOpen, setIsPricingOpen] = useState(false);
   const [isAreaOpen, setIsAreaOpen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [isHydrated, setIsHydrated] = useState(false);
   const isSavingRef = useRef(false);
   const { user } = useAuthStore();
+
+  useEffect(() => {
+    if (isHydrated) return;
+    
+    const loc = searchParams.get("selectedLocation") || searchParams.get("location");
+    if (loc) props.setSelectedLocation(loc);
+    
+    const cat = searchParams.get("selectedCategory") || searchParams.get("categoryId");
+    if (cat) props.setSelectedCategory(cat);
+    
+    const pType = searchParams.get("propertyType");
+    if (pType) props.setPropertyType(pType);
+    
+    const minP = searchParams.get("minPrice");
+    if (minP) props.setMinPrice(minP);
+    
+    const maxP = searchParams.get("maxPrice");
+    if (maxP) props.setMaxPrice(maxP);
+    
+    const minA = searchParams.get("minArea");
+    if (minA) props.setMinArea(minA);
+    
+    const maxA = searchParams.get("maxArea");
+    if (maxA) props.setMaxArea(maxA);
+    
+    const bed = searchParams.get("beds");
+    if (bed) props.setBeds(bed);
+    
+    const bath = searchParams.get("baths");
+    if (bath) props.setBaths(bath);
+    
+    const rFor = searchParams.get("rentFor");
+    if (rFor) props.setRentFor(rFor);
+    
+    const furn = searchParams.get("furnished");
+    if (furn) props.setFurnished(furn);
+    
+    const amen = searchParams.get("amenities");
+    if (amen) props.setAmenities(amen.split(","));
+    
+    const mode = searchParams.get("searchMode");
+    if (mode) props.setSearchMode(mode);
+    
+    const term = searchParams.get("searchTerm");
+    if (term) props.setSearchTerm(term);
+
+    setIsHydrated(true);
+  }, [searchParams, isHydrated, props]);
 
   const handleSaveSearchClick = async () => {
     if (isSavingRef.current) return;
@@ -83,7 +134,7 @@ export default function PropertyFilters(props: PropertyFiltersProps) {
       if (props.maxArea) searchData.maxArea = props.maxArea;
       if (props.rentFor && props.rentFor !== "all") searchData.rentFor = props.rentFor;
       if (props.furnished && props.furnished !== "all") searchData.furnished = props.furnished;
-      if (props.amenities && props.amenities.length > 0) searchData.amenities = props.amenities;
+      if (props.amenities && props.amenities.length > 0) searchData.amenities = props.amenities.join(",");
 
       await saveSearch(searchData);
       toast.dismiss();
@@ -129,6 +180,7 @@ export default function PropertyFilters(props: PropertyFiltersProps) {
         props.setRentFor("all");
         props.setFurnished("all");
         props.setSelectedLocation("");
+        props.setAmenities([]);
 
         if (data.location) {
           props.setSelectedLocation(data.location);
@@ -167,6 +219,9 @@ export default function PropertyFilters(props: PropertyFiltersProps) {
       toast.success("Location updated!");
     }
   };
+
+  const isPricingActive = props.minPrice !== "" || props.maxPrice !== "";
+  const isAreaActive = props.minArea !== "" || props.maxArea !== "";
 
   return (
     <div className="relative z-50 bg-white/60 backdrop-blur-2xl border border-white/60 p-6 rounded-3xl shadow-xl shadow-sky-100/40 mb-12 flex flex-col gap-6">
@@ -291,7 +346,7 @@ export default function PropertyFilters(props: PropertyFiltersProps) {
           ]} 
         />
 
-       <DropdownMenu 
+        <DropdownMenu 
           label="Property Category" 
           value={props.selectedCategory} 
           onChange={props.setSelectedCategory}
@@ -308,20 +363,26 @@ export default function PropertyFilters(props: PropertyFiltersProps) {
               setIsPricingOpen(!isPricingOpen);
               setIsAreaOpen(false);
             }}
-            className="h-10 px-4 flex items-center gap-2 bg-white border border-slate-200 hover:border-sky-300 hover:bg-sky-50 rounded-full text-sm font-medium text-slate-700 transition-colors shadow-sm"
+            className={`h-10 px-4 flex items-center gap-2 border rounded-full text-sm font-medium transition-colors shadow-sm ${
+              isPricingActive 
+                ? "bg-sky-50 border-sky-300 text-sky-700" 
+                : "bg-white border-slate-200 hover:border-sky-300 hover:bg-sky-50 text-slate-700"
+            }`}
           >
-            Pricing ($) <ChevronDown className="h-4 w-4 text-slate-400" />
+            Pricing ($) <ChevronDown className={`h-4 w-4 ${isPricingActive ? "text-sky-700" : "text-slate-400"}`} />
           </button>
-          <div className={`absolute top-full left-0 mt-2 z-100 ${isPricingOpen ? 'block' : 'hidden'}`}>
-            <RangeInput 
-              minVal={props.minPrice} setMinVal={props.setMinPrice} 
-              maxVal={props.maxPrice} setMaxVal={props.setMaxPrice} 
-              placeholder="Price" 
-              maxAllowed={100000}
-              step={500}
-              onClose={() => setIsPricingOpen(false)}
-            />
-          </div>
+          {isPricingOpen && (
+            <div className="absolute top-full left-0 mt-2 z-100">
+              <RangeInput 
+                minVal={props.minPrice} setMinVal={props.setMinPrice} 
+                maxVal={props.maxPrice} setMaxVal={props.setMaxPrice} 
+                placeholder="Price" 
+                maxAllowed={100000}
+                step={500}
+                onClose={() => setIsPricingOpen(false)}
+              />
+            </div>
+          )}
         </div>
 
         <div className="relative">
@@ -330,20 +391,26 @@ export default function PropertyFilters(props: PropertyFiltersProps) {
               setIsAreaOpen(!isAreaOpen);
               setIsPricingOpen(false);
             }}
-            className="h-10 px-4 flex items-center gap-2 bg-white border border-slate-200 hover:border-sky-300 hover:bg-sky-50 rounded-full text-sm font-medium text-slate-700 transition-colors shadow-sm"
+            className={`h-10 px-4 flex items-center gap-2 border rounded-full text-sm font-medium transition-colors shadow-sm ${
+              isAreaActive 
+                ? "bg-sky-50 border-sky-300 text-sky-700" 
+                : "bg-white border-slate-200 hover:border-sky-300 hover:bg-sky-50 text-slate-700"
+            }`}
           >
-            Area (sqft) <ChevronDown className="h-4 w-4 text-slate-400" />
+            Area (sqft) <ChevronDown className={`h-4 w-4 ${isAreaActive ? "text-sky-700" : "text-slate-400"}`} />
           </button>
-          <div className={`absolute top-full left-0 mt-2 z-100 ${isAreaOpen ? 'block' : 'hidden'}`}>
-            <RangeInput 
-              minVal={props.minArea} setMinVal={props.setMinArea} 
-              maxVal={props.maxArea} setMaxVal={props.setMaxArea} 
-              placeholder="Sqft" 
-              maxAllowed={10000}
-              step={100}
-              onClose={() => setIsAreaOpen(false)}
-            />
-          </div>
+          {isAreaOpen && (
+            <div className="absolute top-full left-0 mt-2 z-100">
+              <RangeInput 
+                minVal={props.minArea} setMinVal={props.setMinArea} 
+                maxVal={props.maxArea} setMaxVal={props.setMaxArea} 
+                placeholder="Sqft" 
+                maxAllowed={10000}
+                step={100}
+                onClose={() => setIsAreaOpen(false)}
+              />
+            </div>
+          )}
         </div>
 
         <DropdownMenu 

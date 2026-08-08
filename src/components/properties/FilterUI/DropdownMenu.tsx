@@ -13,6 +13,8 @@ export default function DropdownMenu({ label, value, onChange, options, type }: 
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
+  const isActive = Array.isArray(value) ? value.length > 0 : value !== "all" && value !== "";
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -46,7 +48,11 @@ export default function DropdownMenu({ label, value, onChange, options, type }: 
     <div className="relative" ref={dropdownRef}>
       <button 
         onClick={() => setIsOpen(!isOpen)}
-        className={`h-10 px-4 flex items-center gap-2 rounded-full text-sm font-medium transition-colors shadow-sm border ${isOpen || (Array.isArray(value) ? value.length > 0 : value !== "all" && value !== "" && value !== "United Arab Emirates / Dubai") ? "bg-sky-50 border-sky-300 text-sky-700" : "bg-white border-slate-200 text-slate-700 hover:border-sky-300 hover:bg-sky-50"}`}
+        className={`h-10 px-4 flex items-center gap-2 rounded-full text-sm font-medium transition-colors shadow-sm border ${
+          isActive 
+            ? "bg-sky-50 border-sky-300 text-sky-700" 
+            : "bg-white border-slate-200 text-slate-700 hover:border-sky-300 hover:bg-sky-50"
+        }`}
       >
         <span>{label}</span>
         <ChevronDown className="h-4 w-4 text-slate-400" />
@@ -61,7 +67,9 @@ export default function DropdownMenu({ label, value, onChange, options, type }: 
                 <button
                   key={opt.value}
                   onClick={() => handleSingleSelect(opt.value)}
-                  className={`flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium text-left transition-colors ${isSelected(opt.value) ? "bg-sky-50 text-sky-700" : "hover:bg-slate-50 text-slate-700"}`}
+                  className={`flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium text-left transition-colors ${
+                    isSelected(opt.value) ? "bg-sky-50 text-sky-700" : "hover:bg-slate-50 text-slate-700"
+                  }`}
                 >
                   {opt.label}
                   {isSelected(opt.value) && <Check className="h-4 w-4 text-sky-600" />}
@@ -74,11 +82,18 @@ export default function DropdownMenu({ label, value, onChange, options, type }: 
             <div className="flex flex-col gap-1 max-h-60 overflow-y-auto pr-1">
               {options.map((opt) => (
                 <label key={opt.value} className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-50 cursor-pointer">
-                  <div className={`w-5 h-5 rounded border flex items-center justify-center transition-colors ${isSelected(opt.value) ? "bg-sky-500 border-sky-500" : "border-slate-300 bg-white"}`}>
+                  <div className={`w-5 h-5 rounded border flex items-center justify-center transition-colors ${
+                    isSelected(opt.value) ? "bg-sky-500 border-sky-500" : "border-slate-300 bg-white"
+                  }`}>
                     {isSelected(opt.value) && <Check className="h-3 w-3 text-white" />}
                   </div>
                   <span className="text-sm font-medium text-slate-700">{opt.label}</span>
-                  <input type="checkbox" className="hidden" checked={isSelected(opt.value)} onChange={() => handleMultipleSelect(opt.value)} />
+                  <input 
+                    type="checkbox" 
+                    className="hidden" 
+                    checked={isSelected(opt.value)} 
+                    onChange={() => handleMultipleSelect(opt.value)} 
+                  />
                 </label>
               ))}
             </div>
@@ -96,7 +111,11 @@ export default function DropdownMenu({ label, value, onChange, options, type }: 
                       handleSingleSelect(opt.value);
                     }
                   }}
-                  className={`h-10 rounded-xl text-sm font-semibold transition-colors border ${isSelected(opt.value) ? "bg-sky-500 text-white border-sky-500" : "bg-white text-slate-600 border-slate-200 hover:border-sky-300 hover:bg-sky-50"}`}
+                  className={`h-10 rounded-xl text-sm font-semibold transition-colors border ${
+                    isSelected(opt.value) 
+                      ? "bg-sky-500 text-white border-sky-500" 
+                      : "bg-white text-slate-600 border-slate-200 hover:border-sky-300 hover:bg-sky-50"
+                  }`}
                 >
                   {opt.label}
                 </button>

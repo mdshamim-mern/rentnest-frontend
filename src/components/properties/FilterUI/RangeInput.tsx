@@ -1,5 +1,5 @@
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface RangeInputProps {
   minVal: string;
@@ -13,23 +13,39 @@ interface RangeInputProps {
 }
 
 export default function RangeInput({ minVal, maxVal, setMinVal, setMaxVal, placeholder = "Value", maxAllowed = 100000, step = 100, onClose }: RangeInputProps) {
+  const [localMin, setLocalMin] = useState(minVal);
+  const [localMax, setLocalMax] = useState(maxVal);
   const [sliderVal, setSliderVal] = useState(Number(maxVal) || (maxAllowed / 2));
+
+  useEffect(() => {
+    setLocalMin(minVal);
+    setLocalMax(maxVal);
+    setSliderVal(Number(maxVal) || (maxAllowed / 2));
+  }, [minVal, maxVal, maxAllowed]);
 
   const handleSliderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSliderVal(Number(e.target.value));
-    setMaxVal(e.target.value);
+    setLocalMax(e.target.value);
+  };
+
+  const handleApply = () => {
+    setMinVal(localMin);
+    setMaxVal(localMax);
+    if (onClose) {
+      onClose();
+    }
   };
 
   return (
-    <div className="flex flex-col gap-4 p-4 bg-white rounded-2xl shadow-xl border border-slate-200 min-w-70">
+    <div className="flex flex-col gap-4 p-4 bg-white rounded-2xl shadow-xl border border-slate-200 min-w-70 z-50">
       <div className="flex items-center gap-2">
         <div className="flex-1">
           <label className="text-xs font-semibold text-slate-500 ml-1 mb-1 block">MINIMUM</label>
           <Input 
             type="number" 
             placeholder={`Min ${placeholder}`}
-            value={minVal}
-            onChange={(e) => setMinVal(e.target.value)}
+            value={localMin}
+            onChange={(e) => setLocalMin(e.target.value)}
             className="h-10 bg-slate-50 border-slate-200 rounded-xl focus-visible:ring-sky-500 text-slate-800 w-full"
           />
         </div>
@@ -39,8 +55,8 @@ export default function RangeInput({ minVal, maxVal, setMinVal, setMaxVal, place
           <Input 
             type="number" 
             placeholder={`Max ${placeholder}`}
-            value={maxVal}
-            onChange={(e) => setMaxVal(e.target.value)}
+            value={localMax}
+            onChange={(e) => setLocalMax(e.target.value)}
             className="h-10 bg-slate-50 border-slate-200 rounded-xl focus-visible:ring-sky-500 text-slate-800 w-full"
           />
         </div>
@@ -63,7 +79,7 @@ export default function RangeInput({ minVal, maxVal, setMinVal, setMaxVal, place
       </div>
 
       <button 
-        onClick={onClose}
+        onClick={handleApply}
         className="w-full h-10 bg-slate-900 hover:bg-sky-500 text-white font-bold rounded-xl transition-colors"
       >
         Apply Range
