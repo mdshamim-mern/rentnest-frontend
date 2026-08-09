@@ -19,7 +19,7 @@ export default function TenantRequestsPage() {
   const [isLoading, setIsLoading] = useState(true);
   
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
-  const [selectedRequestId, setSelectedRequestId] = useState("");
+  const [selectedPropertyId, setSelectedPropertyId] = useState("");
   const [rating, setRating] = useState(5);
   const [reviewComment, setReviewComment] = useState("");
   const [isSubmittingReview, setIsSubmittingReview] = useState(false);
@@ -52,8 +52,8 @@ export default function TenantRequestsPage() {
     }
   };
 
-  const openReviewModal = (id: string) => {
-    setSelectedRequestId(id);
+  const openReviewModal = (propertyId: string) => {
+    setSelectedPropertyId(propertyId);
     setRating(5);
     setReviewComment("");
     setIsReviewModalOpen(true);
@@ -64,15 +64,26 @@ export default function TenantRequestsPage() {
       toast.error("Please write a review comment");
       return;
     }
+    if (!selectedPropertyId) {
+      toast.error("Property ID is missing");
+      return;
+    }
     try {
       setIsSubmittingReview(true);
-      setTimeout(() => {
+      
+      const response = await axiosInstance.post('/reviews', {
+        propertyId: selectedPropertyId,
+        rating,
+        content: reviewComment
+      });
+
+      if (response.data.success) {
         toast.success("Review submitted successfully!");
         setIsReviewModalOpen(false);
-        setIsSubmittingReview(false);
-      }, 1500);
-    } catch (error) {
-      toast.error("Failed to submit review");
+      }
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || "Failed to submit review");
+    } finally {
       setIsSubmittingReview(false);
     }
   };
@@ -184,7 +195,7 @@ export default function TenantRequestsPage() {
                           )}
                           {(request.status === "ACTIVE" || request.status === "COMPLETED") && (
                             <Button 
-                              onClick={() => openReviewModal(request.id)}
+                              onClick={() => openReviewModal(request.property?.id || '')}
                               size="sm" 
                               variant="outline" 
                               className="bg-white/60 border-slate-300 hover:bg-sky-50 hover:text-sky-600 hover:border-sky-300 rounded-xl transition-all"
