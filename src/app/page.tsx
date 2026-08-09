@@ -16,7 +16,7 @@ export default function HomePage() {
               <span className="bg-clip-text text-transparent bg-linear-to-r from-primary to-blue-600">Rental Home</span>
             </h1>
             <p className="text-lg md:text-xl text-slate-600 mb-10 max-w-3xl mx-auto font-medium">
-              Discover thousands of premium rental properties. From cozy apartments to luxury estates, your next home is just a click away.
+              Discover verified rental properties that match your needs. From cozy apartments to luxury estates, your next home is just a click away.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/properties">
@@ -49,22 +49,43 @@ export default function HomePage() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
-              { icon: <Home className="h-8 w-8 text-sky-500" />, title: "Premium Listings", desc: "Access exclusively verified properties matching your exact needs with high-quality visual tours." },
-              { icon: <Shield className="h-8 w-8 text-sky-500" />, title: "Secure Payments", desc: "Integrated Stripe & SSLCommerz for 100% safe, transparent, and hassle-free transactions." },
-              { icon: <Star className="h-8 w-8 text-sky-500" />, title: "Trusted Reviews", desc: "Read genuine feedback from previous tenants before renting to ensure a peaceful experience." }
+              { 
+                icon: <Home className="h-8 w-8 text-blue-600" />, 
+                title: "Premium Listings", 
+                desc: "Access exclusively verified properties matching your exact needs with high-quality visual tours.",
+                wrapperClass: "from-blue-50/50 to-white hover:border-blue-300 hover:shadow-blue-200/50",
+                iconBg: "bg-blue-100 shadow-blue-200/50",
+                indicator: "from-blue-400 to-blue-600"
+              },
+              { 
+                icon: <Shield className="h-8 w-8 text-emerald-600" />, 
+                title: "Secure Payments", 
+                desc: "Integrated Stripe & SSLCommerz for 100% safe, transparent, and hassle-free transactions.",
+                wrapperClass: "from-emerald-50/50 to-white hover:border-emerald-300 hover:shadow-emerald-200/50",
+                iconBg: "bg-emerald-100 shadow-emerald-200/50",
+                indicator: "from-emerald-400 to-emerald-600"
+              },
+              { 
+                icon: <Star className="h-8 w-8 text-violet-600" />, 
+                title: "Trusted Reviews", 
+                desc: "Read genuine feedback from previous tenants before renting to ensure a peaceful experience.",
+                wrapperClass: "from-violet-50/50 to-white hover:border-violet-300 hover:shadow-violet-200/50",
+                iconBg: "bg-violet-100 shadow-violet-200/50",
+                indicator: "from-violet-400 to-violet-600"
+              }
             ].map((feature, idx) => (
               <div 
                 key={idx}
-                className="group relative bg-white rounded-3xl p-8 border border-slate-100 shadow-xl shadow-slate-200/20 hover:shadow-2xl hover:shadow-sky-100/50 transition-all duration-300 hover:-translate-y-2 overflow-hidden"
+                className={`group relative bg-linear-to-br ${feature.wrapperClass} rounded-[2rem] p-8 border border-slate-100 shadow-xl shadow-slate-200/40 transition-all duration-300 hover:-translate-y-2 overflow-hidden`}
               >
-                <div className="absolute top-0 left-0 w-full h-1 bg-linear-to-r from-sky-400 to-blue-500 transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500" />
+                <div className={`absolute top-0 left-0 w-full h-1.5 bg-linear-to-r ${feature.indicator} transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500`} />
                 
-                <div className="w-16 h-16 bg-sky-50 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-sky-100 transition-all duration-300">
+                <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-6 shadow-md group-hover:scale-110 transition-all duration-300 ${feature.iconBg}`}>
                   {feature.icon}
                 </div>
                 
-                <h3 className="text-xl font-bold text-slate-900 mb-3">{feature.title}</h3>
-                <p className="text-slate-500 leading-relaxed">{feature.desc}</p>
+                <h3 className="text-2xl font-bold text-slate-900 mb-3">{feature.title}</h3>
+                <p className="text-slate-600 leading-relaxed text-[15px]">{feature.desc}</p>
               </div>
             ))}
           </div>
