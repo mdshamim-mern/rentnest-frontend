@@ -69,7 +69,7 @@ export default function Navbar() {
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white/60 backdrop-blur-lg border-b border-white/20 shadow-sm transition-all duration-300">
-      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-10">
+      <div className={isDashboard ? "w-full px-4 sm:px-6 lg:px-8" : "max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-10"}>
         <div className="flex justify-between items-center h-16">
           <div className="shrink-0 flex items-center">
             <Link href="/" className="text-xl font-extrabold tracking-tighter text-slate-900 flex items-center gap-2">

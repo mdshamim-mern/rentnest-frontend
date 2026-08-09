@@ -34,25 +34,37 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="py-24 bg-slate-50 relative">
-        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-10">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Why Choose RentNest?</h2>
-            <p className="text-slate-500 max-w-2xl mx-auto">We provide the best rental experience with secure payments and verified landlords.</p>
+      <section className="py-24 bg-linear-to-b from-slate-50 to-white relative overflow-hidden">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-125 bg-sky-50/50 blur-[120px] rounded-full pointer-events-none" />
+        
+        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-10 relative z-10">
+          <div className="text-center max-w-2xl mx-auto mb-16">
+            <h2 className="text-4xl font-extrabold text-slate-900 mb-4 tracking-tight">
+              Why Choose RentNest?
+            </h2>
+            <p className="text-lg text-slate-500">
+              We provide the best rental experience with secure payments, verified landlords, and a completely seamless platform.
+            </p>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
-              { icon: <Home className="h-8 w-8 text-primary" />, title: "Premium Listings", desc: "Access exclusively verified properties matching your exact needs." },
-              { icon: <Shield className="h-8 w-8 text-primary" />, title: "Secure Payments", desc: "Integrated Stripe & SSLCommerz for 100% safe transactions." },
-              { icon: <Star className="h-8 w-8 text-primary" />, title: "Trusted Reviews", desc: "Read genuine feedback from previous tenants before renting." }
+              { icon: <Home className="h-8 w-8 text-sky-500" />, title: "Premium Listings", desc: "Access exclusively verified properties matching your exact needs with high-quality visual tours." },
+              { icon: <Shield className="h-8 w-8 text-sky-500" />, title: "Secure Payments", desc: "Integrated Stripe & SSLCommerz for 100% safe, transparent, and hassle-free transactions." },
+              { icon: <Star className="h-8 w-8 text-sky-500" />, title: "Trusted Reviews", desc: "Read genuine feedback from previous tenants before renting to ensure a peaceful experience." }
             ].map((feature, idx) => (
-              <div key={idx} className="bg-white/60 backdrop-blur-lg border border-slate-100 p-8 rounded-3xl shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
-                <div className="bg-primary/10 w-16 h-16 rounded-2xl flex items-center justify-center mb-6">
+              <div 
+                key={idx}
+                className="group relative bg-white rounded-3xl p-8 border border-slate-100 shadow-xl shadow-slate-200/20 hover:shadow-2xl hover:shadow-sky-100/50 transition-all duration-300 hover:-translate-y-2 overflow-hidden"
+              >
+                <div className="absolute top-0 left-0 w-full h-1 bg-linear-to-r from-sky-400 to-blue-500 transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500" />
+                
+                <div className="w-16 h-16 bg-sky-50 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-sky-100 transition-all duration-300">
                   {feature.icon}
                 </div>
+                
                 <h3 className="text-xl font-bold text-slate-900 mb-3">{feature.title}</h3>
-                <p className="text-slate-600">{feature.desc}</p>
+                <p className="text-slate-500 leading-relaxed">{feature.desc}</p>
               </div>
             ))}
           </div>

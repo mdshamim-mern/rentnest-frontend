@@ -31,8 +31,8 @@ export default function TenantPaymentsPage() {
   };
 
   const totalPaid = payments
-    .filter((p) => p.status === "COMPLETED")
-    .reduce((acc, curr) => acc + curr.amount, 0);
+    .filter((p) => p.status === "COMPLETED" || p.status === "PAID")
+    .reduce((acc, curr) => acc + Number(curr.amount || 0), 0);
 
   const pendingPayments = payments.filter((p) => p.status === "PENDING").length;
 
@@ -133,14 +133,14 @@ export default function TenantPaymentsPage() {
                         {payment.rental?.property?.title || "Property Rental"}
                       </TableCell>
                       <TableCell className="text-slate-500 text-sm">
-                        {new Date(payment.createdAt).toLocaleDateString()}
+                        {payment.createdAt ? new Date(payment.createdAt).toLocaleDateString() : "Invalid Date"}
                       </TableCell>
                       <TableCell className="text-right font-bold text-slate-900">
                         ${payment.amount}
                       </TableCell>
                       <TableCell className="text-right">
                         <span className={`px-3 py-1 rounded-full text-xs font-bold ${
-                          payment.status === "COMPLETED" 
+                          payment.status === "COMPLETED" || payment.status === "PAID"
                             ? "bg-green-100 text-green-700 border border-green-200" 
                             : payment.status === "PENDING"
                             ? "bg-orange-100 text-orange-700 border border-orange-200"
