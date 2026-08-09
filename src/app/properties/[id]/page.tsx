@@ -17,6 +17,7 @@ import { useAuthStore } from "@/lib/store/authStore";
 import { axiosInstance } from "@/lib/api/axiosInstance";
 import toast from "react-hot-toast";
 import PropertyCard from "@/components/properties/PropertyCard";
+import PropertyReviews from "@/components/properties/PropertyReviews";
 
 const getAmenityIcon = (amenityName: string) => {
   const name = amenityName.toLowerCase();
@@ -156,7 +157,8 @@ export default function PropertyDetailsPage() {
   const propertyImages = property.images || [];
   const smallImage1 = propertyImages.length > 0 ? propertyImages[0] : fallbackImage;
   const smallImage2 = propertyImages.length > 1 ? propertyImages[1] : fallbackImage;
-return (
+
+  return (
     <div className="min-h-screen bg-linear-to-br from-slate-50 via-sky-50/40 to-slate-100 py-12">
       
       {isPhotoModalOpen && propertyImages.length > 0 && (
@@ -203,8 +205,7 @@ return (
               fill
               className="object-cover group-hover:scale-105 transition-transform duration-700"
               priority
-            />
-            <div className="absolute inset-0 bg-linear-to-t from-slate-900/60 via-transparent to-transparent" />
+            />  <div className="absolute inset-0 bg-linear-to-t from-slate-900/60 via-transparent to-transparent" />
             <div className="absolute bottom-8 left-8 right-8">
               <div className="bg-sky-500/90 backdrop-blur-md w-fit px-4 py-1.5 rounded-full text-white text-sm font-bold tracking-wider uppercase mb-3 shadow-lg">
                 {property.propertyType || property.category?.name || "Premium"}
@@ -354,6 +355,8 @@ return (
                  />
               </div>
             </div>
+            
+            <PropertyReviews propertyId={property.id} />
 
           </div>
           

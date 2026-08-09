@@ -6,11 +6,15 @@ import { Property } from "@/types";
 import { Card, CardContent } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
+import { Eye } from "lucide-react";
 import toast from "react-hot-toast";
+import ReviewModerationModal from "@/components/dashboard/admin/ReviewModerationModal";
 
 export default function AdminPropertiesPage() {
   const [properties, setProperties] = useState<Property[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(null);
 
   useEffect(() => {
     fetchProperties();
@@ -47,7 +51,8 @@ export default function AdminPropertiesPage() {
                   <TableHead className="font-semibold text-slate-700">Landlord</TableHead>
                   <TableHead className="font-semibold text-slate-700">Location</TableHead>
                   <TableHead className="font-semibold text-slate-700">Category</TableHead>
-                  <TableHead className="font-semibold text-slate-700 text-right">Price</TableHead>
+                  <TableHead className="font-semibold text-slate-700">Price</TableHead>
+                  <TableHead className="font-semibold text-slate-700 text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -58,12 +63,13 @@ export default function AdminPropertiesPage() {
                       <TableCell><Skeleton className="h-6 w-32" /></TableCell>
                       <TableCell><Skeleton className="h-6 w-32" /></TableCell>
                       <TableCell><Skeleton className="h-6 w-24" /></TableCell>
-                      <TableCell className="text-right"><Skeleton className="h-6 w-16 ml-auto" /></TableCell>
+                      <TableCell><Skeleton className="h-6 w-16" /></TableCell>
+                      <TableCell className="text-right"><Skeleton className="h-8 w-24 ml-auto" /></TableCell>
                     </TableRow>
                   ))
                 ) : properties.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={5} className="text-center py-16 text-slate-500">
+                    <TableCell colSpan={6} className="text-center py-16 text-slate-500">
                       No properties exist on the platform.
                     </TableCell>
                   </TableRow>
@@ -78,8 +84,18 @@ export default function AdminPropertiesPage() {
                           {property.category?.name}
                         </span>
                       </TableCell>
-                      <TableCell className="text-right font-bold text-primary">
+                      <TableCell className="font-bold text-primary">
                         ${property.price}
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <Button 
+                          onClick={() => setSelectedPropertyId(property.id)}
+                          variant="outline"
+                          size="sm"
+                          className="bg-white hover:bg-sky-50 text-sky-600 border-sky-200"
+                        >
+                          <Eye className="w-4 h-4 mr-2" /> Reviews
+                        </Button>
                       </TableCell>
                     </TableRow>
                   ))
@@ -89,6 +105,12 @@ export default function AdminPropertiesPage() {
           </div>
         </CardContent>
       </Card>
+
+      <ReviewModerationModal 
+        propertyId={selectedPropertyId} 
+        isOpen={!!selectedPropertyId} 
+        onClose={() => setSelectedPropertyId(null)} 
+      />
     </div>
   );
 }

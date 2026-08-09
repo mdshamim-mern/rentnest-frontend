@@ -9,12 +9,12 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { PlusCircle, Edit, Trash2 } from "lucide-react";
+import { PlusCircle, Edit, Trash2, Star } from "lucide-react";
 import toast from "react-hot-toast";
 import { useAuthStore } from "@/lib/store/authStore";
 
 export default function LandlordPropertiesPage() {
-  const [properties, setProperties] = useState<Property[]>([]);
+  const [properties, setProperties] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
   const user = useAuthStore((state: any) => state.user);
@@ -76,6 +76,7 @@ export default function LandlordPropertiesPage() {
                   <TableHead className="font-semibold text-slate-700">Title</TableHead>
                   <TableHead className="font-semibold text-slate-700">Location</TableHead>
                   <TableHead className="font-semibold text-slate-700">Category</TableHead>
+                  <TableHead className="font-semibold text-slate-700">Rating</TableHead>
                   <TableHead className="font-semibold text-slate-700">Price</TableHead>
                   <TableHead className="font-semibold text-slate-700 text-right">Actions</TableHead>
                 </TableRow>
@@ -87,13 +88,14 @@ export default function LandlordPropertiesPage() {
                       <TableCell><Skeleton className="h-6 w-48" /></TableCell>
                       <TableCell><Skeleton className="h-6 w-32" /></TableCell>
                       <TableCell><Skeleton className="h-6 w-24" /></TableCell>
+                      <TableCell><Skeleton className="h-6 w-16" /></TableCell>
                       <TableCell><Skeleton className="h-6 w-20" /></TableCell>
                       <TableCell className="text-right"><Skeleton className="h-8 w-24 ml-auto" /></TableCell>
                     </TableRow>
                   ))
                 ) : properties.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={5} className="text-center py-16 text-slate-500">
+                    <TableCell colSpan={6} className="text-center py-16 text-slate-500">
                       You haven't listed any properties yet.
                     </TableCell>
                   </TableRow>
@@ -103,6 +105,16 @@ export default function LandlordPropertiesPage() {
                       <TableCell className="font-medium text-slate-900">{property.title}</TableCell>
                       <TableCell className="text-slate-600">{property.location}</TableCell>
                       <TableCell className="text-slate-600">{property.category?.name}</TableCell>
+                      <TableCell className="text-slate-600">
+                        {property.averageRating ? (
+                          <div className="flex items-center gap-1 bg-amber-50 text-amber-700 w-fit px-2 py-0.5 rounded-full border border-amber-100">
+                            <Star className="w-3 h-3 fill-amber-500" />
+                            <span className="text-xs font-bold">{Number(property.averageRating).toFixed(1)}</span>
+                          </div>
+                        ) : (
+                          <span className="text-xs text-slate-400">N/A</span>
+                        )}
+                      </TableCell>
                       <TableCell className="text-slate-900 font-semibold">${property.price}</TableCell>
                       <TableCell className="text-right">
                         <div className="flex justify-end gap-2">
