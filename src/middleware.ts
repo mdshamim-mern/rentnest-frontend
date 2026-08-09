@@ -8,6 +8,11 @@ export function middleware(request: NextRequest) {
   const isAuthRoute = pathname === '/login' || pathname === '/register';
   const isDashboardRoute = pathname.startsWith('/dashboard');
   const isPaymentRoute = pathname.startsWith('/payment');
+  const isPaymentResultRoute = pathname === '/payment/success' || pathname === '/payment/cancel';
+
+  if (isPaymentResultRoute) {
+    return NextResponse.next();
+  }
 
   if (!token && (isDashboardRoute || isPaymentRoute)) {
     return NextResponse.redirect(new URL('/login', request.url));
