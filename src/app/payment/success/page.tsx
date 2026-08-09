@@ -22,9 +22,9 @@ export default function PaymentSuccessPage() {
             </p>
           </div>
           <div className="pt-4 flex flex-col gap-3">
-            <Link href="/dashboard/tenant/requests">
+            <Link href="/dashboard/tenant/payments">
               <Button className="w-full h-12 text-base font-semibold rounded-xl bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20 transition-colors">
-                View My Requests
+                View Payment History
               </Button>
             </Link>
             <Link href="/dashboard/tenant">

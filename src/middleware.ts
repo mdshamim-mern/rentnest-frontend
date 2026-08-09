@@ -7,8 +7,9 @@ export function middleware(request: NextRequest) {
 
   const isAuthRoute = pathname === '/login' || pathname === '/register';
   const isDashboardRoute = pathname.startsWith('/dashboard');
+  const isPaymentRoute = pathname.startsWith('/payment');
 
-  if (!token && isDashboardRoute) {
+  if (!token && (isDashboardRoute || isPaymentRoute)) {
     return NextResponse.redirect(new URL('/login', request.url));
   }
 
@@ -31,7 +32,7 @@ export function middleware(request: NextRequest) {
       return response;
     }
 
-    if (!role && isDashboardRoute) {
+    if (!role && (isDashboardRoute || isPaymentRoute)) {
       return NextResponse.redirect(new URL('/login', request.url));
     }
 
@@ -58,5 +59,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/dashboard/:path*', '/login', '/register'],
+  matcher: ['/dashboard/:path*', '/payment/:path*', '/login', '/register'],
 };
