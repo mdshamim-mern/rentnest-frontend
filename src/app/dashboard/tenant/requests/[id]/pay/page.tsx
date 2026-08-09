@@ -33,7 +33,7 @@ export default function PaymentPage() {
     if (params.id) fetchRequestDetails();
   }, [params.id, router]);
 
-  const calculateTotalAmount = (startDate: string, endDate: string, monthlyPrice: number) => {
+  const calculateSubtotal = (startDate: string, endDate: string, monthlyPrice: number) => {
     const start = new Date(startDate);
     const end = new Date(endDate);
     let months = (end.getFullYear() - start.getFullYear()) * 12 + (end.getMonth() - start.getMonth()) + 1;
@@ -41,14 +41,17 @@ export default function PaymentPage() {
     return months * (monthlyPrice || 0);
   };
 
-  const totalAmount = request ? calculateTotalAmount(request.startDate, request.endDate, request.property?.price || 0) : 0;
+  const subtotal = request ? calculateSubtotal(request.startDate, request.endDate, request.property?.price || 0) : 0;
+  const serviceFee = request?.property?.serviceCharge ? Number(request.property.serviceCharge) : 0;
+  const totalAmount = subtotal + serviceFee;
 
   const handlePayment = async () => {
     try {
       setIsProcessing(true);
       const response = await axiosInstance.post('/payments/create', {
         rentalRequestId: request?.id,
-        amount: totalAmount,
+        amount: subtotal,
+        serviceCharge: serviceFee,
       });
       if (response.data.success && response.data.data?.clientSecret) {
         toast.success("Payment intent created successfully");
@@ -105,11 +108,11 @@ export default function PaymentPage() {
 
             <div className="flex justify-between items-center py-2">
               <span className="text-slate-600 font-medium">Subtotal</span>
-              <span className="text-slate-900 font-semibold">${totalAmount}</span>
+              <span className="text-slate-900 font-semibold">${subtotal}</span>
             </div>
             <div className="flex justify-between items-center py-2">
               <span className="text-slate-600 font-medium">Service Fee</span>
-              <span className="text-slate-900 font-semibold">$0.00</span>
+              <span className="text-slate-900 font-semibold">${serviceFee}</span>
             </div>
             
             <div className="flex justify-between items-center pt-6 border-t border-slate-200">
