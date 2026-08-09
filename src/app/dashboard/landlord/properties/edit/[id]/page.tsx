@@ -14,6 +14,12 @@ import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Loader2 } from "lucide-react";
 import toast from "react-hot-toast";
+import dynamic from "next/dynamic";
+
+const LocationPickerMap = dynamic(() => import("@/components/map/LocationPickerMap"), {
+  ssr: false,
+  loading: () => <div className="h-87.5 w-full bg-slate-100 animate-pulse rounded-xl" />
+});
 
 const AMENITIES_LIST = [
   "Security Guard", "CCTV Camera", "Generator", "Community Hall", "Prayer Room", "GYM", 
@@ -27,8 +33,8 @@ const propertySchema = z.object({
   title: z.string().min(5, "Title must be at least 5 characters"),
   description: z.string().min(20, "Description must be at least 20 characters"),
   location: z.string().min(5, "Location must be at least 5 characters"),
-  lat: z.coerce.number().min(-90).max(90).optional().or(z.literal("")),
-  lng: z.coerce.number().min(-180).max(180).optional().or(z.literal("")),
+  lat: z.coerce.number().min(-90).max(90),
+  lng: z.coerce.number().min(-180).max(180),
   price: z.coerce.number().positive("Price must be a positive number"),
   categoryId: z.string().min(1, "Please select a category"),
   isAvailable: z.boolean(),
@@ -78,8 +84,8 @@ export default function EditPropertyPage() {
       title: "",
       description: "",
       location: "",
-      lat: "" as any,
-      lng: "" as any,
+      lat: 23.7937,
+      lng: 90.4066,
       categoryId: "",
       isAvailable: true,
       rentType: "",
@@ -129,8 +135,8 @@ export default function EditPropertyPage() {
             title: property.title || "",
             description: property.description || "",
             location: property.location || "",
-            lat: property.lat !== null && property.lat !== undefined ? property.lat : ("" as any),
-            lng: property.lng !== null && property.lng !== undefined ? property.lng : ("" as any),
+            lat: property.lat !== null && property.lat !== undefined ? property.lat : 23.7937,
+            lng: property.lng !== null && property.lng !== undefined ? property.lng : 90.4066,
             price: property.price || ("" as any),
             categoryId: property.categoryId || "",
             isAvailable: property.isAvailable !== false,
@@ -212,24 +218,6 @@ export default function EditPropertyPage() {
     try {
       setIsSubmitting(true);
 
-      let finalLat = data.lat ? Number(data.lat) : null;
-      let finalLng = data.lng ? Number(data.lng) : null;
-
-      if (data.location) {
-        try {
-          const token = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
-          if (token) {
-            const geoRes = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(data.location)}.json?access_token=${token}`);
-            const geoData = await geoRes.json();
-            if (geoData.features && geoData.features.length > 0) {
-              finalLng = geoData.features[0].center[0];
-              finalLat = geoData.features[0].center[1];
-            }
-          }
-        } catch (error) {
-        }
-      }
-
       let mainImageUrl = imagePreview && !imagePreview.startsWith("blob:") ? imagePreview : "";
       let additionalImageUrls: string[] = imagePreviews.filter(p => !p.startsWith("blob:"));
 
@@ -267,8 +255,8 @@ export default function EditPropertyPage() {
         title: data.title,
         description: data.description,
         location: data.location,
-        lat: finalLat,
-        lng: finalLng,
+        lat: data.lat,
+        lng: data.lng,
         price: Number(data.price),
         categoryId: data.categoryId,
         isAvailable: data.isAvailable,
@@ -380,7 +368,7 @@ export default function EditPropertyPage() {
 
         <Card className="bg-white/60 backdrop-blur-xl border border-white/50 shadow-xl shadow-sky-100/50 rounded-3xl overflow-hidden">
            <div className="bg-slate-50/80 px-6 py-4 border-b border-slate-100">
-            <CardTitle className="text-xl text-slate-800">Basic Information</CardTitle>
+            <CardTitle className="text-xl text-slate-800">Basic Information & Location</CardTitle>
           </div>
           <CardContent className="p-6 space-y-6">
             <div className="space-y-2">
@@ -390,9 +378,22 @@ export default function EditPropertyPage() {
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-slate-700">Location *</label>
+              <label className="text-sm font-medium text-slate-700">Location Area *</label>
               <Input {...register("location")} placeholder="e.g. House-08, Road-11, Block-A, Dhanmondi, Dhaka" className="bg-white border-slate-200 h-12 rounded-xl" />
               {errors.location && <p className="text-sm text-red-500">{errors.location.message}</p>}
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-slate-700">Exact Map Location *</label>
+              <LocationPickerMap 
+                initialLat={watch("lat")}
+                initialLng={watch("lng")}
+                onLocationSelect={(lat, lng) => {
+                  setValue("lat", lat);
+                  setValue("lng", lng);
+                }} 
+              />
+              {errors.lat && <p className="text-sm text-red-500">Please select location on map</p>}
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
