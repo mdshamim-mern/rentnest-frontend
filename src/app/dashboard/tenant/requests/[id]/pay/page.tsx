@@ -33,16 +33,16 @@ export default function PaymentPage() {
     if (params.id) fetchRequestDetails();
   }, [params.id, router]);
 
-  const calculateSubtotal = (startDate: string, endDate: string, monthlyPrice: number) => {
+  const getMonthsCount = (startDate: string, endDate: string) => {
     const start = new Date(startDate);
     const end = new Date(endDate);
     let months = (end.getFullYear() - start.getFullYear()) * 12 + (end.getMonth() - start.getMonth()) + 1;
-    if (months <= 0) months = 1;
-    return months * (monthlyPrice || 0);
+    return months <= 0 ? 1 : months;
   };
 
-  const subtotal = request ? calculateSubtotal(request.startDate, request.endDate, request.property?.price || 0) : 0;
-  const serviceFee = request?.property?.serviceCharge ? Number(request.property.serviceCharge) : 0;
+  const totalMonths = request ? getMonthsCount(request.startDate, request.endDate) : 0;
+  const subtotal = request ? totalMonths * (request.property?.price || 0) : 0;
+  const serviceFee = request?.property?.serviceCharge ? Number(request.property.serviceCharge) * totalMonths : 0;
   const totalAmount = subtotal + serviceFee;
 
   const handlePayment = async () => {
@@ -53,9 +53,7 @@ export default function PaymentPage() {
         amount: subtotal,
         serviceCharge: serviceFee,
       });
-      if (response.data.success && response.data.data?.clientSecret) {
-        toast.success("Payment intent created successfully");
-      } else if (response.data.success && response.data.data?.url) {
+      if (response.data.success && response.data.data?.url) {
         window.location.href = response.data.data.url;
       } else {
         toast.error("Failed to initiate payment");
@@ -101,7 +99,7 @@ export default function PaymentPage() {
                 <h3 className="font-bold text-lg text-slate-900">{request.property?.title}</h3>
                 <p className="text-slate-500 text-sm mt-1">{request.property?.location}</p>
                 <div className="mt-3 text-sm text-slate-600 bg-white/60 px-3 py-1.5 rounded-lg inline-block">
-                  Duration: {new Date(request.startDate).toLocaleDateString()} - {new Date(request.endDate).toLocaleDateString()}
+                  Duration: {new Date(request.startDate).toLocaleDateString()} - {new Date(request.endDate).toLocaleDateString()} ({totalMonths} {totalMonths > 1 ? 'months' : 'month'})
                 </div>
               </div>
             </div>

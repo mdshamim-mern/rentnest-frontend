@@ -99,12 +99,14 @@ export default function TenantRequestsPage() {
     }
   };
 
-  const calculateTotalAmount = (startDate: string, endDate: string, monthlyPrice: number) => {
+  const calculateTotalAmount = (startDate: string, endDate: string, monthlyPrice: number, serviceCharge: string | number) => {
     const start = new Date(startDate);
     const end = new Date(endDate);
     let months = (end.getFullYear() - start.getFullYear()) * 12 + (end.getMonth() - start.getMonth()) + 1;
     if (months <= 0) months = 1;
-    return months * (monthlyPrice || 0);
+    
+    const serviceFee = serviceCharge ? Number(serviceCharge) : 0;
+    return months * (monthlyPrice + serviceFee);
   };
 
   return (
@@ -178,7 +180,7 @@ export default function TenantRequestsPage() {
                           {new Date(request.startDate).toLocaleDateString()} - {new Date(request.endDate).toLocaleDateString()}
                         </TableCell>
                         <TableCell className="text-slate-900 font-bold">
-                          ${calculateTotalAmount(request.startDate, request.endDate, request.property?.price || 0)}
+                          ${calculateTotalAmount(request.startDate, request.endDate, request.property?.price || 0, request.property?.serviceCharge || 0)}
                         </TableCell>
                         <TableCell>
                           <span className={`px-3 py-1 rounded-full text-xs font-bold border ${getStatusColor(request.status)}`}>
