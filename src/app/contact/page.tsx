@@ -39,9 +39,7 @@ export default function ContactPage() {
             phoneSupportText: res.data.profile?.phoneSupportText || contactInfo.phoneSupportText,
           });
         }
-      } catch (error) {
-        console.error("Error fetching admin info:", error);
-      }
+      } catch (error) {}
     };
     fetchAdminInfo();
   }, []);
@@ -53,7 +51,7 @@ export default function ContactPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.firstName || !formData.email || !formData.message) {
-      toast.error("Please fill in all required fields.");
+      toast.error("Please fill in all required fields!");
       return;
     }
 
@@ -74,7 +72,6 @@ export default function ContactPage() {
         toast.error("Failed to send message.");
       }
     } catch (error) {
-      console.error("Contact submit error:", error);
       toast.error("Something went wrong. Please try again later.");
     } finally {
       setIsSubmitting(false);
@@ -82,80 +79,80 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="min-h-screen pt-16 pb-16">
-      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-10">
+    <div className="min-h-screen pt-16 pb-24 bg-linear-to-br from-slate-50 via-sky-50/30 to-slate-50">
+      <div className="max-w-350 mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight mb-4">
-            Get in <span className="text-primary">Touch</span>
+          <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight mb-6">
+            Get in <span className="text-transparent bg-clip-text bg-linear-to-r from-sky-500 to-blue-600">Touch</span>
           </h1>
-          <p className="text-lg text-slate-600">
+          <p className="text-lg text-slate-600 leading-relaxed">
             Have questions about listing a property or finding your new home? Our team is here to help you every step of the way.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          <div className="bg-white/60 backdrop-blur-xl border border-white/50 p-8 md:p-10 rounded-3xl shadow-lg">
-            <h2 className="text-2xl font-bold text-slate-900 mb-6">Send us a message</h2>
-            <form className="space-y-6" onSubmit={handleSubmit}>
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 items-start">
+          <div className="lg:col-span-3 bg-white/80 backdrop-blur-2xl border border-white p-8 md:p-12 rounded-[2rem] shadow-2xl shadow-sky-100/50">
+            <h2 className="text-3xl font-bold text-slate-900 mb-8">Send us a message</h2>
+            <form className="space-y-6" onSubmit={handleSubmit} noValidate>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-slate-700">First Name <span className="text-red-500">*</span></label>
-                  <Input name="firstName" value={formData.firstName} onChange={handleChange} placeholder="John" className="bg-white/60 h-12" required />
+                <div className="space-y-2.5">
+                  <label className="text-sm font-semibold text-slate-700">First Name <span className="text-rose-500">*</span></label>
+                  <Input name="firstName" value={formData.firstName} onChange={handleChange} placeholder="John" className="bg-slate-50/50 hover:bg-white focus:bg-white border-slate-200 h-14 rounded-xl transition-all" required />
                 </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-slate-700">Last Name</label>
-                  <Input name="lastName" value={formData.lastName} onChange={handleChange} placeholder="Doe" className="bg-white/60 h-12" />
+                <div className="space-y-2.5">
+                  <label className="text-sm font-semibold text-slate-700">Last Name</label>
+                  <Input name="lastName" value={formData.lastName} onChange={handleChange} placeholder="Doe" className="bg-slate-50/50 hover:bg-white focus:bg-white border-slate-200 h-14 rounded-xl transition-all" />
                 </div>
               </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-slate-700">Email Address <span className="text-red-500">*</span></label>
-                <Input name="email" type="email" value={formData.email} onChange={handleChange} placeholder="john@example.com" className="bg-white/60 h-12" required />
+              <div className="space-y-2.5">
+                <label className="text-sm font-semibold text-slate-700">Email Address <span className="text-rose-500">*</span></label>
+                <Input name="email" type="email" value={formData.email} onChange={handleChange} placeholder="john@example.com" className="bg-slate-50/50 hover:bg-white focus:bg-white border-slate-200 h-14 rounded-xl transition-all" required />
               </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-slate-700">Message <span className="text-red-500">*</span></label>
-                <Textarea name="message" value={formData.message} onChange={handleChange} placeholder="How can we help you?" className="bg-white/60 min-h-32 resize-none" required />
+              <div className="space-y-2.5">
+                <label className="text-sm font-semibold text-slate-700">Message <span className="text-rose-500">*</span></label>
+                <Textarea name="message" value={formData.message} onChange={handleChange} placeholder="How can we help you?" className="bg-slate-50/50 hover:bg-white focus:bg-white border-slate-200 min-h-40 rounded-xl resize-none transition-all" required />
               </div>
-              <Button type="submit" disabled={isSubmitting} className="w-full h-12 text-base font-semibold shadow-lg shadow-primary/20">
-                {isSubmitting ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : null}
-                {isSubmitting ? "Sending..." : "Send Message"}
+              <Button type="submit" disabled={isSubmitting} className="w-full h-14 text-lg font-bold bg-linear-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white rounded-xl shadow-xl shadow-blue-500/25 hover:shadow-2xl hover:shadow-blue-500/40 hover:-translate-y-0.5 transition-all duration-300">
+                {isSubmitting ? <Loader2 className="mr-2 h-6 w-6 animate-spin" /> : null}
+                {isSubmitting ? "Sending Message..." : "Send Message"}
               </Button>
             </form>
           </div>
 
-          <div className="space-y-8 flex flex-col justify-center">
-            <div className="flex items-start gap-4 p-6 bg-white/40 rounded-2xl border border-white/50">
-              <div className="bg-primary/10 p-4 rounded-xl shrink-0">
-                <Mail className="h-6 w-6 text-primary" />
+          <div className="lg:col-span-2 space-y-6">
+            <div className="group flex items-start gap-5 p-8 bg-white/70 hover:bg-white rounded-[2rem] border border-white shadow-xl shadow-slate-200/50 hover:shadow-2xl hover:shadow-sky-200/50 transition-all duration-300">
+              <div className="bg-linear-to-br from-sky-100 to-blue-100 p-4 rounded-2xl shrink-0 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300">
+                <Mail className="h-7 w-7 text-blue-600" />
               </div>
               <div>
-                <h3 className="text-lg font-bold text-slate-900">Email Us</h3>
-                <p className="text-slate-600 mb-1">{contactInfo.emailSupportText}</p>
-                <a href={`mailto:${contactInfo.email}`} className="text-primary font-medium hover:underline">
+                <h3 className="text-xl font-bold text-slate-900 mb-2">Email Us</h3>
+                <p className="text-slate-600 leading-relaxed mb-3">{contactInfo.emailSupportText}</p>
+                <a href={`mailto:${contactInfo.email}`} className="text-blue-600 font-semibold hover:text-blue-700 hover:underline transition-colors">
                   {contactInfo.email}
                 </a>
               </div>
             </div>
 
-            <div className="flex items-start gap-4 p-6 bg-white/40 rounded-2xl border border-white/50">
-              <div className="bg-primary/10 p-4 rounded-xl shrink-0">
-                <Phone className="h-6 w-6 text-primary" />
+            <div className="group flex items-start gap-5 p-8 bg-white/70 hover:bg-white rounded-[2rem] border border-white shadow-xl shadow-slate-200/50 hover:shadow-2xl hover:shadow-sky-200/50 transition-all duration-300">
+              <div className="bg-linear-to-br from-sky-100 to-blue-100 p-4 rounded-2xl shrink-0 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300">
+                <Phone className="h-7 w-7 text-blue-600" />
               </div>
               <div>
-                <h3 className="text-lg font-bold text-slate-900">Call Us</h3>
-                <p className="text-slate-600 mb-1">{contactInfo.phoneSupportText}</p>
-                <a href={`tel:${contactInfo.phone}`} className="text-primary font-medium hover:underline">
+                <h3 className="text-xl font-bold text-slate-900 mb-2">Call Us</h3>
+                <p className="text-slate-600 leading-relaxed mb-3">{contactInfo.phoneSupportText}</p>
+                <a href={`tel:${contactInfo.phone}`} className="text-blue-600 font-semibold hover:text-blue-700 hover:underline transition-colors">
                   {contactInfo.phone}
                 </a>
               </div>
             </div>
 
-            <div className="flex items-start gap-4 p-6 bg-white/40 rounded-2xl border border-white/50">
-              <div className="bg-primary/10 p-4 rounded-xl shrink-0">
-                <MapPin className="h-6 w-6 text-primary" />
+            <div className="group flex items-start gap-5 p-8 bg-white/70 hover:bg-white rounded-[2rem] border border-white shadow-xl shadow-slate-200/50 hover:shadow-2xl hover:shadow-sky-200/50 transition-all duration-300">
+              <div className="bg-linear-to-br from-sky-100 to-blue-100 p-4 rounded-2xl shrink-0 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300">
+                <MapPin className="h-7 w-7 text-blue-600" />
               </div>
               <div>
-                <h3 className="text-lg font-bold text-slate-900">Office Location</h3>
-                <p className="text-slate-600 whitespace-pre-wrap">
+                <h3 className="text-xl font-bold text-slate-900 mb-2">Office Location</h3>
+                <p className="text-slate-600 leading-relaxed whitespace-pre-wrap">
                   {contactInfo.address}
                 </p>
               </div>
