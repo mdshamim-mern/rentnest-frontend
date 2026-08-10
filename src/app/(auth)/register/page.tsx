@@ -141,7 +141,7 @@ export default function RegisterPage() {
                 <SelectTrigger className="bg-white/60 border-slate-200/60 h-12">
                   <SelectValue placeholder="Select your role" />
                 </SelectTrigger>
-                <SelectContent className="w-var(--radix-select-trigger-width)">
+                <SelectContent className="min-w-87.5">
                   <SelectItem value="TENANT">Tenant (Looking for rental)</SelectItem>
                   <SelectItem value="LANDLORD">Landlord (Listing properties)</SelectItem>
                   <SelectItem value="ADMIN">Admin (Platform Management)</SelectItem>
