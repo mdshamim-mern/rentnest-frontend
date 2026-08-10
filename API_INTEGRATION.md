@@ -35,9 +35,9 @@ This document maps all the frontend routes, pages, and components to their corre
 ### 💳 Payment Flow (Tenant)
 | Frontend Route / Action | Backend API Endpoint | HTTP Method | Purpose |
 | :--- | :--- | :--- | :--- |
-| `/dashboard/tenant/requests/[id]/pay` | `/api/payments/create-checkout-session` | `POST` | Initiates Stripe Checkout session and returns session URL. |
-| `/payment/success` (Webhook handler) | `/api/payments/webhook` | `POST` | (Backend) Stripe webhook updates DB status to `PAID`/`ACTIVE`. |
-| `/dashboard/tenant/payments` | `/api/payments/my-payments` | `GET` | Fetches complete transaction history for the tenant. |
+| `/dashboard/tenant/requests/[id]/pay` | `/api/payments/create` | `POST` | Initiates Stripe Checkout session and returns session URL. |
+| `/payment/success` | `/api/payments/save` | `POST` | Saves payment details in DB and updates rental request status to `ACTIVE`. |
+| `/dashboard/tenant/payments` | `/api/payments` | `GET` | Fetches complete transaction history for the tenant. |
 
 ---
 
