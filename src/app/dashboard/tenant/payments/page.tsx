@@ -130,10 +130,10 @@ export default function TenantPaymentsPage() {
                         {payment.transactionId || payment.id.slice(0, 8).toUpperCase()}
                       </TableCell>
                       <TableCell className="font-semibold text-slate-900">
-                        {payment.rental?.property?.title || "Property Rental"}
+                        {payment.rental?.property?.title || payment.rentalRequest?.property?.title || "Property Rental"}
                       </TableCell>
                       <TableCell className="text-slate-500 text-sm">
-                        {payment.createdAt ? new Date(payment.createdAt).toLocaleDateString() : "Invalid Date"}
+                        {payment.createdAt ? new Date(payment.createdAt).toLocaleDateString() : "Date Not Available"}
                       </TableCell>
                       <TableCell className="text-right font-bold text-slate-900">
                         ${payment.amount}
