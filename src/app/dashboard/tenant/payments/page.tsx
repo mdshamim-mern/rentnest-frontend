@@ -133,7 +133,7 @@ export default function TenantPaymentsPage() {
                         {payment.rental?.property?.title || payment.rentalRequest?.property?.title || "Property Rental"}
                       </TableCell>
                       <TableCell className="text-slate-500 text-sm">
-                        {payment.createdAt ? new Date(payment.createdAt).toLocaleDateString() : "Date Not Available"}
+                        {payment.paidAt ? new Date(payment.paidAt).toLocaleDateString() : "Date Not Available"}
                       </TableCell>
                       <TableCell className="text-right font-bold text-slate-900">
                         ${payment.amount}
