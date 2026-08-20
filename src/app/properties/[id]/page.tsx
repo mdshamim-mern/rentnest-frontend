@@ -366,7 +366,7 @@ export default function PropertyDetailsPage() {
                 <div className="flex justify-between items-start mb-2">
                   <div>
                     <div className="text-sm font-semibold text-slate-500 uppercase tracking-widest mb-1">{property.rentType || "Monthly Rent"}</div>
-                    <div className="text-4xl font-extrabold text-slate-900">৳ {property.price}</div>
+                    <div className="text-4xl font-extrabold text-slate-900">$ {property.price}</div>
                   </div>
                   <Button onClick={handleShare} variant="outline" size="icon" className="rounded-full h-10 w-10 bg-white/80 border-slate-200 hover:text-sky-500 hover:scale-110 transition-transform shadow-sm">
                     <Share className="h-4 w-4" />
