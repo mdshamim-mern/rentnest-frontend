@@ -143,7 +143,8 @@ export default function PropertyDetailsPage() {
     }
   };
 
-  if (isLoading) {  return (
+  if (isLoading) {  
+    return (
       <div className="min-h-screen flex items-center justify-center bg-slate-50/50">
         <div className="animate-pulse flex flex-col items-center">
           <Home className="h-16 w-16 text-sky-300 mb-6 animate-bounce" />
@@ -205,7 +206,8 @@ export default function PropertyDetailsPage() {
               fill
               className="object-cover group-hover:scale-105 transition-transform duration-700"
               priority
-            />  <div className="absolute inset-0 bg-linear-to-t from-slate-900/60 via-transparent to-transparent" />
+            />  
+            <div className="absolute inset-0 bg-linear-to-t from-slate-900/60 via-transparent to-transparent" />
             <div className="absolute bottom-8 left-8 right-8">
               <div className="bg-sky-500/90 backdrop-blur-md w-fit px-4 py-1.5 rounded-full text-white text-sm font-bold tracking-wider uppercase mb-3 shadow-lg">
                 {property.propertyType || property.category?.name || "Premium"}
@@ -300,7 +302,7 @@ export default function PropertyDetailsPage() {
                  </div>
                  <div>
                     <p className="text-sm text-slate-500 font-medium mb-1 flex items-center gap-1.5"><Wrench className="h-4 w-4 text-sky-500"/> Service Charge</p>
-                    <p className="font-bold text-slate-800">{property.serviceCharge ? `৳ ${property.serviceCharge}` : "-"}</p>
+                    <p className="font-bold text-slate-800">{property.serviceCharge ? `$ ${property.serviceCharge}` : "-"}</p>
                  </div>
               </div>
             </div>
@@ -366,14 +368,14 @@ export default function PropertyDetailsPage() {
                 <div className="flex justify-between items-start mb-2">
                   <div>
                     <div className="text-sm font-semibold text-slate-500 uppercase tracking-widest mb-1">{property.rentType || "Monthly Rent"}</div>
-                    <div className="text-4xl font-extrabold text-slate-900">৳ {property.price}</div>
+                    <div className="text-4xl font-extrabold text-slate-900">$ {property.price}</div>
                   </div>
                   <Button onClick={handleShare} variant="outline" size="icon" className="rounded-full h-10 w-10 bg-white/80 border-slate-200 hover:text-sky-500 hover:scale-110 transition-transform shadow-sm">
                     <Share className="h-4 w-4" />
                   </Button>
                 </div>
                 <div className="mb-6 inline-block bg-slate-100 text-slate-600 px-3 py-1 rounded-full text-sm font-semibold border border-slate-200">
-                    {property.rentNegotiable ? "Negotiable" : "Fixed"}
+                    {(property as any).isNegotiable || property.rentNegotiable ? "Negotiable" : "Fixed"}
                 </div>
                 
                 <div className="space-y-4 mb-8">
