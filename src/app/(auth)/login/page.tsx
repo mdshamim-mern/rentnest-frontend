@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -12,6 +12,8 @@ import { useAuthStore } from "@/lib/store/authStore";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import AuthShell from "@/components/shared/AuthShell";
+import GoogleLogin from "@/components/shared/GoogleLogin";
 import { Eye, EyeOff } from "lucide-react";
 
 const loginSchema = z.object({
@@ -33,10 +35,13 @@ export default function LoginPage() {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
   });
+
+  useEffect(() => { if (searchParams.get("demo") === "true") { setValue("email", "demo@rentnest.example"); setValue("password", "RentNestDemo2026!"); } }, [searchParams, setValue]);
 
   const onSubmit = async (data: LoginFormValues) => {
     try {
@@ -47,7 +52,7 @@ export default function LoginPage() {
         document.cookie = `token=${res.data.token}; path=/; max-age=86400; SameSite=Strict`;
         toast.success("Login successful!");
         
-        if (redirectUrl && res.data.user.role === "LANDLORD") {
+        if (redirectUrl?.startsWith("/") && !redirectUrl.startsWith("//") && !redirectUrl.includes("\\") && res.data.user.role === "LANDLORD") {
           router.push(redirectUrl);
         } else {
           router.push(`/dashboard/${res.data.user.role.toLowerCase()}`);
@@ -61,7 +66,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-[80vh] px-4 pt-16">
+    <AuthShell>
       <Card className="w-full max-w-md bg-white/40 backdrop-blur-xl border-white/50 shadow-2xl rounded-2xl">
         <CardHeader className="space-y-1 text-center">
           <CardTitle className="text-3xl font-bold tracking-tight text-slate-900">
@@ -72,9 +77,13 @@ export default function LoginPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
+          <GoogleLogin onSuccess={({ user, token }) => { login(user, token); document.cookie = `token=${token}; path=/; max-age=86400; SameSite=Strict`; toast.success("Welcome to RentNest!"); router.push(`/dashboard/${user.role.toLowerCase()}`); }} />
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div className="space-y-2">
+              <label htmlFor="email">Email address</label>
               <Input
+                id="email"
+                autoComplete="email"
                 {...register("email")}
                 type="email"
                 placeholder="name@example.com"
@@ -85,15 +94,19 @@ export default function LoginPage() {
               )}
             </div>
             <div className="space-y-2">
+              <label htmlFor="password">Password</label>
               <div className="relative">
                 <Input
-                  {...register("password")}
+                  id="password"
+                autoComplete="current-password"
+                {...register("password")}
                   type={showPassword ? "text" : "password"}
                   placeholder="••••••••"
                   className="bg-white/60 border-slate-200/60 focus-visible:ring-primary h-12 pr-10"
                 />
                 <button
                   type="button"
+                  aria-label={showPassword ? "Hide password" : "Show password"}
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 transition-colors"
                 >
@@ -116,6 +129,8 @@ export default function LoginPage() {
               {isLoading ? "Signing in..." : "Sign in"}
             </Button>
           </form>
+          <button type="button" className="demo-button" disabled={isLoading} onClick={() => { setValue("email", "demo@rentnest.example", { shouldValidate: true }); setValue("password", "RentNestDemo2026!", { shouldValidate: true }); toast.success("Demo credentials filled. Select Sign in to explore."); }}>Demo Login — auto-fill credentials</button>
+          <p className="mt-2 text-center text-xs text-slate-500">Explore with a read-only demo account.</p>
           <div className="mt-6 text-center text-sm text-slate-600">
             Don&apos;t have an account?{" "}
             <Link href="/register" className="font-semibold text-primary hover:underline">
@@ -124,6 +139,6 @@ export default function LoginPage() {
           </div>
         </CardContent>
       </Card>
-    </div>
+    </AuthShell>
   );
 }

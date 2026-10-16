@@ -6,7 +6,8 @@ import { useAuthStore } from '../store/authStore';
 
 export const axiosInstance = axios.create({
 
-  baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
+  baseURL: process.env.NEXT_PUBLIC_BACKEND_URL || "https://rentnest-backend-iota.vercel.app/api",
+  timeout: 20000,
 
   headers: {
 
@@ -50,7 +51,7 @@ axiosInstance.interceptors.response.use(
 
   (error) => {
 
-    if (error.response?.status === 401) {
+    if (error.response?.status === 401 && !error.config?.url?.startsWith('/auth/')) {
 
       useAuthStore.getState().logout();
 

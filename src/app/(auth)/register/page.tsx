@@ -13,13 +13,15 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import AuthShell from "@/components/shared/AuthShell";
+import GoogleLogin from "@/components/shared/GoogleLogin";
 import { Eye, EyeOff } from "lucide-react";
 
 const registerSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string().email("Invalid email address"),
   password: z.string().min(6, "Password must be at least 6 characters"),
-  role: z.enum(["TENANT", "LANDLORD", "ADMIN"], {
+  role: z.enum(["TENANT", "LANDLORD"], {
     required_error: "Please select a role",
   }),
 });
@@ -36,9 +38,11 @@ export default function RegisterPage() {
     register,
     handleSubmit,
     setValue,
+    watch,
     formState: { errors },
   } = useForm<RegisterFormValues>({
     resolver: zodResolver(registerSchema),
+    defaultValues: { role: "TENANT" },
   });
 
   const onSubmit = async (data: RegisterFormValues) => {
@@ -79,7 +83,7 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-[80vh] px-4 pt-16">
+    <AuthShell>
       <Card className="w-full max-w-md bg-white/40 backdrop-blur-xl border-white/50 shadow-2xl rounded-2xl">
         <CardHeader className="space-y-1 text-center">
           <CardTitle className="text-3xl font-bold tracking-tight text-slate-900">
@@ -90,9 +94,13 @@ export default function RegisterPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
+          <GoogleLogin role={watch("role") || "TENANT"} onSuccess={({ user, token }) => { login(user, token); document.cookie = `token=${token}; path=/; max-age=86400; SameSite=Strict`; toast.success("Welcome to RentNest!"); router.push(`/dashboard/${user.role.toLowerCase()}`); }} />
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div className="space-y-2">
+              <label htmlFor="name">Full name</label>
               <Input
+                id="name"
+                autoComplete="name"
                 {...register("name")}
                 placeholder="Full Name"
                 className="bg-white/60 border-slate-200/60 focus-visible:ring-primary h-12"
@@ -102,7 +110,10 @@ export default function RegisterPage() {
               )}
             </div>
             <div className="space-y-2">
+              <label htmlFor="email">Email address</label>
               <Input
+                id="email"
+                autoComplete="email"
                 {...register("email")}
                 type="email"
                 placeholder="name@example.com"
@@ -113,15 +124,19 @@ export default function RegisterPage() {
               )}
             </div>
             <div className="space-y-2">
+              <label htmlFor="password">Password</label>
               <div className="relative">
                 <Input
-                  {...register("password")}
+                  id="password"
+                autoComplete="new-password"
+                {...register("password")}
                   type={showPassword ? "text" : "password"}
                   placeholder="Create a password"
                   className="bg-white/60 border-slate-200/60 focus-visible:ring-primary h-12 pr-10"
                 />
                 <button
                   type="button"
+                  aria-label={showPassword ? "Hide password" : "Show password"}
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 transition-colors"
                 >
@@ -137,14 +152,15 @@ export default function RegisterPage() {
               )}
             </div>
             <div className="space-y-2">
-              <Select onValueChange={(value) => setValue("role", value as "TENANT" | "LANDLORD" | "ADMIN")}>
+              <label>Account type</label>
+              <Select value={watch("role")} onValueChange={(value) => setValue("role", value as "TENANT" | "LANDLORD")}>
                 <SelectTrigger className="bg-white/60 border-slate-200/60 h-12">
                   <SelectValue placeholder="Select your role" />
                 </SelectTrigger>
-                <SelectContent className="min-w-87.5">
+                <SelectContent className="max-w-[calc(100vw-40px)]">
                   <SelectItem value="TENANT">Tenant (Looking for rental)</SelectItem>
                   <SelectItem value="LANDLORD">Landlord (Listing properties)</SelectItem>
-                  <SelectItem value="ADMIN">Admin (Platform Management)</SelectItem>
+
                 </SelectContent>
               </Select>
               {errors.role && (
@@ -159,6 +175,7 @@ export default function RegisterPage() {
               {isLoading ? "Creating account..." : "Sign up"}
             </Button>
           </form>
+          <Link href="/login?demo=true" className="demo-button block text-center">Try Demo Login instead</Link>
           <div className="mt-6 text-center text-sm text-slate-600">
             Already have an account?{" "}
             <Link href="/login" className="font-semibold text-primary hover:underline">
@@ -167,6 +184,6 @@ export default function RegisterPage() {
           </div>
         </CardContent>
       </Card>
-    </div>
+    </AuthShell>
   );
 }

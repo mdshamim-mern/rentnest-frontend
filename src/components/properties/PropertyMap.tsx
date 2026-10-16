@@ -54,11 +54,11 @@ export default function PropertyMap({ properties }: PropertyMapProps) {
         </div>
       </div>
       <p className="text-slate-500 text-center max-w-md mb-6">
-        Showing {properties.length} properties on the map. Explore locations and neighborhood stats interactively.
+        Showing {validProperties.length} of {properties.length} properties with map coordinates.
       </p>
 
-      <div className="w-full h-112.5 rounded-2xl overflow-hidden border border-slate-200">
-        <MapContainer center={center} zoom={12} scrollWheelZoom={true} className="h-full w-full">
+      <div className="relative z-0 w-full h-112.5 rounded-2xl overflow-hidden border border-slate-200">
+        <MapContainer center={center} zoom={12} scrollWheelZoom={false} className="h-full w-full">
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -67,7 +67,7 @@ export default function PropertyMap({ properties }: PropertyMapProps) {
             <Marker key={p.id} position={[p.lat as number, p.lng as number]} icon={defaultIcon}>
               <Popup>
                 <div className="flex flex-col gap-2 w-48">
-                  <img src={p.image || "/placeholder.jpg"} alt={p.title} className="w-full h-24 object-cover rounded-lg" />
+                  <img src={p.image || "/property-placeholder.svg"} alt={p.title} className="w-full h-24 object-cover rounded-lg" />
                   <h4 className="font-bold text-sm text-slate-900 leading-tight">{p.title}</h4>
                   <p className="text-xs text-sky-600 font-semibold">${p.price}/month</p>
                   <p className="text-xs text-slate-500 truncate">{p.location}</p>

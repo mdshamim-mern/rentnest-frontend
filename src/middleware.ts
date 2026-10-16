@@ -30,7 +30,9 @@ export function middleware(request: NextRequest) {
           .join('')
       );
       const decoded = JSON.parse(jsonPayload);
+      if (!decoded.exp || decoded.exp * 1000 <= Date.now()) throw new Error('Session expired');
       role = decoded.role || decoded.user?.role || '';
+      if (!['TENANT', 'LANDLORD', 'ADMIN'].includes(role)) throw new Error('Invalid role');
     } catch (error) {
       const response = NextResponse.redirect(new URL('/login', request.url));
       response.cookies.delete('token');

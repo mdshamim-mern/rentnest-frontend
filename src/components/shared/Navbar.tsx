@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { Menu, X, Home, Building, LayoutDashboard, LogOut, Info, PhoneCall, PlusCircle } from "lucide-react";
 import { useAuthStore } from "@/lib/store/authStore";
 import { Button } from "@/components/ui/button";
@@ -12,7 +12,7 @@ export default function Navbar() {
   const [isMounted, setIsMounted] = useState(false);
   const { isAuthenticated, user, logout } = useAuthStore();
   const pathname = usePathname();
-  const router = useRouter();
+
 
   useEffect(() => {
     setIsMounted(true);
@@ -68,17 +68,17 @@ export default function Navbar() {
   if (!isMounted) return null;
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-white/60 backdrop-blur-lg border-b border-white/20 shadow-sm transition-all duration-300">
+    <nav className="rentnest-nav fixed top-0 left-0 right-0 z-50 bg-white/60 backdrop-blur-lg border-b border-white/20 shadow-sm transition-all duration-300">
       <div className={isDashboard ? "w-full px-4 sm:px-6 lg:px-8" : "max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-10"}>
         <div className="flex justify-between items-center h-16">
           <div className="shrink-0 flex items-center">
             <Link href="/" className="text-xl font-extrabold tracking-tighter text-slate-900 flex items-center gap-2">
-              <span className="bg-primary text-white rounded-lg flex items-center justify-center text-sm font-bold w-8 h-8">RN</span>
+              <span className="bg-primary text-white rounded-xl flex items-center justify-center text-sm font-bold w-8 h-8">RN</span>
               <span className="text-xl font-black">RentNest</span>
             </Link>
           </div>
 
-          <div className="hidden md:flex md:items-center bg-slate-50 border border-slate-100 rounded-full p-1 shadow-sm">
+          <div className="hidden lg:flex md:items-center nav-pills bg-slate-50 border border-slate-100 rounded-full p-1 shadow-sm">
             {navLinks.map((link) => (
               <Link
                 key={link.name}
@@ -95,7 +95,7 @@ export default function Navbar() {
             ))}
           </div>
 
-          <div className="hidden md:flex md:items-center md:space-x-4">
+          <div className="hidden lg:flex md:items-center md:space-x-4">
             {renderListPropertyBtn()}
             
             {isAuthenticated ? (
@@ -122,8 +122,10 @@ export default function Navbar() {
             )}
           </div>
 
-          <div className="flex items-center md:hidden">
+          <div className="flex items-center lg:hidden">
             <Button
+              aria-label={isOpen ? "Close navigation" : "Open navigation"}
+              aria-expanded={isOpen}
               variant="ghost"
               size="icon"
               onClick={() => setIsOpen(!isOpen)}
@@ -136,7 +138,7 @@ export default function Navbar() {
       </div>
 
       {isOpen && (
-        <div className="md:hidden bg-white/95 backdrop-blur-xl border-b border-slate-200 shadow-xl absolute w-full">
+        <div className="lg:hidden bg-white/95 backdrop-blur-xl border-b border-slate-200 shadow-xl absolute w-full">
           <div className="px-4 pt-2 pb-6 space-y-2">
             {navLinks.map((link) => (
               <Link

@@ -1,96 +1,46 @@
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Search, Home, Shield, Star, ArrowRight } from "lucide-react";
-
+import { ArrowUpRight, Search, MapPin, ShieldCheck, KeyRound, SlidersHorizontal, ArrowRight, Building2 } from "lucide-react";
+const neighborhoods = [
+  { name: "Gulshan", detail: "A little more room for the good life", image: "photo-1600607687920-4e2a09cf159d" },
+  { name: "Dhanmondi", detail: "City energy. A neighborhood feeling.", image: "photo-1600566753190-17f0baa2a6c3" },
+  { name: "Banani", detail: "Find your own corner of the city", image: "photo-1600210492486-724fe5c67fb0" },
+];
 export default function HomePage() {
-  return (
-    <div className="min-h-screen flex flex-col">
-      <section className="relative h-[90vh] flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 bg-linear-to-br from-primary/10 via-slate-100 to-secondary/10 z-0" />
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=2075&auto=format&fit=crop')] bg-cover bg-center opacity-5" />
-        
-        <div className="relative z-10 max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-10 flex flex-col items-center text-center">
-          <div className="bg-white/40 backdrop-blur-2xl border border-white/60 p-8 md:p-14 rounded-[2.5rem] shadow-2xl max-w-5xl">
-            <h1 className="text-5xl md:text-7xl font-extrabold text-slate-900 tracking-tight mb-6 leading-tight">
-              Find Your Perfect <br className="hidden md:block" />
-              <span className="bg-clip-text text-transparent bg-linear-to-r from-primary to-blue-600">Rental Home</span>
-            </h1>
-            <p className="text-lg md:text-xl text-slate-600 mb-10 max-w-3xl mx-auto font-medium">
-              Discover verified rental properties that match your needs. From cozy apartments to luxury estates, your next home is just a click away.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/properties">
-                <Button size="lg" className="h-14 px-8 text-lg w-full sm:w-auto shadow-xl shadow-primary/25 rounded-2xl transition-all hover:scale-105">
-                  <Search className="mr-2 h-5 w-5" /> Browse Properties
-                </Button>
-              </Link>
-              <Link href="/contact">
-                <Button size="lg" variant="outline" className="h-14 px-8 text-lg w-full sm:w-auto bg-white/50 backdrop-blur-md border-slate-300 rounded-2xl hover:bg-white/80 transition-all">
-                  Contact Us <ArrowRight className="ml-2 h-5 w-5" />
-                </Button>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="py-24 bg-linear-to-b from-slate-50 to-white relative overflow-hidden">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-125 bg-sky-50/50 blur-[120px] rounded-full pointer-events-none" />
-        
-        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-10 relative z-10">
-          <div className="text-center max-w-2xl mx-auto mb-16">
-            <h2 className="text-4xl font-extrabold text-slate-900 mb-4 tracking-tight">
-              Why Choose RentNest?
-            </h2>
-            <p className="text-lg text-slate-500">
-              We provide the best rental experience with secure payments, verified landlords, and a completely seamless platform.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[
-              { 
-                icon: <Home className="h-8 w-8 text-blue-600" />, 
-                title: "Premium Listings", 
-                desc: "Access exclusively verified properties matching your exact needs with high-quality visual tours.",
-                wrapperClass: "from-blue-50/50 to-white hover:border-blue-300 hover:shadow-blue-200/50",
-                iconBg: "bg-blue-100 shadow-blue-200/50",
-                indicator: "from-blue-400 to-blue-600"
-              },
-              { 
-                icon: <Shield className="h-8 w-8 text-emerald-600" />, 
-                title: "Secure Payments", 
-                desc: "Integrated Stripe & SSLCommerz for 100% safe, transparent, and hassle-free transactions.",
-                wrapperClass: "from-emerald-50/50 to-white hover:border-emerald-300 hover:shadow-emerald-200/50",
-                iconBg: "bg-emerald-100 shadow-emerald-200/50",
-                indicator: "from-emerald-400 to-emerald-600"
-              },
-              { 
-                icon: <Star className="h-8 w-8 text-violet-600" />, 
-                title: "Trusted Reviews", 
-                desc: "Read genuine feedback from previous tenants before renting to ensure a peaceful experience.",
-                wrapperClass: "from-violet-50/50 to-white hover:border-violet-300 hover:shadow-violet-200/50",
-                iconBg: "bg-violet-100 shadow-violet-200/50",
-                indicator: "from-violet-400 to-violet-600"
-              }
-            ].map((feature, idx) => (
-              <div 
-                key={idx}
-                className={`group relative bg-linear-to-br ${feature.wrapperClass} rounded-[2rem] p-8 border border-slate-100 shadow-xl shadow-slate-200/40 transition-all duration-300 hover:-translate-y-2 overflow-hidden`}
-              >
-                <div className={`absolute top-0 left-0 w-full h-1.5 bg-linear-to-r ${feature.indicator} transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500`} />
-                
-                <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-6 shadow-md group-hover:scale-110 transition-all duration-300 ${feature.iconBg}`}>
-                  {feature.icon}
-                </div>
-                
-                <h3 className="text-2xl font-bold text-slate-900 mb-3">{feature.title}</h3>
-                <p className="text-slate-600 leading-relaxed text-[15px]">{feature.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-    </div>
-  );
+  return <div className="home-page">
+    <section className="hero-shell site-width">
+      <div className="hero-copy">
+        <span className="eyebrow"><span className="status-dot" /> A NEW WAY TO FEEL AT HOME</span>
+        <h1>Great spaces.<br />Fresh starts.<br /><span>A place for you.</span></h1>
+        <p>From your first apartment to your next chapter. Discover rental homes that fit the way you live.</p>
+        <div className="hero-actions"><Link className="primary-link" href="/properties">Explore homes <ArrowUpRight size={19} /></Link><Link className="text-link" href="/about">Meet RentNest <ArrowRight size={17} /></Link></div>
+        <div className="hero-note"><ShieldCheck size={20} /><span>Your search, simplified.<br /><strong>One place to find your next home.</strong></span></div>
+      </div>
+      <div className="hero-visual">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1400&q=85" alt="Bright contemporary living room with natural textures and generous windows" fetchPriority="high" />
+        <div className="hero-image-label"><span className="status-dot" /> SPACES THAT FEEL LIKE YOU</div>
+        <div className="hero-floating glass"><span className="icon-tile"><KeyRound size={23} /></span><div><strong>Your next chapter starts here</strong><p>Find a home. Make it yours.</p></div><ArrowUpRight size={22} /></div>
+        <div className="image-caption">Thoughtful spaces. Everyday comfort.</div>
+      </div>
+      <form action="/properties" className="home-search glass">
+        <label><span>WHERE DO YOU WANT TO LIVE?</span><div><MapPin size={20} /><input name="location" placeholder="City or neighborhood" aria-label="City or neighborhood" /></div></label>
+        <label><span>YOUR KIND OF SPACE</span><div><Building2 size={20} /><select name="type" aria-label="Property type"><option value="all">All property types</option>{["Apartment", "Duplex", "Studio", "Villa", "Penthouse"].map(type => <option key={type}>{type}</option>)}</select></div></label>
+        <button className="primary-link" type="submit"><Search size={19} /> Find my home</button>
+      </form>
+    </section>
+    <section className="site-width section-space">
+      <div className="section-heading"><div><span className="eyebrow">FIND YOUR NEIGHBORHOOD</span><h2>A location you&apos;ll love.</h2></div><Link className="text-link" href="/properties">Explore all properties <ArrowUpRight size={19} /></Link></div>
+      <div className="neighborhood-grid">{neighborhoods.map(place => <Link href={'/properties?location=' + place.name} className="neighborhood-card" key={place.name}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={'https://images.unsplash.com/' + place.image + '?auto=format&fit=crop&w=800&q=80'} alt={place.name + ' rental home inspiration'} loading="lazy" />
+        <div><span><h3>{place.name}</h3><p>{place.detail}</p></span><span className="circle-arrow"><ArrowUpRight size={21} /></span></div>
+      </Link>)}</div>
+    </section>
+    <section className="site-width section-space steps-section"><div><span className="eyebrow">LESS SEARCHING. MORE LIVING.</span><h2>A better move,<br />from the very start.</h2><p className="section-description">The details matter. We bring your home search, conversations, and rental requests together.</p><Link className="text-link" href="/help">How it works <ArrowRight size={18} /></Link></div><div className="steps-list">{[
+      { icon: SlidersHorizontal, title: "Find your fit", text: "Filter by neighborhood, budget, and the little things that make a place home." },
+      { icon: Building2, title: "Take a closer look", text: "Explore property details and request a tour before making your next move." },
+      { icon: KeyRound, title: "Start your next chapter", text: "Send a rental request and follow its progress from your personal dashboard." },
+    ].map((item, i) => <div key={item.title} className="step-row"><span className="step-number">0{i + 1}</span><item.icon size={24} /><div><h3>{item.title}</h3><p>{item.text}</p></div></div>)}</div></section>
+    <section className="site-width cta-panel"><div><span className="eyebrow">A GREAT SPACE DESERVES A GREAT TENANT</span><h2>Your property.<br />Someone&apos;s next home.</h2><p>Bring your listing to RentNest and manage it all in one place.</p></div><Link href="/login?redirect=/dashboard/landlord/properties/new" className="primary-link light-link">List your property <ArrowUpRight size={20} /></Link></section>
+  </div>;
 }

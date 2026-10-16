@@ -3,9 +3,9 @@ import { Input } from "@/components/ui/input";
 import { Category } from "@/types";
 import { useState, useRef, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
-import MainFilterButton from "./FilterUI/MainFilterButton";
-import DropdownMenu from "./FilterUI/DropdownMenu";
-import RangeInput from "./FilterUI/RangeInput";
+
+
+
 import toast from "react-hot-toast";
 import Link from "next/link";
 import { saveSearch } from "@/lib/api/savedSearch.api";
@@ -49,8 +49,9 @@ interface PropertyFiltersProps {
 
 export default function PropertyFilters(props: PropertyFiltersProps) {
   const searchParams = useSearchParams();
-  const [isPricingOpen, setIsPricingOpen] = useState(false);
-  const [isAreaOpen, setIsAreaOpen] = useState(false);
+  const [expanded, setExpanded] = useState(false);
+
+
   const [isSaving, setIsSaving] = useState(false);
   const [isHydrated, setIsHydrated] = useState(false);
   const isSavingRef = useRef(false);
@@ -141,7 +142,7 @@ export default function PropertyFilters(props: PropertyFiltersProps) {
       toast.success("Search Saved Successfully!");
     } catch (error: any) {
       toast.dismiss();
-      toast.error(error.message || "Failed to save search. Please try again.");
+      toast.error(error.response?.data?.message || error.message || "Failed to save search. Please try again.");
     } finally {
       isSavingRef.current = false;
       setIsSaving(false);
@@ -149,7 +150,7 @@ export default function PropertyFilters(props: PropertyFiltersProps) {
   };
 
   const handleSearchSubmit = async () => {
-    if (!props.searchTerm) return;
+    if (!props.searchTerm.trim()) return;
 
     if (props.searchMode === "ai") {
       const loadingToastId = toast.loading("✨ AI is analyzing your request...");
@@ -267,271 +268,31 @@ export default function PropertyFilters(props: PropertyFiltersProps) {
     }
   };
 
-  const isPricingActive = props.minPrice !== "" || props.maxPrice !== "";
-  const isAreaActive = props.minArea !== "" || props.maxArea !== "";
-
-  return (
-    <div className="relative z-50 bg-white/60 backdrop-blur-2xl border border-white/60 p-6 rounded-3xl shadow-xl shadow-sky-100/40 mb-12 flex flex-col gap-6">
-      
-      <div className="flex flex-col xl:flex-row gap-4 items-center justify-between w-full">
-        <div className="flex items-center gap-1 bg-white/80 p-1 rounded-full border border-white/50 shadow-sm w-full xl:w-auto h-12">
-          <button 
-            onClick={() => props.setSearchMode("ai")}
-            className={`whitespace-nowrap px-5 h-full rounded-full text-sm font-semibold transition-colors ${props.searchMode === "ai" ? "bg-sky-500 text-white shadow-md" : "text-slate-600 hover:bg-slate-100"}`}
-          >
-            AI Search
-          </button>
-          <button 
-            onClick={() => {
-              props.setSearchMode("classic");
-              props.setSearchTerm("");
-            }}
-            className={`whitespace-nowrap px-5 h-full rounded-full text-sm font-semibold transition-colors ${props.searchMode === "classic" ? "bg-sky-500 text-white shadow-md" : "text-slate-600 hover:bg-slate-100"}`}
-          >
-            Classic
-          </button>
-        </div>
-        <div className="relative grow w-full h-12">
-          <Input 
-            placeholder={props.searchMode === "ai" ? "Try: '2 bed apartment in Dhanmondi under 50k'" : "Search your location..."} 
-            value={props.searchTerm}
-            onChange={(e) => props.setSearchTerm(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                handleSearchSubmit();
-              }
-            }}
-            className="pl-6 pr-24 h-full bg-white/80 border-white/50 rounded-2xl text-base text-slate-800 shadow-sm focus-visible:ring-sky-500 w-full"
-          />
-          <div className="absolute right-1.5 top-1/2 -translate-y-1/2 flex items-center gap-1 h-9">
-            {props.searchTerm && (
-              <button onClick={() => props.setSearchTerm("")} className="p-1.5 text-slate-400 hover:text-slate-600 transition-colors h-full flex items-center justify-center">
-                <X className="h-4 w-4" />
-              </button>
-            )}
-            <button 
-              onClick={handleSearchSubmit}
-              className="flex items-center justify-center px-3 h-full bg-sky-500 hover:bg-sky-600 text-white rounded-xl shadow-sm transition-colors"
-            >
-              <Search className="h-4 w-4" />
-            </button>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-4 w-full xl:w-auto justify-between xl:justify-end">
-          <button 
-            onClick={handleSaveSearchClick}
-            disabled={isSaving}
-            className="whitespace-nowrap h-12 px-6 bg-white border border-slate-200 rounded-2xl text-slate-800 font-bold hover:bg-slate-50 shadow-sm transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
-          >
-            {isSaving ? "Saving..." : "Save Search"}
-          </button>
-          <div className="flex items-center gap-1 bg-white/80 p-1 rounded-2xl border border-white/50 shadow-sm h-12">
-            <button 
-              onClick={() => props.setViewMode("list")}
-              className={`flex items-center gap-2 px-4 h-full rounded-xl text-sm font-semibold transition-colors ${props.viewMode === "list" ? "bg-white shadow-md text-slate-900" : "text-slate-600 hover:bg-slate-100"}`}
-            >
-              <List className={`h-4 w-4 ${props.viewMode === "list" ? "text-sky-500" : ""}`} /> List
-            </button>
-            <button 
-              onClick={() => props.setViewMode("map")}
-              className={`flex items-center gap-2 px-4 h-full rounded-xl text-sm font-semibold transition-colors ${props.viewMode === "map" ? "bg-white shadow-md text-slate-900" : "text-slate-600 hover:bg-slate-100"}`}
-            >
-              <Map className={`h-4 w-4 ${props.viewMode === "map" ? "text-sky-500" : ""}`} /> Map
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <div className="flex flex-wrap items-center gap-2 text-sm text-slate-500 font-medium px-2">
-        <Link href="/" className="hover:text-sky-500 cursor-pointer transition-colors">Back to Home</Link>
-        <span>|</span>
-        <span className="hover:text-sky-500 cursor-pointer transition-colors">Property Search</span>
-        <span>/</span>
-        <span className="text-slate-800 font-bold">{props.selectedLocation || "All Locations"}</span>
-        <span>/</span>
-        <div className="relative flex items-center">
-          <DropdownMenu 
-            label="Choose Location" 
-            value={props.selectedLocation} 
-            onChange={props.setSelectedLocation}
-            type="single"
-            options={[
-              { label: "All Locations", value: "" },
-              { label: "Dhanmondi", value: "Dhanmondi" },
-              { label: "Mohammadpur", value: "Mohammadpur" },
-              { label: "Gulshan", value: "Gulshan" },
-              { label: "Banani", value: "Banani" },
-              { label: "Uttara", value: "Uttara" },
-              { label: "Bashundhara", value: "Bashundhara" },
-              { label: "Mirpur", value: "Mirpur" },
-              { label: "Shyamoli", value: "Shyamoli" },
-              { label: "Badda", value: "Badda" },
-              { label: "Khilgaon", value: "Khilgaon" }
-            ]} 
-          />
-        </div>
-      </div>
-
-      <div className="flex flex-wrap items-center gap-3">
-        <MainFilterButton onReset={props.onReset} />
-
-        <DropdownMenu 
-          label="Property Type" 
-          value={props.propertyType} 
-          onChange={props.setPropertyType}
-          type="single"
-          options={[
-            { label: "All Types", value: "all" },
-            { label: "Apartment", value: "Apartment" },
-            { label: "Villa", value: "Villa" },
-            { label: "Duplex", value: "Duplex" },
-            { label: "Penthouse", value: "Penthouse" },
-            { label: "Townhouse", value: "Townhouse" },
-            { label: "Studio", value: "Studio" }
-          ]} 
-        />
-
-        <DropdownMenu 
-          label="Property Category" 
-          value={props.selectedCategory} 
-          onChange={props.setSelectedCategory}
-          type="single"
-          options={[
-            { label: "All Categories", value: "all" },
-            ...props.categories.map((c: any) => ({ label: c.name, value: c.id }))
-          ]} 
-        />
-
-        <div className="relative">
-          <button 
-            onClick={() => {
-              setIsPricingOpen(!isPricingOpen);
-              setIsAreaOpen(false);
-            }}
-            className={`h-10 px-4 flex items-center gap-2 border rounded-full text-sm font-medium transition-colors shadow-sm ${
-              isPricingActive 
-                ? "bg-sky-50 border-sky-300 text-sky-700" 
-                : "bg-white border-slate-200 hover:border-sky-300 hover:bg-sky-50 text-slate-700"
-            }`}
-          >
-            Pricing ($) <ChevronDown className={`h-4 w-4 ${isPricingActive ? "text-sky-700" : "text-slate-400"}`} />
-          </button>
-          {isPricingOpen && (
-            <div className="absolute top-full left-0 mt-2 z-100">
-              <RangeInput 
-                minVal={props.minPrice} setMinVal={props.setMinPrice} 
-                maxVal={props.maxPrice} setMaxVal={props.setMaxPrice} 
-                placeholder="Price" 
-                maxAllowed={100000}
-                step={500}
-                onClose={() => setIsPricingOpen(false)}
-              />
-            </div>
-          )}
-        </div>
-
-        <div className="relative">
-          <button 
-            onClick={() => {
-              setIsAreaOpen(!isAreaOpen);
-              setIsPricingOpen(false);
-            }}
-            className={`h-10 px-4 flex items-center gap-2 border rounded-full text-sm font-medium transition-colors shadow-sm ${
-              isAreaActive 
-                ? "bg-sky-50 border-sky-300 text-sky-700" 
-                : "bg-white border-slate-200 hover:border-sky-300 hover:bg-sky-50 text-slate-700"
-            }`}
-          >
-            Area (sqft) <ChevronDown className={`h-4 w-4 ${isAreaActive ? "text-sky-700" : "text-slate-400"}`} />
-          </button>
-          {isAreaOpen && (
-            <div className="absolute top-full left-0 mt-2 z-100">
-              <RangeInput 
-                minVal={props.minArea} setMinVal={props.setMinArea} 
-                maxVal={props.maxArea} setMaxVal={props.setMaxArea} 
-                placeholder="Sqft" 
-                maxAllowed={10000}
-                step={100}
-                onClose={() => setIsAreaOpen(false)}
-              />
-            </div>
-          )}
-        </div>
-
-        <DropdownMenu 
-          label="Beds" 
-          value={props.beds} 
-          onChange={props.setBeds}
-          type="grid"
-          options={[
-            { label: "Studio", value: "studio" }, { label: "1", value: "1" },
-            { label: "2", value: "2" }, { label: "3", value: "3" },
-            { label: "4", value: "4" }, { label: "5+", value: "5+" }
-          ]} 
-        />
-
-        <DropdownMenu 
-          label="Baths" 
-          value={props.baths} 
-          onChange={props.setBaths}
-          type="grid"
-          options={[
-            { label: "1", value: "1" }, { label: "2", value: "2" }, 
-            { label: "3", value: "3" }, { label: "4+", value: "4+" }
-          ]} 
-        />
-
-        <DropdownMenu 
-          label="Rent For" 
-          value={props.rentFor} 
-          onChange={props.setRentFor}
-          type="single"
-          options={[
-            { label: "Any", value: "all" },
-            { label: "Family", value: "Family" },
-            { label: "Bachelor", value: "Bachelor" }
-          ]} 
-        />
-
-        <DropdownMenu 
-          label="Furnished" 
-          value={props.furnished} 
-          onChange={props.setFurnished}
-          type="single"
-          options={[
-            { label: "Any", value: "all" },
-            { label: "Fully Furnished", value: "Fully Furnished" },
-            { label: "Semi Furnished", value: "Semi Furnished" },
-            { label: "Unfurnished", value: "Unfurnished" }
-          ]} 
-        />
-
-        <DropdownMenu 
-          label="Amenities" 
-          value={props.amenities} 
-          onChange={props.setAmenities}
-          type="multiple"
-          options={[
-            { label: "Security Guard", value: "Security Guard" },
-            { label: "CCTV Camera", value: "CCTV Camera" },
-            { label: "Generator", value: "Generator" },
-            { label: "Community Hall", value: "Community Hall" },
-            { label: "Prayer Room", value: "Prayer Room" },
-            { label: "GYM", value: "GYM" },
-            { label: "Swimming Pool", value: "Swimming Pool" },
-            { label: "Barbeque Area", value: "Barbeque Area" },
-            { label: "Garden", value: "Garden" },
-            { label: "Intercom", value: "Intercom" },
-            { label: "Fire Exit", value: "Fire Exit" },
-            { label: "Fire Exitinguisher", value: "Fire Exitinguisher" },
-            { label: "Wi-Fi Connectivity", value: "Wi-Fi Connectivity" },
-            { label: "WASA Connection", value: "WASA Connection" },
-            { label: "Submersible Pump", value: "Submersible Pump" }
-          ]} 
-        />
-
-      </div>
+  const select = (label: string, value: string, change: (value: string) => void, options: { label: string; value: string }[]) => <label className="filter-field"><span>{label}</span><select aria-label={label} value={value} onChange={e => change(e.target.value)}>{options.map(option => <option key={option.value} value={option.value}>{option.label}</option>)}</select></label>;
+  const options = (all: string, values: string[]) => [{label: all,value:'all'}, ...values.map(value => ({label:value,value}))];
+  const active = [props.selectedLocation, props.propertyType !== 'all' && props.propertyType, props.selectedCategory !== 'all' && props.categories.find(c=>c.id===props.selectedCategory)?.name, props.minPrice && 'From $'+props.minPrice, props.maxPrice && 'Up to $'+props.maxPrice, props.beds !== 'all' && props.beds+' beds', props.baths !== 'all' && props.baths+' baths', props.minArea && 'From '+props.minArea+' sqft', props.maxArea && 'Up to '+props.maxArea+' sqft', props.rentFor !== 'all' && props.rentFor, props.furnished !== 'all' && props.furnished, ...props.amenities].filter(Boolean);
+  return <section className="filter-panel glass" aria-label="Search and filter properties">
+    <div className="filter-search-row"><div className="search-mode"><button aria-pressed={props.searchMode==='classic'} onClick={()=>props.setSearchMode('classic')}>Classic</button><button aria-pressed={props.searchMode==='ai'} onClick={()=>props.setSearchMode('ai')}>✦ AI search</button></div>
+      <form onSubmit={e=>{e.preventDefault();handleSearchSubmit();}} className="filter-search-input"><Search size={18} /><input aria-label="Search location or describe your home" value={props.searchTerm} onChange={e=>props.setSearchTerm(e.target.value)} placeholder={props.searchMode==='ai'?'Try: 2 bed apartment in Banani under 50k':'Search a city or neighborhood…'} /><button aria-label="Search properties" type="submit"><Search size={18} /></button></form>
+      <button className="save-search-button" onClick={handleSaveSearchClick} disabled={isSaving}>{isSaving?'Saving…':'Save search'}</button>
     </div>
-  );
+    <div className="filter-fields">
+      {select('Location',props.selectedLocation,props.setSelectedLocation,[{label:'All locations',value:''},...['Dhanmondi','Mohammadpur','Gulshan','Banani','Uttara','Bashundhara','Mirpur','Shyamoli','Badda','Khilgaon'].map(value=>({label:value,value})),...props.selectedLocation && !['Dhanmondi','Mohammadpur','Gulshan','Banani','Uttara','Bashundhara','Mirpur','Shyamoli','Badda','Khilgaon'].includes(props.selectedLocation)?[{label:props.selectedLocation,value:props.selectedLocation}]:[]])}
+      {select('Property type',props.propertyType,props.setPropertyType,options('Any type',['Apartment','Villa','Duplex','Penthouse','Townhouse','Studio']))}
+      <label className="filter-field"><span>Min rent ($)</span><input aria-label="Minimum rent" type="number" min="0" value={props.minPrice} placeholder="No minimum" onChange={e=>props.setMinPrice(e.target.value)} /></label>
+      <label className="filter-field"><span>Max rent ($)</span><input aria-label="Maximum rent" type="number" min="0" value={props.maxPrice} placeholder="No maximum" onChange={e=>props.setMaxPrice(e.target.value)} /></label>
+      {select('Bedrooms',props.beds,props.setBeds,options('Any beds',['studio','1','2','3','4','5+']))}
+      <button className="more-filters" aria-expanded={expanded} aria-controls="advanced-filters" onClick={()=>setExpanded(!expanded)}>More filters <ChevronDown size={16} /></button>
+    </div>
+    {expanded && <div className="advanced-filters" id="advanced-filters"><div className="filter-fields">
+      {select('Category',props.selectedCategory,props.setSelectedCategory,[{label:'All categories',value:'all'},...props.categories.map(c=>({label:c.name,value:c.id}))])}
+      {select('Bathrooms',props.baths,props.setBaths,options('Any baths',['1','2','3','4','5+']))}
+      {select('Rent for',props.rentFor,props.setRentFor,options('Anyone',['Family','Bachelor']))}
+      {select('Furnishing',props.furnished,props.setFurnished,options('Any furnishing',['Fully Furnished','Semi Furnished','Unfurnished']))}
+      <label className="filter-field"><span>Min area (sqft)</span><input aria-label="Minimum area" type="number" min="0" value={props.minArea} placeholder="No minimum" onChange={e=>props.setMinArea(e.target.value)} /></label>
+      <label className="filter-field"><span>Max area (sqft)</span><input aria-label="Maximum area" type="number" min="0" value={props.maxArea} placeholder="No maximum" onChange={e=>props.setMaxArea(e.target.value)} /></label>
+    </div><fieldset className="amenity-options"><legend>Amenities</legend>{['Security Guard','CCTV Camera','Generator','Community Hall','Prayer Room','GYM','Swimming Pool','Barbeque Area','Garden','Intercom','Fire Exit','Fire Exitinguisher','Wi-Fi Connectivity','WASA Connection','Submersible Pump'].map(item=><label key={item}><input type="checkbox" checked={props.amenities.includes(item)} onChange={e=>props.setAmenities(e.target.checked?[...props.amenities,item]:props.amenities.filter(a=>a!==item))} />{item}</label>)}</fieldset></div>}
+    {(props.minPrice && props.maxPrice && Number(props.minPrice)>Number(props.maxPrice) || props.minArea && props.maxArea && Number(props.minArea)>Number(props.maxArea)) && <p role="alert" className="text-sm text-red-600 mt-3">Minimum must be less than or equal to maximum.</p>}
+    <div className="filter-bottom"><div className="active-filters">{active.length ? <><span>{active.length} active</span>{active.map((item,i)=><span className="filter-chip" key={i}>{item}</span>)}<button onClick={props.onReset}>Clear all <X size={13} /></button></> : <span>Make room for what matters to you.</span>}</div><div className="view-toggle"><button aria-label="List view" aria-pressed={props.viewMode==='list'} onClick={()=>props.setViewMode('list')}><List size={16} />List</button><button aria-label="Map view" aria-pressed={props.viewMode==='map'} onClick={()=>props.setViewMode('map')}><Map size={16} />Map</button></div></div>
+  </section>;
 }
