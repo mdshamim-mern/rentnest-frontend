@@ -126,6 +126,7 @@ export default function LandlordPropertiesPage() {
                       <TableCell className="text-right">
                         <div className="flex justify-end gap-2">
                           <Button 
+                            aria-label={`Edit ${property.title}`}
                             onClick={() => router.push(`/dashboard/landlord/properties/edit/${property.id}`)}
                             size="icon" 
                             variant="outline" 
@@ -134,7 +135,8 @@ export default function LandlordPropertiesPage() {
                             <Edit className="h-4 w-4" />
                           </Button>
                           <Button 
-                            onClick={() => handleDelete(property.id)} 
+                            aria-label={`Delete ${property.title}`}
+                            onClick={() => handleDelete(property.id)}
                             size="icon" 
                             variant="outline" 
                             className="h-8 w-8 bg-white/50 border-slate-300 text-red-600 hover:bg-red-50"
