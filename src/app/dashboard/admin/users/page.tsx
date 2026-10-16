@@ -1,4 +1,5 @@
 "use client";
+import CollectionFilters from "@/components/dashboard/CollectionFilters";
 
 import { useEffect, useState } from "react";
 import { axiosInstance } from "@/lib/api/axiosInstance";
@@ -12,6 +13,7 @@ import toast from "react-hot-toast";
 export default function AdminUsersPage() {
   const [users, setUsers] = useState<User[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [processing, setProcessing] = useState(false);
 
   useEffect(() => {
     fetchUsers();
@@ -32,17 +34,24 @@ export default function AdminUsersPage() {
   };
 
   const handleStatusToggle = async (userId: string, currentStatus: string) => {
+    if (processing) return;
+    setProcessing(true);
     const newStatus = currentStatus === "ACTIVE" ? "BANNED" : "ACTIVE";
     try {
       const response = await axiosInstance.patch(`/admin/users/${userId}`, { status: newStatus });
       if (response.data.success) {
         toast.success(`User successfully ${newStatus.toLowerCase()}`);
-        setUsers(users.map(u => u.id === userId ? { ...u, status: newStatus as any } : u));
+        setUsers(current => current.map(u => u.id === userId ? { ...u, status: newStatus as any } : u));
       }
     } catch (error) {
       toast.error("Failed to update user status");
-    }
+    } finally { setProcessing(false); }
   };
+
+  const [search, setSearch] = useState("");
+  const [filter, setFilter] = useState("all");
+  const filterOptions = ['ADMIN','LANDLORD','TENANT'].map(value => ({value: String(value), label: String(value)}));
+  const filteredRecords = users.filter(item => (filter === "all" || (item.role) === filter) && `${item.name} ${item.email}`.toLowerCase().includes(search.trim().toLowerCase()));
 
   return (
     <div className="space-y-6">
@@ -51,6 +60,7 @@ export default function AdminUsersPage() {
         <p className="text-slate-500 mt-1">View all registered users and manage their access.</p>
       </div>
 
+      <CollectionFilters search={search} onSearch={setSearch} value={filter} onValue={setFilter} options={filterOptions} count={filteredRecords.length} />
       <Card className="bg-white/40 backdrop-blur-xl border-white/60 shadow-xl rounded-3xl overflow-hidden">
         <CardContent className="p-0">
           <div className="overflow-x-auto">
@@ -75,14 +85,14 @@ export default function AdminUsersPage() {
                       <TableCell className="text-right"><Skeleton className="h-8 w-24 ml-auto" /></TableCell>
                     </TableRow>
                   ))
-                ) : users.length === 0 ? (
+                ) : filteredRecords.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={5} className="text-center py-16 text-slate-500">
                       No users found in the system.
                     </TableCell>
                   </TableRow>
                 ) : (
-                  users.map((user) => (
+                  filteredRecords.map((user) => (
                     <TableRow key={user.id} className="hover:bg-white/40 transition-colors">
                       <TableCell className="font-medium text-slate-900">{user.name}</TableCell>
                       <TableCell className="text-slate-600">{user.email}</TableCell>
@@ -101,6 +111,7 @@ export default function AdminUsersPage() {
                       <TableCell className="text-right">
                         {user.role !== "ADMIN" && (
                           <Button 
+                            disabled={processing}
                             onClick={() => handleStatusToggle(user.id, user.status)}
                             size="sm" 
                             variant={user.status === "ACTIVE" ? "destructive" : "default"}

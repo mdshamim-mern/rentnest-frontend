@@ -51,6 +51,8 @@ export default function PropertiesPage() {
 
   useEffect(() => {
     const loc = searchParams.get('location');
+    const query = searchParams.get('searchTerm');
+    if (query) setSearchTerm(query);
     const type = searchParams.get('type') || searchParams.get('propertyType');
     const minP = searchParams.get('minPrice');
     const maxP = searchParams.get('maxPrice');

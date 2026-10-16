@@ -1,4 +1,5 @@
 "use client";
+import CollectionFilters from "@/components/dashboard/CollectionFilters";
 
 import { useEffect, useState } from "react";
 import { axiosInstance } from "@/lib/api/axiosInstance";
@@ -36,6 +37,11 @@ export default function TenantPaymentsPage() {
 
   const pendingPayments = payments.filter((p) => p.status === "PENDING").length;
 
+  const [search, setSearch] = useState("");
+  const [filter, setFilter] = useState("all");
+  const filterOptions = Array.from(new Set(payments.map(item => item.status).filter(Boolean))).map(value => ({value: String(value), label: String(value)}));
+  const filteredRecords = payments.filter(item => (filter === "all" || (item.status) === filter) && `${item.transactionId || ""} ${item.rental?.property?.title || item.rentalRequest?.property?.title || ""}`.toLowerCase().includes(search.trim().toLowerCase()));
+
   return (
     <div className="space-y-8">
       <div>
@@ -44,7 +50,7 @@ export default function TenantPaymentsPage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card className="bg-white/40 backdrop-blur-xl border-white/60 shadow-lg hover:shadow-xl transition-all rounded-2xl">
+      <Card className="bg-white/40 backdrop-blur-xl border-white/60 shadow-lg hover:shadow-xl transition-all rounded-2xl">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-slate-500">Total Paid</CardTitle>
             <div className="p-2 bg-white/60 rounded-xl shadow-sm">
@@ -93,6 +99,7 @@ export default function TenantPaymentsPage() {
         </Card>
       </div>
 
+      <CollectionFilters search={search} onSearch={setSearch} value={filter} onValue={setFilter} options={filterOptions} count={filteredRecords.length} />
       <Card className="bg-white/40 backdrop-blur-xl border-white/60 shadow-xl rounded-3xl overflow-hidden">
         <CardContent className="p-0">
           <div className="overflow-x-auto">
@@ -117,14 +124,14 @@ export default function TenantPaymentsPage() {
                       <TableCell className="text-right"><Skeleton className="h-6 w-20 ml-auto rounded-full" /></TableCell>
                     </TableRow>
                   ))
-                ) : payments.length === 0 ? (
+                ) : filteredRecords.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={5} className="text-center py-16 text-slate-500">
-                      You have no payment history yet.
+                      No payments match this search.
                     </TableCell>
                   </TableRow>
                 ) : (
-                  payments.map((payment) => (
+                  filteredRecords.map((payment) => (
                     <TableRow key={payment.id} className="hover:bg-white/40 transition-colors">
                       <TableCell className="font-medium text-slate-600 text-sm">
                         {payment.transactionId || payment.id.slice(0, 8).toUpperCase()}

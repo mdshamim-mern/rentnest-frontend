@@ -1,4 +1,5 @@
 "use client";
+import CollectionFilters from "@/components/dashboard/CollectionFilters";
 
 import { useEffect, useState } from "react";
 import { axiosInstance } from "@/lib/api/axiosInstance";
@@ -34,6 +35,11 @@ export default function AdminPropertiesPage() {
     }
   };
 
+  const [search, setSearch] = useState("");
+  const [filter, setFilter] = useState("all");
+  const filterOptions = Array.from(new Set(properties.map(item => item.propertyType).filter(Boolean))).map(value => ({value: String(value), label: String(value)}));
+  const filteredRecords = properties.filter(item => (filter === "all" || (item.propertyType) === filter) && `${item.title} ${item.location} ${item.landlord?.name || ""}`.toLowerCase().includes(search.trim().toLowerCase()));
+
   return (
     <div className="space-y-6">
       <div>
@@ -41,6 +47,7 @@ export default function AdminPropertiesPage() {
         <p className="text-slate-500 mt-1">View all properties listed across the platform.</p>
       </div>
 
+      <CollectionFilters search={search} onSearch={setSearch} value={filter} onValue={setFilter} options={filterOptions} count={filteredRecords.length} />
       <Card className="bg-white/40 backdrop-blur-xl border-white/60 shadow-xl rounded-3xl overflow-hidden">
         <CardContent className="p-0">
           <div className="overflow-x-auto">
@@ -67,14 +74,14 @@ export default function AdminPropertiesPage() {
                       <TableCell className="text-right"><Skeleton className="h-8 w-24 ml-auto" /></TableCell>
                     </TableRow>
                   ))
-                ) : properties.length === 0 ? (
+                ) : filteredRecords.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={6} className="text-center py-16 text-slate-500">
                       No properties exist on the platform.
                     </TableCell>
                   </TableRow>
                 ) : (
-                  properties.map((property) => (
+                  filteredRecords.map((property) => (
                     <TableRow key={property.id} className="hover:bg-white/40 transition-colors">
                       <TableCell className="font-medium text-slate-900">{property.title}</TableCell>
                       <TableCell className="text-slate-600">{property.landlord?.name}</TableCell>

@@ -78,7 +78,7 @@ export default function Navbar() {
             </Link>
           </div>
 
-          <div className="hidden lg:flex md:items-center nav-pills bg-slate-50 border border-slate-100 rounded-full p-1 shadow-sm">
+          <div className="hidden xl:flex md:items-center nav-pills bg-slate-50 border border-slate-100 rounded-full p-1 shadow-sm">
             {navLinks.map((link) => (
               <Link
                 key={link.name}
@@ -95,7 +95,7 @@ export default function Navbar() {
             ))}
           </div>
 
-          <div className="hidden lg:flex md:items-center md:space-x-4">
+          <div className="hidden xl:flex md:items-center md:space-x-4">
             {renderListPropertyBtn()}
             
             {isAuthenticated ? (
@@ -122,7 +122,7 @@ export default function Navbar() {
             )}
           </div>
 
-          <div className="flex items-center lg:hidden">
+          <div className="flex items-center xl:hidden">
             <Button
               aria-label={isOpen ? "Close navigation" : "Open navigation"}
               aria-expanded={isOpen}
@@ -138,7 +138,7 @@ export default function Navbar() {
       </div>
 
       {isOpen && (
-        <div className="lg:hidden bg-white/95 backdrop-blur-xl border-b border-slate-200 shadow-xl absolute w-full">
+        <div className="xl:hidden bg-white/95 backdrop-blur-xl border-b border-slate-200 shadow-xl absolute w-full">
           <div className="px-4 pt-2 pb-6 space-y-2">
             {navLinks.map((link) => (
               <Link

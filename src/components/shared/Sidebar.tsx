@@ -11,7 +11,11 @@ import {
   CreditCard,
   User as UserIcon,
   MessageSquare,
-  Search
+  Search,
+  CalendarDays,
+  Heart,
+  LifeBuoy,
+  ArrowUpRight
 } from "lucide-react";
 import { useAuthStore } from "@/lib/store/authStore";
 
@@ -38,12 +42,14 @@ export default function Sidebar({ onNavigate }: SidebarProps) {
     { name: "Saved Searches", href: "/dashboard/landlord/saved-searches", icon: <Search className="w-5 h-5 mr-3 shrink-0" /> },
     { name: "My Properties", href: "/dashboard/landlord/properties", icon: <Building className="w-5 h-5 mr-3 shrink-0" /> },
     { name: "Add Property", href: "/dashboard/landlord/properties/new", icon: <PlusCircle className="w-5 h-5 mr-3 shrink-0" /> },
+    { name: "Tour Requests", href: "/dashboard/landlord/tours", icon: <CalendarDays className="w-5 h-5 mr-3 shrink-0" /> },
     { name: "Rental Requests", href: "/dashboard/landlord/requests", icon: <FileText className="w-5 h-5 mr-3 shrink-0" /> },
     { name: "Profile Settings", href: "/dashboard/landlord/profile", icon: <UserIcon className="w-5 h-5 mr-3 shrink-0" /> },
   ];
 
   const tenantLinks = [
     { name: "Overview", href: "/dashboard/tenant", icon: <LayoutDashboard className="w-5 h-5 mr-3 shrink-0" /> },
+    { name: "Saved Homes", href: "/dashboard/tenant/favorites", icon: <Heart className="w-5 h-5 mr-3 shrink-0" /> },
     { name: "Saved Searches", href: "/dashboard/tenant/saved-searches", icon: <Search className="w-5 h-5 mr-3 shrink-0" /> },
     { name: "My Requests", href: "/dashboard/tenant/requests", icon: <FileText className="w-5 h-5 mr-3 shrink-0" /> },
     { name: "Payment History", href: "/dashboard/tenant/payments", icon: <CreditCard className="w-5 h-5 mr-3 shrink-0" /> },
@@ -55,10 +61,11 @@ export default function Sidebar({ onNavigate }: SidebarProps) {
   if (user?.role === "LANDLORD") links = landlordLinks;
 
   return (
-    <div className="flex flex-col h-full bg-white/40 backdrop-blur-2xl border-r border-white/60 shadow-[4px_0_24px_-12px_rgba(0,0,0,0.1)] w-64 md:w-72 shrink-0 z-40">
-      <div className="flex-1 overflow-y-auto p-6 scrollbar-thin scrollbar-thumb-slate-200">
+    <div className="workspace-sidebar flex flex-col h-full bg-white/40 backdrop-blur-2xl border-r border-white/60 shadow-[4px_0_24px_-12px_rgba(0,0,0,0.1)] w-64 md:w-72 shrink-0 z-40">
+      <div className="sidebar-links flex-1 overflow-y-auto p-6 scrollbar-thin scrollbar-thumb-slate-200">
         <h2 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">
-          Menu
+          <span className="sidebar-workspace-label">RentNest workspace</span>
+          <span className="sidebar-workspace-role">{user?.role === "ADMIN" ? "Platform management" : user?.role === "LANDLORD" ? "Property management" : "Your rental journey"}</span>
         </h2>
         <nav className="space-y-2 pb-6">
           {links.map((link) => {
@@ -67,6 +74,7 @@ export default function Sidebar({ onNavigate }: SidebarProps) {
               <Link
                 key={link.name}
                 href={link.href}
+                aria-current={isActive ? "page" : undefined}
                 onClick={onNavigate}
                 className={`flex items-center px-4 py-3.5 rounded-2xl transition-all duration-300 font-medium ${
                   isActive
@@ -80,9 +88,11 @@ export default function Sidebar({ onNavigate }: SidebarProps) {
             );
           })}
         </nav>
+        <Link href="/properties" onClick={onNavigate} className="sidebar-explore"><Building size={19} />Explore properties<ArrowUpRight size={17} /></Link>
+        <Link href="/help" onClick={onNavigate} className="sidebar-help"><LifeBuoy size={18} />Help & support</Link>
       </div>
 
-      <div className="p-6 border-t border-slate-200/50 mt-auto bg-white/40 shrink-0">
+      <div className="sidebar-account p-6 border-t border-slate-200/50 mt-auto bg-white/40 shrink-0">
         <div className="flex items-center bg-white/50 backdrop-blur-sm p-4 rounded-2xl border border-white/60 shadow-sm hover:shadow-md transition-shadow">
           <div className="w-10 h-10 rounded-full bg-linear-to-br from-primary to-blue-600 flex items-center justify-center text-white font-bold text-lg shrink-0 overflow-hidden shadow-inner">
             {(user as any)?.profile?.photo ? (

@@ -91,8 +91,8 @@ export default function LandlordSavedSearchesPage() {
           {searches.map((search) => (
             <div key={search.id} className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow relative group">
               <button 
-                onClick={() => handleDelete(search.id)}
-                className="absolute top-4 right-4 p-2 text-slate-300 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors opacity-0 group-hover:opacity-100"
+                aria-label="Delete saved search" onClick={() => handleDelete(search.id)}
+                className="absolute top-4 right-4 p-2 text-slate-300 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors opacity-100"
               >
                 <Trash2 className="h-4 w-4" />
               </button>
@@ -176,7 +176,7 @@ export default function LandlordSavedSearchesPage() {
               
               <div className="mt-5 pt-4 border-t border-slate-100">
                 <Link 
-                  href={`/properties?location=${search.selectedLocation || ''}&type=${search.propertyType || ''}&minPrice=${search.minPrice || ''}&maxPrice=${search.maxPrice || ''}&beds=${search.beds || ''}&baths=${search.baths || ''}&searchMode=${search.searchMode || ''}&categoryId=${search.selectedCategory || ''}&minArea=${search.minArea || ''}&maxArea=${search.maxArea || ''}&rentFor=${search.rentFor || ''}&furnished=${search.furnished || ''}&amenities=${search.amenities || ''}`} 
+                  href={"/properties?" + new URLSearchParams({location: search.selectedLocation || "", searchTerm: search.searchTerm || "", type: search.propertyType || "", minPrice: search.minPrice || "", maxPrice: search.maxPrice || "", beds: search.beds || "", baths: search.baths || "", searchMode: search.searchMode || "", categoryId: search.selectedCategory || "", minArea: search.minArea || "", maxArea: search.maxArea || "", rentFor: search.rentFor || "", furnished: search.furnished || "", amenities: search.amenities || ""}).toString()}
                   className="w-full block text-center text-sm font-semibold text-sky-600 hover:text-sky-700 bg-sky-50 hover:bg-sky-100 py-2 rounded-xl transition-colors"
                 >
                   Browse Property

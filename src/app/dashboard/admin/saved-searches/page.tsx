@@ -123,8 +123,8 @@ export default function AdminSavedSearchesPage() {
           {filteredSearches.map((search) => (
             <div key={search.id} className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow relative group flex flex-col h-full">
               <button 
-                onClick={() => handleDelete(search.id)}
-                className="absolute top-4 right-4 p-2 text-slate-300 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors opacity-0 group-hover:opacity-100 z-10"
+                aria-label="Delete saved search" onClick={() => handleDelete(search.id)}
+                className="absolute top-4 right-4 p-2 text-slate-300 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors opacity-100 z-10"
                 title="Delete Search"
               >
                 <Trash2 className="h-4 w-4" />
@@ -221,7 +221,7 @@ export default function AdminSavedSearchesPage() {
               
               <div className="mt-6 pt-4 border-t border-slate-100">
                 <Link 
-                  href={`/properties?location=${search.selectedLocation || ''}&type=${search.propertyType || ''}&minPrice=${search.minPrice || ''}&maxPrice=${search.maxPrice || ''}&beds=${search.beds || ''}&baths=${search.baths || ''}&searchMode=${search.searchMode || ''}&categoryId=${search.selectedCategory || ''}&minArea=${search.minArea || ''}&maxArea=${search.maxArea || ''}&rentFor=${search.rentFor || ''}&furnished=${search.furnished || ''}&amenities=${search.amenities || ''}`} 
+                  href={"/properties?" + new URLSearchParams({location: search.selectedLocation || "", searchTerm: search.searchTerm || "", type: search.propertyType || "", minPrice: search.minPrice || "", maxPrice: search.maxPrice || "", beds: search.beds || "", baths: search.baths || "", searchMode: search.searchMode || "", categoryId: search.selectedCategory || "", minArea: search.minArea || "", maxArea: search.maxArea || "", rentFor: search.rentFor || "", furnished: search.furnished || "", amenities: search.amenities || ""}).toString()}
                   className="w-full flex items-center justify-center gap-2 text-sm font-semibold text-sky-600 hover:text-sky-700 bg-sky-50 hover:bg-sky-100 py-2.5 rounded-xl transition-colors"
                 >
                   <Search className="h-4 w-4" />

@@ -1,4 +1,5 @@
 "use client";
+import CollectionFilters from "@/components/dashboard/CollectionFilters";
 
 import { useEffect, useState } from "react";
 import { axiosInstance } from "@/lib/api/axiosInstance";
@@ -41,6 +42,11 @@ export default function AdminRequestsPage() {
     }
   };
 
+  const [search, setSearch] = useState("");
+  const [filter, setFilter] = useState("all");
+  const filterOptions = ['PENDING','APPROVED','REJECTED','ACTIVE','COMPLETED'].map(value => ({value: String(value), label: String(value)}));
+  const filteredRecords = requests.filter(item => (filter === "all" || (item.status) === filter) && `${item.property?.title || ""} ${item.tenant?.name || ""}`.toLowerCase().includes(search.trim().toLowerCase()));
+
   return (
     <div className="space-y-6">
       <div>
@@ -48,6 +54,7 @@ export default function AdminRequestsPage() {
         <p className="text-slate-500 mt-1">Global view of all rental requests across the platform.</p>
       </div>
 
+      <CollectionFilters search={search} onSearch={setSearch} value={filter} onValue={setFilter} options={filterOptions} count={filteredRecords.length} />
       <Card className="bg-white/40 backdrop-blur-xl border-white/60 shadow-xl rounded-3xl overflow-hidden">
         <CardContent className="p-0">
           <div className="overflow-x-auto">
@@ -72,14 +79,14 @@ export default function AdminRequestsPage() {
                       <TableCell className="text-right"><Skeleton className="h-6 w-20 ml-auto" /></TableCell>
                     </TableRow>
                   ))
-                ) : requests.length === 0 ? (
+                ) : filteredRecords.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={5} className="text-center py-16 text-slate-500">
                       No rental requests exist on the platform.
                     </TableCell>
                   </TableRow>
                 ) : (
-                  requests.map((request) => (
+                  filteredRecords.map((request) => (
                     <TableRow key={request.id} className="hover:bg-white/40 transition-colors">
                       <TableCell className="font-medium text-slate-900">{request.property?.title}</TableCell>
                       <TableCell className="text-slate-600">{request.tenant?.name}</TableCell>

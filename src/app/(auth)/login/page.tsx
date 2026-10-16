@@ -69,7 +69,7 @@ export default function LoginPage() {
     <AuthShell>
       <Card className="w-full max-w-md bg-white/40 backdrop-blur-xl border-white/50 shadow-2xl rounded-2xl">
         <CardHeader className="space-y-1 text-center">
-          <CardTitle className="text-3xl font-bold tracking-tight text-slate-900">
+          <CardTitle role="heading" aria-level={1} className="text-3xl font-bold tracking-tight text-slate-900">
             Welcome back
           </CardTitle>
           <CardDescription className="text-slate-500">

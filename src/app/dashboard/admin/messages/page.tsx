@@ -1,4 +1,5 @@
 "use client";
+import CollectionFilters from "@/components/dashboard/CollectionFilters";
 
 import { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
@@ -78,6 +79,11 @@ export default function AdminMessagesPage() {
     }
   };
 
+  const [search, setSearch] = useState("");
+  const [filter, setFilter] = useState("all");
+  const filterOptions = ['Read','Unread'].map(value => ({value: String(value), label: String(value)}));
+  const filteredRecords = messages.filter(item => (filter === "all" || (item.isRead ? "Read" : "Unread") === filter) && `${item.name} ${item.email} ${item.message}`.toLowerCase().includes(search.trim().toLowerCase()));
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
@@ -90,6 +96,7 @@ export default function AdminMessagesPage() {
         </div>
       </div>
 
+      <CollectionFilters search={search} onSearch={setSearch} value={filter} onValue={setFilter} options={filterOptions} count={filteredRecords.length} />
       <Card className="bg-white/60 backdrop-blur-xl border border-white/50 shadow-xl shadow-sky-100/50 rounded-3xl overflow-hidden">
         <CardContent className="p-0">
           <div className="overflow-x-auto">
@@ -116,7 +123,7 @@ export default function AdminMessagesPage() {
                       <TableCell className="text-right"><Skeleton className="h-8 w-20 ml-auto" /></TableCell>
                     </TableRow>
                   ))
-                ) : messages.length === 0 ? (
+                ) : filteredRecords.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={6} className="text-center py-16 text-slate-500">
                       <Mail className="h-12 w-12 text-slate-300 mx-auto mb-4" />
@@ -124,7 +131,7 @@ export default function AdminMessagesPage() {
                     </TableCell>
                   </TableRow>
                 ) : (
-                  messages.map((msg) => (
+                  filteredRecords.map((msg) => (
                     <TableRow key={msg.id} className={`transition-colors ${!msg.isRead ? 'bg-sky-50/50' : 'hover:bg-white/60'}`}>
                       <TableCell>
                         {!msg.isRead && <div className="h-2.5 w-2.5 rounded-full bg-primary mx-auto" />}
@@ -138,9 +145,7 @@ export default function AdminMessagesPage() {
                         </a>
                       </TableCell>
                       <TableCell className="max-w-md">
-                        <p className={`truncate ${!msg.isRead ? 'font-medium text-slate-800' : 'text-slate-500'}`} title={msg.message}>
-                          {msg.message}
-                        </p>
+                        <details className="message-details"><summary>Read message</summary><p>{msg.message}</p></details>
                       </TableCell>
                       <TableCell className="text-slate-500 text-sm">
                         {new Date(msg.createdAt).toLocaleDateString()}
@@ -152,7 +157,7 @@ export default function AdminMessagesPage() {
                           size="sm" 
                           variant="ghost" 
                           className={msg.isRead ? 'text-slate-400 hover:text-slate-600' : 'text-primary hover:text-primary/80'}
-                          title={msg.isRead ? "Mark as unread" : "Mark as read"}
+                          aria-label={msg.isRead ? "Mark as unread" : "Mark as read"}
                         >
                           {isUpdating === msg.id ? <Loader2 className="h-4 w-4 animate-spin" /> : (
                             msg.isRead ? <CheckCircle2 className="h-5 w-5" /> : <Circle className="h-5 w-5" />
@@ -164,7 +169,7 @@ export default function AdminMessagesPage() {
                           size="sm" 
                           variant="ghost" 
                           className="text-slate-400 hover:text-red-500 hover:bg-red-50"
-                          title="Delete message"
+                          aria-label="Delete message"
                         >
                           {isDeleting === msg.id ? <Loader2 className="h-4 w-4 animate-spin" /> : <Trash2 className="h-4 w-4" />}
                         </Button>

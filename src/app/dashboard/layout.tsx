@@ -1,76 +1,24 @@
 "use client";
-
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { Menu, X } from "lucide-react";
+import { useSyncExternalStore, useEffect, useRef } from "react";
+import { useRouter, usePathname } from "next/navigation";
+import { Menu, X, LayoutDashboard } from "lucide-react";
 import Sidebar from "@/components/shared/Sidebar";
 import { useAuthStore } from "@/lib/store/authStore";
-import { Button } from "@/components/ui/button";
+import "./workspace.css";
 
-export default function DashboardLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isMounted, setIsMounted] = useState(false);
-  const { isAuthenticated } = useAuthStore();
-  const router = useRouter();
-
-  useEffect(() => {
-    setIsMounted(true);
-    if (!isAuthenticated) {
-      router.push("/login");
-    }
-  }, [isAuthenticated, router]);
-
-  if (!isMounted || !isAuthenticated) {
-    return null;
-  }
-
-  return (
-    <div className="w-full bg-slate-50/50">
-      <div className="w-full flex min-h-[calc(100vh-4rem)] relative">
-        <div className="hidden md:block sticky top-16 h-[calc(100vh-4rem)] shrink-0 z-10">
-          <Sidebar />
-        </div>
-
-        {isMobileMenuOpen && (
-          <div 
-            className="fixed inset-0 bg-slate-900/20 backdrop-blur-sm z-40 md:hidden"
-            onClick={() => setIsMobileMenuOpen(false)}
-          />
-        )}
-
-        <div 
-          className={`fixed inset-y-0 left-0 z-50 transform transition-transform duration-300 ease-in-out md:hidden ${
-            isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
-          }`}
-        >
-          <div className="h-full pt-16 bg-slate-50">
-            <Sidebar onNavigate={() => setIsMobileMenuOpen(false)} />
-          </div>
-        </div>
-
-        <div className="flex-1 flex flex-col min-w-0">
-          <div className="md:hidden flex items-center justify-between py-4 px-4 bg-slate-50/90 backdrop-blur-xl border-b border-slate-200/50 sticky top-16 z-30">
-            <span className="font-semibold text-slate-900">Dashboard Menu</span>
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            >
-              {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-            </Button>
-          </div>
-
-          <main className="flex-1 py-4 px-4 sm:py-6 sm:px-6 md:py-8 md:px-8 lg:py-10 lg:px-10 overflow-x-hidden">
-            <div className="h-full w-full max-w-[1600px] mx-auto">
-              {children}
-            </div>
-          </main>
-        </div>
-      </div>
-    </div>
-  );
+const subscribe = () => () => {};
+export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+  const mounted=useSyncExternalStore(subscribe,()=>true,()=>false);
+  const dialog=useRef<HTMLDialogElement>(null);
+  const {isAuthenticated,user}=useAuthStore();
+  const router=useRouter();
+  const pathname=usePathname();
+  useEffect(()=>{if(mounted && !isAuthenticated) router.replace('/login');},[mounted,isAuthenticated,router]);
+  useEffect(()=>{dialog.current?.close();},[pathname]);
+  if(!mounted || !isAuthenticated) return <div className="p-12 text-center" role="status">Opening your workspace…</div>;
+  return <div className="dashboard-workspace"><div className="workspace-shell">
+    <aside className="workspace-desktop-sidebar"><Sidebar /></aside>
+    <dialog ref={dialog} className="workspace-drawer" aria-label="Dashboard navigation" onClick={event=>{if(event.target===dialog.current)dialog.current.close();}}><div className="drawer-content"><div className="drawer-heading"><strong>Your workspace</strong><button aria-label="Close dashboard navigation" onClick={()=>dialog.current?.close()}><X size={22} /></button></div><Sidebar onNavigate={()=>dialog.current?.close()} /></div></dialog>
+    <div className="workspace-main"><div className="workspace-mobile-bar"><span><LayoutDashboard size={20} />{user?.role.toLowerCase()} workspace</span><button aria-label="Open dashboard navigation" onClick={()=>dialog.current?.showModal()}><Menu size={22} />Menu</button></div><div className="workspace-content">{children}</div></div>
+  </div></div>;
 }

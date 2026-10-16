@@ -1,4 +1,5 @@
 "use client";
+import CollectionFilters from "@/components/dashboard/CollectionFilters";
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
@@ -109,6 +110,12 @@ export default function TenantRequestsPage() {
     return months * (monthlyPrice + serviceFee);
   };
 
+  const [search, setSearch] = useState("");
+  const [filter, setFilter] = useState("all");
+  const matchRecord = (item: {status: string; property?: {title?:string}; tenant?: {name?:string}}) => (filter === "all" || item.status === filter) && `${item.property?.title || ""} ${item.tenant?.name || ""}`.toLowerCase().includes(search.trim().toLowerCase());
+  const filteredRentals = requests.filter(matchRecord);
+  const filteredTours = tourRequests.filter(matchRecord);
+
   return (
     <div className="space-y-6 relative">
       <div>
@@ -116,7 +123,7 @@ export default function TenantRequestsPage() {
         <p className="text-slate-500 mt-2">Manage and track your property rental and tour requests.</p>
       </div>
 
-      <div className="flex space-x-4 mb-4">
+      <div className="flex flex-wrap gap-3 mb-4">
         <Button
           variant={activeTab === 'rental' ? 'default' : 'outline'}
           onClick={() => setActiveTab('rental')}
@@ -133,6 +140,7 @@ export default function TenantRequestsPage() {
         </Button>
       </div>
 
+      <CollectionFilters search={search} onSearch={setSearch} value={filter} onValue={setFilter} options={['PENDING','APPROVED','REJECTED','ACTIVE','COMPLETED'].map(value=>({value,label:value}))} count={activeTab === 'rental' ? filteredRentals.length : filteredTours.length} />
       <Card className="bg-white/60 backdrop-blur-xl border border-white/50 shadow-xl shadow-sky-100/50 rounded-3xl overflow-hidden">
         <CardContent className="p-0">
           <div className="overflow-x-auto">
@@ -164,14 +172,14 @@ export default function TenantRequestsPage() {
                     </TableRow>
                   ))
                 ) : activeTab === 'rental' ? (
-                  requests.length === 0 ? (
+                  filteredRentals.length === 0 ? (
                     <TableRow>
                       <TableCell colSpan={5} className="text-center py-16 text-slate-500">
                         No rental requests found.
                       </TableCell>
                     </TableRow>
                   ) : (
-                    requests.map((request) => (
+                    filteredRentals.map((request) => (
                       <TableRow key={request.id} className="hover:bg-white/60 transition-colors">
                         <TableCell className="font-medium text-slate-900">
                           {request.property?.title || "Unknown Property"}
@@ -210,14 +218,14 @@ export default function TenantRequestsPage() {
                     ))
                   )
                 ) : (
-                  tourRequests.length === 0 ? (
+                  filteredTours.length === 0 ? (
                     <TableRow>
                       <TableCell colSpan={4} className="text-center py-16 text-slate-500">
                         No tour requests found.
                       </TableCell>
                     </TableRow>
                   ) : (
-                    tourRequests.map((request) => (
+                    filteredTours.map((request) => (
                       <TableRow key={request.id} className="hover:bg-white/60 transition-colors">
                         <TableCell className="font-medium text-slate-900">
                           {request.property?.title || "Unknown Property"}
