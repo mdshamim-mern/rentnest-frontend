@@ -7,3 +7,53 @@
 @media(max-width:760px) { .property-detail { padding-top:20px; }.detail-width { width:calc(100% - 28px); }.detail-breadcrumb { margin-bottom:22px; }.detail-heading h1 { font-size:30px; }.detail-heading p { font-size:14px; line-height:1.7; align-items:start; }.detail-heading-actions button { font-size:13px; }.detail-gallery { height:310px; grid-template-columns:1fr; border-width:5px; border-radius:21px; }.detail-side-photos { display:none; }.detail-all-photos { bottom:13px; right:13px; padding:11px 13px; font-size:12px; }.detail-type { top:13px; left:13px; }.detail-layout { display:flex; flex-direction:column; margin-top:20px; gap:22px; }.detail-main,.detail-booking { width:100%; }.detail-booking { position:static; order:-1; }.detail-booking-card { padding:24px; }.detail-booking-note { margin-bottom:16px; }.detail-owner { padding-top:17px; }.detail-owner .detail-eyebrow { margin-bottom:8px; }.detail-owner-profile { margin:10px 0 14px; }.detail-stats { gap:8px; }.detail-stats > div { flex-direction:column; align-items:start; padding:15px; gap:10px; }.detail-stats small { font-size:11px; }.detail-stats strong { font-size:16px; }.detail-section-nav { gap:2px; justify-content:space-between; }.detail-section-nav a { font-size:12px; padding:10px 7px; }.detail-panel { padding:23px; border-radius:20px; }.detail-panel h2,.detail-similar h2 { font-size:23px; }.detail-description { font-size:15px; }.detail-features { gap:0 14px; }.detail-features dd { font-size:14px; }.detail-amenities { gap:9px; }.detail-amenities > div { font-size:12px; padding:11px 9px; gap:8px; }.detail-amenities > div > span { width:24px; height:24px; }.detail-location iframe { height:280px; }.detail-similar { margin-top:32px; }.detail-similar-grid { grid-template-columns:1fr; }.detail-photo-dialog { padding:12px; border-radius:17px; }.detail-photo-controls { gap:15px; }.detail-tour-dialog { padding:28px; } }
 @media(prefers-reduced-motion:reduce) { .hero-floating,.detail-gallery img { transition:none; } }
 .detail-side-photos:empty { display:none; }.detail-heading > div:first-child,.detail-owner-profile > div { min-width:0; overflow-wrap:anywhere; }.detail-section-nav { overflow-x:auto; }.detail-features dd { overflow-wrap:anywhere; }
+
+/* Comfortable reading sizes and consistent, framed icons on every screen. */
+.property-detail { font-size:16px; font-weight:500; }
+.property-detail svg { flex-shrink:0; stroke-width:2.2; }
+.detail-eyebrow { font-size:13px; letter-spacing:.11em; color:#326c72; }
+.detail-breadcrumb,.detail-heading p,.detail-location > p { font-size:16px; font-weight:550; color:#466773; }
+.detail-panel h2,.detail-similar h2,.detail-reviews h2 { font-size:clamp(25px,2.2vw,30px); font-weight:750; }
+.detail-description { font-size:18px; font-weight:500; color:#405f6d; line-height:1.85; }
+.detail-heading-actions button,.detail-all-photos,.detail-section-heading > a { font-size:15px; }
+.detail-type,.detail-price-tag { font-size:14px; }
+.detail-section-nav a { font-size:16px; font-weight:700; padding:12px 15px; }
+.detail-stats > div { gap:14px; flex-wrap:wrap; }
+.detail-stats small { font-size:15px; font-weight:600; color:#4b6975; }
+.detail-stats strong { font-size:23px; }
+.detail-stats svg,.detail-section-heading > svg { width:48px; height:48px; padding:10px; border-radius:15px; border:1px solid #ffffff; background:linear-gradient(135deg,#cef2e9,#e0edf9); color:#087e88; box-shadow:0 4px 12px #1a697512; }
+.detail-features { gap:0 22px; }
+.detail-features dt { font-size:15px; font-weight:600; color:#466775; gap:10px; }
+.detail-features dt svg { width:38px; height:38px; padding:8px; border-radius:12px; background:linear-gradient(140deg,#dcefe9,#e5eefb); border:1px solid #fff; color:#087f8b; }
+.detail-features dd { font-size:18px; font-weight:700; margin-top:12px; }
+.detail-amenities > div { font-size:17px; font-weight:600; gap:13px; padding:17px; border-radius:16px; color:#305763; }
+.detail-amenities > div > span { width:40px; height:40px; border-radius:12px; background:linear-gradient(135deg,#cceee0,#e1f3ee); border:1px solid #fff; box-shadow:0 3px 9px #287f6810; }
+.detail-amenities svg { width:23px; height:23px; }
+.detail-price { font-size:44px; }
+.detail-price > span,.detail-costs { font-size:16px; font-weight:600; color:#4c6974; }
+.detail-rent-button,.detail-tour-button { font-size:17px; min-height:56px; }
+.detail-rent-button svg,.detail-tour-button svg,.detail-contact-links svg,.detail-heading-actions svg,.detail-location > p svg { width:22px; height:22px; }
+.detail-booking-note,.detail-location > small,.detail-owner-profile small { font-size:14px; font-weight:500; color:#506d78; }
+.detail-owner-profile strong { font-size:19px; font-weight:750; }
+.detail-contact-links a { font-size:15px; min-height:48px; white-space:normal; }
+.detail-reviews p,.detail-reviews .text-sm { font-size:16px; line-height:1.8; font-weight:500; }
+.detail-reviews .text-xs { font-size:14px; }
+@media(max-width:1000px) {
+ .detail-stats > div { align-content:start; }
+ .detail-features dt { flex-wrap:wrap; }
+ .detail-amenities { grid-template-columns:1fr; }
+}
+@media(max-width:760px) {
+ .detail-description { font-size:17px; }
+ .detail-stats > div { padding:14px 10px; }
+ .detail-stats svg { width:42px; height:42px; padding:9px; }
+ .detail-stats small { font-size:13px; }
+ .detail-stats strong { font-size:19px; overflow-wrap:anywhere; }
+ .detail-section-nav { justify-content:flex-start; gap:3px; }
+ .detail-section-nav a { font-size:15px; padding:11px 12px; }
+ .detail-features dt { font-size:14px; gap:8px; }
+ .detail-features dd { font-size:17px; }
+ .detail-amenities > div { font-size:16px; padding:14px; }
+ .detail-eyebrow { font-size:12px; }
+ .detail-heading-actions button,.detail-all-photos { font-size:15px; }
+}
