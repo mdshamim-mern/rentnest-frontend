@@ -19,7 +19,7 @@ export default function HomePage() {
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1400&q=85" alt="Bright contemporary living room with natural textures and generous windows" fetchPriority="high" />
         <div className="hero-image-label"><span className="status-dot" /> SPACES THAT FEEL LIKE YOU</div>
-        <div className="hero-floating glass"><span className="icon-tile"><KeyRound size={23} /></span><div><strong>Your next chapter starts here</strong><p>Find a home. Make it yours.</p></div><ArrowUpRight size={22} /></div>
+        <Link href="/properties" className="hero-floating glass"><span className="icon-tile"><KeyRound size={23} /></span><div><strong>Your next chapter starts here</strong><p>Find a home. Make it yours.</p></div><ArrowUpRight size={22} /></Link>
         <div className="image-caption">Thoughtful spaces. Everyday comfort.</div>
       </div>
       <form action="/properties" className="home-search glass">

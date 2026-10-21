@@ -1,468 +1,58 @@
 "use client";
-
-import { useState, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { getPropertyById } from "@/lib/api/properties.api";
-import { Property } from "@/types";
-import { Button } from "@/components/ui/button";
-import { 
-  MapPin, User, CheckCircle2, Home, Share, Calendar, BedDouble, Bath, SquareSquare, 
-  MessageSquare, Phone, MessageCircle, Info, ChevronRight, Check, X, ChevronLeft, 
-  Flame, Car, ArrowUpDown, Armchair, Compass, Wrench, Users, Wind, Layers, ShieldCheck, 
-  Cctv, Zap, Building2, Droplet, Wifi, AlertTriangle, Speaker
-} from "lucide-react";
-import { useAuthStore } from "@/lib/store/authStore";
+import { MapPin, User, CalendarDays, BedDouble, Bath, Square, Mail, Phone, MessageCircle, ChevronRight, ChevronLeft, X, ArrowUpRight, ArrowLeft, Heart, Share2, Images, Check, Building2, Armchair, Compass, Car, Flame, Layers, Users, Wind, Wrench, ArrowUpDown } from "lucide-react";
+import { Property, User as PropertyUser } from "@/types";
 import { axiosInstance } from "@/lib/api/axiosInstance";
-import toast from "react-hot-toast";
+import { useAuthStore } from "@/lib/store/authStore";
+import { useFavoritesStore } from "@/lib/store/favoritesStore";
 import PropertyCard from "@/components/properties/PropertyCard";
 import PropertyReviews from "@/components/properties/PropertyReviews";
-
-const getAmenityIcon = (amenityName: string) => {
-  const name = amenityName.toLowerCase();
-  if (name.includes('cctv')) return <Cctv className="h-4 w-4 text-sky-600" />;
-  if (name.includes('security') || name.includes('guard')) return <ShieldCheck className="h-4 w-4 text-sky-600" />;
-  if (name.includes('generator') || name.includes('power')) return <Zap className="h-4 w-4 text-sky-600" />;
-  if (name.includes('hall') || name.includes('community')) return <Building2 className="h-4 w-4 text-sky-600" />;
-  if (name.includes('pump') || name.includes('wasa') || name.includes('water')) return <Droplet className="h-4 w-4 text-sky-600" />;
-  if (name.includes('wifi') || name.includes('internet')) return <Wifi className="h-4 w-4 text-sky-600" />;
-  if (name.includes('fire')) return <AlertTriangle className="h-4 w-4 text-sky-600" />;
-  if (name.includes('intercom')) return <Speaker className="h-4 w-4 text-sky-600" />;
-  return <Check className="h-4 w-4 text-sky-600" />;
-};
-
-export default function PropertyDetailsPage() {
-  const params = useParams();
-  const router = useRouter();
-  const { isAuthenticated, user } = useAuthStore();
-  const [property, setProperty] = useState<Property | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isTourLoading, setIsTourLoading] = useState(false);
-  const [similarProperties, setSimilarProperties] = useState<Property[]>([]);
-  
-  const [isPhotoModalOpen, setIsPhotoModalOpen] = useState(false);
-  const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
-
-  const fallbackImage = "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&q=80&w=2000";
-
-  useEffect(() => {
-    const fetchPropertyAndSimilar = async () => {
-      try {
-        const res = await getPropertyById(params.id as string);
-        if (res.success) {
-            setProperty(res.data);
-            
-            const similarRes = await axiosInstance.get('/properties', {
-                 params: { categoryId: res.data.categoryId }
-            });
-            if (similarRes.data.success) {
-                const filtered = similarRes.data.data.filter((p: Property) => p.id !== res.data.id).slice(0, 3);
-                setSimilarProperties(filtered);
-            }
-        }
-      } catch (error) {
-        toast.error("Failed to load property details");
-        router.push("/properties");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    if (params.id) fetchPropertyAndSimilar();
-  }, [params.id, router]);
-
-  const handleRequest = () => {
-    if (!isAuthenticated) {
-      toast.error("Please login to request this property");
-      router.push("/login");
-      return;
-    }
-    if (user?.role !== "TENANT") {
-      toast.error("Only tenants can request properties");
-      return;
-    }
-    router.push(`/dashboard/tenant/requests/new?propertyId=${property?.id}`);
-  };
-
-  const handleScheduleTour = async () => {
-    if (!isAuthenticated) {
-      toast.error("Please login to schedule a tour");
-      router.push("/login");
-      return;
-    }
-    if (user?.role !== "TENANT") {
-      toast.error("Only tenants can schedule tours");
-      return;
-    }
-
-    try {
-      setIsTourLoading(true);
-      const res = await axiosInstance.post('/tours', { propertyId: property?.id });
-      if (res.data?.success || res.status === 201) {
-        toast.success("Tour requested successfully! Landlord will be notified.");
-      }
-    } catch (error) {
-      toast.error("Failed to request tour.");
-    } finally {
-      setIsTourLoading(false);
-    }
-  };
-
-  const handleEmail = () => {
-    const email = (property?.landlord as any)?.email || "admin@rentnest.com";
-    window.location.href = `mailto:${email}?subject=Inquiry about ${property?.title}`;
-  };
-
-  const handlePhone = () => {
-    const phone = (property?.landlord as any)?.phone || (property?.landlord as any)?.profile?.phone || "+8801234567890";
-    window.location.href = `tel:${phone}`;
-  };
-
-  const handleWhatsApp = () => {
-    const whatsapp = (property?.landlord as any)?.whatsapp || (property?.landlord as any)?.profile?.whatsapp || (property?.landlord as any)?.phone || "+8801234567890";
-    const cleanNumber = whatsapp.replace(/[^0-9]/g, '');
-    window.open(`https://wa.me/${cleanNumber}`, '_blank');
-  };
-
-  const handleShare = () => {
-    navigator.clipboard.writeText(window.location.href);
-    toast.success("Property link copied to clipboard!");
-  };
-
-  const nextPhoto = () => {
-    const images = property?.images || [];
-    if (images.length > 0) {
-      setCurrentPhotoIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
-    }
-  };
-
-  const prevPhoto = () => {
-    const images = property?.images || [];
-    if (images.length > 0) {
-      setCurrentPhotoIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
-    }
-  };
-
-  if (isLoading) {  
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50/50">
-        <div className="animate-pulse flex flex-col items-center">
-          <Home className="h-16 w-16 text-sky-300 mb-6 animate-bounce" />
-          <p className="text-slate-500 font-medium">Loading premium details...</p>
-        </div>
-      </div>
-    );
-  }
-  if (!property) return null;
-
-  const propertyImages = property.images || [];
-  const smallImage1 = propertyImages.length > 0 ? propertyImages[0] : fallbackImage;
-  const smallImage2 = propertyImages.length > 1 ? propertyImages[1] : fallbackImage;
-
-  return (
-    <div className="min-h-screen bg-linear-to-br from-slate-50 via-sky-50/40 to-slate-100 py-12">
-      
-      {isPhotoModalOpen && propertyImages.length > 0 && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/95 backdrop-blur-sm">
-          <button 
-            onClick={() => setIsPhotoModalOpen(false)} 
-            className="absolute top-6 right-6 text-white/70 hover:text-white transition-colors"
-          >
-            <X className="h-10 w-10" />
-          </button>
-          <button onClick={prevPhoto} className="absolute left-6 p-2 text-white/70 hover:text-white hover:bg-white/10 rounded-full transition-all">
-            <ChevronLeft className="h-12 w-12" />
-          </button>
-          <div className="relative w-full max-w-5xl h-[80vh]">
-             <Image 
-               src={propertyImages[currentPhotoIndex] || fallbackImage} 
-               alt={`Property Photo ${currentPhotoIndex + 1}`} 
-               fill 
-               className="object-contain" 
-             />
-          </div>
-          <button onClick={nextPhoto} className="absolute right-6 p-2 text-white/70 hover:text-white hover:bg-white/10 rounded-full transition-all">
-            <ChevronRight className="h-12 w-12" />
-          </button>
-          <div className="absolute bottom-6 flex gap-3 bg-black/40 px-4 py-2 rounded-full">
-             {propertyImages.map((_, idx) => (
-                <button 
-                  key={idx} 
-                  onClick={() => setCurrentPhotoIndex(idx)} 
-                  className={`w-2.5 h-2.5 rounded-full transition-colors ${currentPhotoIndex === idx ? 'bg-sky-500 scale-125' : 'bg-white/50 hover:bg-white'}`} 
-                />
-             ))}
-          </div>
-        </div>
-      )}
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
-        
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 h-[50vh] md:h-[60vh] rounded-[2.5rem] overflow-hidden shadow-2xl shadow-sky-100/50">
-          <div className="md:col-span-2 relative h-full group">
-            <Image 
-              src={property.image || fallbackImage} 
-              alt={property.title}
-              fill
-              className="object-cover group-hover:scale-105 transition-transform duration-700"
-              priority
-            />  
-            <div className="absolute inset-0 bg-linear-to-t from-slate-900/60 via-transparent to-transparent" />
-            <div className="absolute bottom-8 left-8 right-8">
-              <div className="bg-sky-500/90 backdrop-blur-md w-fit px-4 py-1.5 rounded-full text-white text-sm font-bold tracking-wider uppercase mb-3 shadow-lg">
-                {property.propertyType || property.category?.name || "Premium"}
-              </div>
-              <h1 className="text-3xl md:text-5xl font-extrabold text-white mb-2 leading-tight drop-shadow-md">
-                {property.title}
-              </h1>
-              <div className="flex items-center text-white/90 text-lg font-medium">
-                <MapPin className="h-5 w-5 mr-2 shrink-0 text-sky-400" />
-                {property.location}
-              </div>
-            </div>
-          </div>
-          <div className="hidden md:grid grid-rows-2 gap-4 h-full">
-            <div className="relative w-full h-full overflow-hidden group">
-              <Image 
-                src={smallImage1} 
-                alt="Interior view 1" 
-                fill 
-                className="object-cover group-hover:scale-110 transition-transform duration-700"
-              />
-            </div>
-            <div className="relative w-full h-full overflow-hidden group cursor-pointer" onClick={() => setIsPhotoModalOpen(true)}>
-              <Image 
-                src={smallImage2} 
-                alt="Interior view 2" 
-                fill 
-                className="object-cover group-hover:scale-110 transition-transform duration-700"
-              />
-              <div className="absolute inset-0 bg-slate-900/30 group-hover:bg-slate-900/50 transition-colors flex items-center justify-center">
-                <span className="bg-white/90 backdrop-blur-md px-6 py-2 rounded-full font-bold text-slate-900 hover:bg-sky-500 hover:text-white transition-colors">
-                  View All Photos
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-          
-          <div className="lg:col-span-2 space-y-12">
-            
-            <div className="flex flex-wrap gap-4">
-              <div className="flex items-center gap-3 bg-white/60 backdrop-blur-xl px-6 py-4 rounded-2xl border border-white/50 shadow-sm">
-                <div className="p-2 bg-sky-100 text-sky-600 rounded-full"><BedDouble className="h-5 w-5" /></div>
-                <div><p className="text-sm text-slate-500 font-medium">Bedrooms</p><p className="font-bold text-slate-900">{property.bedrooms || "-"} Beds</p></div>
-              </div>
-              <div className="flex items-center gap-3 bg-white/60 backdrop-blur-xl px-6 py-4 rounded-2xl border border-white/50 shadow-sm">
-                <div className="p-2 bg-sky-100 text-sky-600 rounded-full"><Bath className="h-5 w-5" /></div>
-                <div><p className="text-sm text-slate-500 font-medium">Bathrooms</p><p className="font-bold text-slate-900">{property.bathrooms || "-"} Baths</p></div>
-              </div>
-              <div className="flex items-center gap-3 bg-white/60 backdrop-blur-xl px-6 py-4 rounded-2xl border border-white/50 shadow-sm">
-                <div className="p-2 bg-sky-100 text-sky-600 rounded-full"><SquareSquare className="h-5 w-5" /></div>
-                <div><p className="text-sm text-slate-500 font-medium">Area</p><p className="font-bold text-slate-900">{property.floorArea ? `${property.floorArea} sqft` : "-"}</p></div>
-              </div>
-            </div>
-
-            <div>
-              <h2 className="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-2"><Info className="h-6 w-6 text-sky-500" /> Property Features</h2>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-y-6 gap-x-4 bg-white/60 backdrop-blur-xl p-8 rounded-3xl border border-white/50 shadow-sm">
-                 <div>
-                    <p className="text-sm text-slate-500 font-medium mb-1 flex items-center gap-1.5"><Users className="h-4 w-4 text-sky-500"/> Rent For</p>
-                    <p className="font-bold text-slate-800">{property.rentFor?.join(', ') || "-"}</p>
-                 </div>
-                 <div>
-                    <p className="text-sm text-slate-500 font-medium mb-1 flex items-center gap-1.5"><Wind className="h-4 w-4 text-sky-500"/> Balcony</p>
-                    <p className="font-bold text-slate-800">{property.balcony || "-"}</p>
-                 </div>
-                 <div>
-                    <p className="text-sm text-slate-500 font-medium mb-1 flex items-center gap-1.5"><Layers className="h-4 w-4 text-sky-500"/> Floor Available On</p>
-                    <p className="font-bold text-slate-800">{property.floorLevel || "-"}</p>
-                 </div>
-                 <div>
-                    <p className="text-sm text-slate-500 font-medium mb-1 flex items-center gap-1.5"><Flame className="h-4 w-4 text-sky-500"/> Gas</p>
-                    <p className="font-bold text-slate-800">{property.gas || "-"}</p>
-                 </div>
-                 <div>
-                    <p className="text-sm text-slate-500 font-medium mb-1 flex items-center gap-1.5"><Car className="h-4 w-4 text-sky-500"/> Parking</p>
-                    <p className="font-bold text-slate-800">{property.parking || "-"}</p>
-                 </div>
-                 <div>
-                    <p className="text-sm text-slate-500 font-medium mb-1 flex items-center gap-1.5"><ArrowUpDown className="h-4 w-4 text-sky-500"/> Lift</p>
-                    <p className="font-bold text-slate-800">{property.lift || "-"}</p>
-                 </div>
-                 <div>
-                    <p className="text-sm text-slate-500 font-medium mb-1 flex items-center gap-1.5"><Armchair className="h-4 w-4 text-sky-500"/> Furnished</p>
-                    <p className="font-bold text-slate-800">{property.furnished || "-"}</p>
-                 </div>
-                 <div>
-                    <p className="text-sm text-slate-500 font-medium mb-1 flex items-center gap-1.5"><Compass className="h-4 w-4 text-sky-500"/> Facing</p>
-                    <p className="font-bold text-slate-800">{property.facing || "-"}</p>
-                 </div>
-                 <div>
-                    <p className="text-sm text-slate-500 font-medium mb-1 flex items-center gap-1.5"><Wrench className="h-4 w-4 text-sky-500"/> Service Charge</p>
-                    <p className="font-bold text-slate-800">{property.serviceCharge ? `$ ${property.serviceCharge}` : "-"}</p>
-                 </div>
-              </div>
-            </div>
-
-            <div>
-              <h2 className="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-2"><CheckCircle2 className="h-6 w-6 text-sky-500" /> Amenities</h2>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                  {property.amenities && property.amenities.length > 0 ? (
-                      property.amenities.map((item, idx) => (
-                          <div key={idx} className="flex items-center gap-3 bg-white/60 p-4 rounded-2xl border border-white/50 shadow-sm">
-                              <div className="bg-sky-100 p-1.5 rounded-full">
-                                  {getAmenityIcon(item)}
-                              </div>
-                              <span className="font-medium text-slate-700">{item}</span>
-                          </div>
-                      ))
-                  ) : (
-                      <p className="text-slate-500 italic col-span-full">No specific amenities listed.</p>
-                  )}
-              </div>
-            </div>
-
-            <div>
-              <h2 className="text-2xl font-bold text-slate-900 mb-6">Description</h2>
-              <p className="text-slate-600 leading-relaxed text-lg whitespace-pre-wrap bg-white/40 p-8 rounded-3xl border border-white/50 shadow-sm">
-                {property.description}
-              </p>
-            </div>
-            
-            <div>
-              <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
-                  <MapPin className="h-6 w-6 text-sky-500" /> Local Area Information
-                </h2>
-                <a href={`https://maps.google.com/?q=${encodeURIComponent(property.location)}`} target="_blank" rel="noreferrer">
-                   <Button variant="outline" className="rounded-xl border-sky-200 text-sky-600 hover:bg-sky-50">
-                     <MapPin className="mr-2 h-4 w-4" /> Open in Maps
-                   </Button>
-                </a>
-              </div>
-              <div className="w-full h-96 bg-slate-200 rounded-3xl overflow-hidden relative border border-white/50 shadow-md">
-                 <iframe 
-                    title="Property Location"
-                    src={`https://maps.google.com/maps?q=${encodeURIComponent(property.location)}&t=&z=13&ie=UTF8&iwloc=&output=embed`}
-                    width="100%" 
-                    height="100%" 
-                    style={{ border: 0 }} 
-                    allowFullScreen 
-                    loading="lazy" 
-                    referrerPolicy="no-referrer-when-downgrade"
-                    className="absolute inset-0"
-                 />
-              </div>
-            </div>
-            
-            <PropertyReviews propertyId={property.id} />
-
-          </div>
-          
-          <div className="relative">
-            <div className="sticky top-28 space-y-6">
-              <div className="bg-white/60 backdrop-blur-2xl border border-white/60 p-8 rounded-[2rem] shadow-xl shadow-sky-100/50">
-                <div className="flex justify-between items-start mb-2">
-                  <div>
-                    <div className="text-sm font-semibold text-slate-500 uppercase tracking-widest mb-1">{property.rentType || "Monthly Rent"}</div>
-                    <div className="text-4xl font-extrabold text-slate-900">$ {property.price}</div>
-                  </div>
-                  <Button onClick={handleShare} variant="outline" size="icon" className="rounded-full h-10 w-10 bg-white/80 border-slate-200 hover:text-sky-500 hover:scale-110 transition-transform shadow-sm">
-                    <Share className="h-4 w-4" />
-                  </Button>
-                </div>
-                <div className="mb-6 inline-block bg-slate-100 text-slate-600 px-3 py-1 rounded-full text-sm font-semibold border border-slate-200">
-                    {(property as any).isNegotiable || property.rentNegotiable ? "Negotiable" : "Fixed"}
-                </div>
-                
-                <div className="space-y-4 mb-8">
-                  <Button 
-                    onClick={handleRequest}
-                    className="w-full h-14 text-lg font-bold bg-slate-900 hover:bg-sky-500 text-white rounded-2xl shadow-xl hover:shadow-sky-500/30 transition-all hover:-translate-y-1"
-                  >
-                    Request to Rent
-                  </Button>
-                  <Button 
-                    onClick={handleScheduleTour}
-                    disabled={isTourLoading}
-                    variant="outline"
-                    className="w-full h-14 text-base font-bold bg-white/50 border-slate-300 hover:bg-white rounded-2xl transition-all"
-                  >
-                    <Calendar className="mr-2 h-5 w-5 text-sky-500" /> 
-                    {isTourLoading ? "Scheduling..." : "Schedule a Tour"}
-                  </Button>
-                </div>
-
-                <div className="pt-6 border-t border-slate-200/60">
-                  <div className="text-sm font-semibold text-slate-500 mb-4">LISTED BY</div>
-                  <div className="flex flex-col gap-4 bg-white/40 p-5 rounded-3xl border border-white/50">
-                    <div className="flex items-center gap-4 mb-2">
-                      <div className="bg-sky-100 w-14 h-14 rounded-full flex items-center justify-center shrink-0 border-2 border-white shadow-sm overflow-hidden">
-                        {(property.landlord as any)?.profile?.photo ? (
-                            <img src={(property.landlord as any).profile.photo} alt="avatar" className="w-full h-full object-cover" />
-                        ) : (
-                            <User className="h-7 w-7 text-sky-600" />
-                        )}
-                      </div>
-                      <div>
-                        <div className="font-bold text-slate-900 text-lg line-clamp-1">{(property.landlord as any)?.name || "Verified Owner"}</div>
-                      </div>
-                    </div>
-                    
-                    <Button 
-                      onClick={handleEmail}
-                      variant="outline" 
-                      className="w-full h-10 rounded-xl bg-white hover:bg-sky-50 text-slate-700 hover:text-sky-600 font-semibold border-slate-200"
-                    >
-                      <MessageSquare className="mr-2 h-4 w-4" /> Email Landlord
-                    </Button>
-                    <div className="grid grid-cols-2 gap-3">
-                      <Button 
-                        onClick={handlePhone}
-                        variant="outline" 
-                        className="w-full h-10 rounded-xl bg-white hover:bg-sky-50 text-slate-700 hover:text-sky-600 font-semibold border-slate-200"
-                      >
-                        <Phone className="mr-2 h-4 w-4" /> Call
-                      </Button>
-                      <Button 
-                        onClick={handleWhatsApp}
-                        variant="outline" 
-                        className="w-full h-10 rounded-xl bg-green-50 hover:bg-green-100 text-green-700 hover:text-green-800 font-semibold border-green-200"
-                      >
-                        <MessageCircle className="mr-2 h-4 w-4" /> WhatsApp
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-
-              </div>
-            </div>
-          </div>
-
-        </div>
-        
-        {similarProperties.length > 0 && (
-             <div className="pt-12 border-t border-slate-200/60 mt-12">
-                <div className="flex justify-between items-center mb-8">
-                    <h2 className="text-3xl font-bold text-slate-900">Similar Properties</h2>
-                    <Link href="/properties">
-                      <Button variant="ghost" className="text-sky-600 font-bold hover:bg-sky-50 hover:text-sky-700">
-                          View All <ChevronRight className="ml-1 h-5 w-5" />
-                      </Button>
-                    </Link>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {similarProperties.map(sim => (
-                        <PropertyCard key={sim.id} property={sim} />
-                    ))}
-                </div>
-             </div>
-        )}
-
-      </div>
-    </div>
-  );
+import toast from "react-hot-toast";
+import "./details.css";
+type Contact = PropertyUser & {phone?:string;whatsapp?:string;profile?:{photo?:string;phone?:string;whatsapp?:string}};
+export default function PropertyDetailsPage(){
+ const {id}=useParams<{id:string}>();
+ return <PropertyDetails key={id} id={id}/>;
+}
+function PropertyDetails({id}:{id:string}){
+ const router=useRouter();
+ const {isAuthenticated,user}=useAuthStore(); const {ids,toggle}=useFavoritesStore();
+ const [property,setProperty]=useState<Property|null>(null); const [similar,setSimilar]=useState<Property[]>([]);
+ const [loading,setLoading]=useState(true); const [error,setError]=useState(false); const [retry,setRetry]=useState(0);
+ const [photo,setPhoto]=useState(0); const [tourLoading,setTourLoading]=useState(false); const [tourSent,setTourSent]=useState(false);
+ const gallery=useRef<HTMLDialogElement>(null); const tour=useRef<HTMLDialogElement>(null);
+ useEffect(()=>{const abort=new AbortController();
+ axiosInstance.get('/properties/'+encodeURIComponent(id),{signal:abort.signal}).then(res=>{if(!res.data.success||!res.data.data)throw Error();setProperty(res.data.data);return axiosInstance.get('/properties',{params:{categoryId:res.data.data.categoryId},signal:abort.signal}).then(list=>setSimilar((list.data.data||[]).filter((p:Property)=>p.id!==id).slice(0,3))).catch(()=>{});}).catch(()=>{if(!abort.signal.aborted)setError(true);}).finally(()=>{if(!abort.signal.aborted)setLoading(false);});return()=>abort.abort();},[id,retry]);
+ const photos=Array.from(new Set([property?.image,...(property?.images||[])].filter((src):src is string=>Boolean(src))));
+ const showPhoto=(index:number)=>{setPhoto(index);gallery.current?.showModal();};
+ const movePhoto=(delta:number)=>setPhoto(current=>(current+delta+photos.length)%photos.length);
+ const requireTenant=()=>{if(!isAuthenticated){router.push('/login?redirect='+encodeURIComponent('/properties/'+id));return false;}if(user?.role!=='TENANT'){toast.error('Please use a tenant account to send a request.');return false;}return true;};
+ const requestRent=()=>{if(requireTenant())router.push('/dashboard/tenant/requests/new?propertyId='+encodeURIComponent(id));};
+ const requestTour=async()=>{if(tourLoading)return;setTourLoading(true);try{await axiosInstance.post('/tours',{propertyId:id});setTourSent(true);tour.current?.close();toast.success('Tour requested. The landlord can now review your request.');}catch(error){const message=(error as {response?:{data?:{message?:string}}}).response?.data?.message;toast.error(message||'Could not request a tour. Please try again.');}finally{setTourLoading(false);}};
+ const share=async()=>{try{await navigator.clipboard.writeText(window.location.href);toast.success('Property link copied.');}catch{toast.error('Copy the property URL from your address bar to share it.');}};
+ if(loading)return <div className="detail-loading" role="status"><Building2 size={38}/><h1>Getting your next home ready.</h1><p>Loading property details…</p></div>;
+ if(error||!property)return <div className="detail-loading" role="alert"><Building2 size={38}/><h1>This home couldn’t be loaded.</h1><p>The listing may be unavailable. Try again or explore other homes.</p><button onClick={()=>{setLoading(true);setError(false);setRetry(n=>n+1);}}>Try again</button><Link href="/properties">Browse properties</Link></div>;
+ const owner=property.landlord as Contact|undefined;
+ const phone=owner?.phone||owner?.profile?.phone;
+ const rawWhatsApp=owner?.whatsapp||owner?.profile?.whatsapp||phone;
+ let whatsapp=rawWhatsApp?.replace(/\D/g,'');if(whatsapp?.startsWith('01')&&whatsapp.length===11)whatsapp='88'+whatsapp;
+ const features=[{label:'Ideal for',value:property.rentFor?.join(', '),icon:Users},{label:'Balconies',value:property.balcony,icon:Wind},{label:'Floor',value:property.floorLevel,icon:Layers},{label:'Gas',value:property.gas,icon:Flame},{label:'Parking',value:property.parking,icon:Car},{label:'Lift',value:property.lift,icon:ArrowUpDown},{label:'Furnishing',value:property.furnished,icon:Armchair},{label:'Facing',value:property.facing,icon:Compass},{label:'Service charge',value:property.serviceCharge!=null?'$'+property.serviceCharge.toLocaleString():undefined,icon:Wrench}];
+ return <div className="property-detail"><div className="detail-width">
+ <nav className="detail-breadcrumb" aria-label="Breadcrumb"><Link href="/properties"><ArrowLeft size={16}/>All properties</Link><ChevronRight size={14}/><span>{property.propertyType||'Home'}</span></nav>
+ <header className="detail-heading"><div><span className="detail-eyebrow">A PLACE TO MAKE YOUR OWN</span><h1>{property.title}</h1><p><MapPin size={18}/>{property.location}</p></div><div className="detail-heading-actions"><button onClick={()=>toggle(id)} aria-pressed={ids.includes(id)}><Heart size={18} fill={ids.includes(id)?'currentColor':'none'}/>{ids.includes(id)?'Saved':'Save home'}</button><button onClick={share}><Share2 size={18}/>Share</button></div></header>
+ <section className="detail-gallery" aria-label="Property photos"><button className="detail-main-photo" onClick={()=>photos.length&&showPhoto(0)} disabled={!photos.length} aria-label="Open property photo gallery"><Image src={photos[0]||'/property-placeholder.svg'} alt={property.title} fill priority sizes="(max-width: 700px) 100vw, 65vw"/><span className="detail-type">{property.propertyType||property.category?.name||'Property'}</span></button><div className="detail-side-photos">{photos.slice(1,3).map((src,index)=><button key={src} onClick={()=>showPhoto(index+1)} aria-label={'View property photo '+(index+2)}><Image src={src} alt={'Property view '+(index+2)} fill sizes="35vw"/></button>)}</div>{photos.length>0&&<button className="detail-all-photos" onClick={()=>showPhoto(0)}><Images size={18}/>View all {photos.length} photos</button>}</section>
+ <div className="detail-layout"><div className="detail-main"><div className="detail-stats">{[{label:'Bedrooms',value:property.bedrooms??'—',icon:BedDouble},{label:'Bathrooms',value:property.bathrooms??'—',icon:Bath},{label:'Living space',value:property.floorArea?property.floorArea.toLocaleString()+' sqft':'—',icon:Square}].map(({label,value,icon:Icon})=><div key={label}><Icon size={24}/><span><small>{label}</small><strong>{value}</strong></span></div>)}</div>
+ <nav className="detail-section-nav" aria-label="Property sections"><a href="#overview">Overview</a><a href="#features">Features</a><a href="#amenities">Amenities</a><a href="#location">Location</a><a href="#reviews">Reviews</a></nav>
+ <section id="overview" className="detail-panel"><span className="detail-eyebrow">WELCOME HOME</span><h2>A little more about this space.</h2><p className="detail-description">{property.description||'The landlord has not added a description yet.'}</p></section>
+ <section id="features" className="detail-panel"><div className="detail-section-heading"><div><span className="detail-eyebrow">THE FINER DETAILS</span><h2>Made for everyday living.</h2></div><Building2 size={26}/></div><dl className="detail-features">{features.map(({label,value,icon:Icon})=><div key={label}><dt><Icon size={17}/>{label}</dt><dd>{value??'Not specified'}</dd></div>)}</dl></section>
+ <section id="amenities" className="detail-panel"><span className="detail-eyebrow">A LITTLE EXTRA COMFORT</span><h2>What comes with your home.</h2><div className="detail-amenities">{property.amenities?.length?property.amenities.map(item=><div key={item}><span><Check size={17}/></span>{item}</div>):<p>No amenities have been listed.</p>}</div></section>
+ <section id="location" className="detail-panel detail-location"><div className="detail-section-heading"><div><span className="detail-eyebrow">GET TO KNOW THE NEIGHBORHOOD</span><h2>Find your way here.</h2></div><a href={'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(property.location)} target="_blank" rel="noopener noreferrer">Open map<ArrowUpRight size={17}/></a></div><p><MapPin size={17}/>{property.location}</p><iframe title="Property neighborhood map" src={'https://maps.google.com/maps?q='+encodeURIComponent(property.location)+'&z=13&output=embed'} loading="lazy" referrerPolicy="no-referrer-when-downgrade" allowFullScreen/><small>Map shows the listed area. Confirm the exact address with the landlord.</small></section>
+ <section id="reviews" className="detail-panel detail-reviews"><PropertyReviews propertyId={property.id}/></section></div>
+ <aside className="detail-booking"><div className="detail-booking-card"><span className="detail-eyebrow">YOUR NEXT CHAPTER</span><div className="detail-price">${property.price.toLocaleString()}<span>/ {property.rentType||'month'}</span></div><span className="detail-price-tag">{property.rentNegotiable?'Negotiable rent':'Fixed rent'}</span><div className="detail-costs"><span>Service charge</span><strong>{property.serviceCharge!=null?'$'+property.serviceCharge.toLocaleString():'Ask landlord'}</strong></div><button className="detail-rent-button" onClick={requestRent}>Request to rent<ArrowUpRight size={20}/></button><button className="detail-tour-button" disabled={tourSent} onClick={()=>{if(requireTenant())tour.current?.showModal();}}><CalendarDays size={19}/>{tourSent?'Tour requested':'Schedule a tour'}</button><p className="detail-booking-note">Take the next step. Send a request and connect with the landlord.</p><div className="detail-owner"><span className="detail-eyebrow">MEET YOUR LANDLORD</span><div className="detail-owner-profile">{owner?.profile?.photo?<Image src={owner.profile.photo} alt={owner.name||'Landlord'} width={50} height={50}/>:<span><User size={25}/></span>}<div><strong>{owner?.name||'Property owner'}</strong><small>Listing contact</small></div></div><div className="detail-contact-links">{owner?.email&&<a href={'mailto:'+owner.email+'?subject='+encodeURIComponent('Inquiry about '+property.title)}><Mail size={17}/>Email landlord</a>}{phone&&<a href={'tel:'+phone.replace(/[^+\d]/g,'')}><Phone size={17}/>Call</a>}{whatsapp&&<a className="detail-whatsapp" href={'https://wa.me/'+whatsapp} target="_blank" rel="noopener noreferrer"><MessageCircle size={17}/>WhatsApp</a>}{!owner?.email&&!phone&&!whatsapp&&<p>Contact details have not been provided.</p>}</div></div></div></aside></div>
+ {similar.length>0&&<section className="detail-similar"><div className="detail-section-heading"><div><span className="detail-eyebrow">KEEP EXPLORING</span><h2>More places to call home.</h2></div><Link href={'/properties?categoryId='+encodeURIComponent(property.categoryId)}>View all<ArrowUpRight size={18}/></Link></div><div className="detail-similar-grid">{similar.map(item=><PropertyCard key={item.id} property={item}/>)}</div></section>}
+ </div><dialog ref={gallery} className="detail-photo-dialog" aria-label="Property photo gallery" onClick={e=>{if(e.target===gallery.current)gallery.current?.close();}} onKeyDown={e=>{if(e.key==='ArrowRight')movePhoto(1);if(e.key==='ArrowLeft')movePhoto(-1);}}><div className="detail-photo-toolbar"><span>{photo+1} / {photos.length}</span><button aria-label="Close photo gallery" onClick={()=>gallery.current?.close()}><X size={24}/></button></div><div className="detail-photo-stage">{photos.length>0&&<Image src={photos[photo]||photos[0]} alt={property.title+' — photo '+(photo+1)} fill sizes="95vw"/>}</div><div className="detail-photo-controls"><button aria-label="Previous photo" onClick={()=>movePhoto(-1)} disabled={photos.length<2}><ChevronLeft size={23}/></button><p>Use the arrows to explore</p><button aria-label="Next photo" onClick={()=>movePhoto(1)} disabled={photos.length<2}><ChevronRight size={23}/></button></div></dialog>
+ <dialog ref={tour} className="detail-tour-dialog" aria-labelledby="tour-title"><button className="detail-dialog-close" aria-label="Close tour request" onClick={()=>tour.current?.close()}><X size={21}/></button><CalendarDays size={32}/><h2 id="tour-title">Come see it for yourself.</h2><p>Send a tour request for <strong>{property.title}</strong>. The landlord will review it; this does not confirm a date or time.</p><button className="detail-rent-button" disabled={tourLoading} onClick={requestTour}>{tourLoading?'Sending request…':'Send tour request'}<ArrowUpRight size={18}/></button></dialog></div>;
 }

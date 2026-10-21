@@ -20,21 +20,28 @@ interface Review {
 export default function PropertyReviews({ propertyId }: { propertyId: string }) {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(false);
+  const [retry, setRetry] = useState(0);
 
   useEffect(() => {
+    const abort = new AbortController();
     const fetchReviews = async () => {
       try {
-        const response = await axiosInstance.get(`/reviews/${propertyId}`);
+        const response = await axiosInstance.get(`/reviews/${propertyId}`, { signal: abort.signal });
         if (response.data.success) {
           setReviews(response.data.data);
         }
-      } catch (error) {
+      } catch {
+        if (!abort.signal.aborted) setError(true);
       } finally {
-        setIsLoading(false);
+        if (!abort.signal.aborted) setIsLoading(false);
       }
     };
     if (propertyId) fetchReviews();
-  }, [propertyId]);
+  return () => abort.abort();
+  }, [propertyId, retry]);
+
+  if (error) return <div role="alert"><h2>Reviews & Ratings</h2><p>Reviews could not be loaded.</p><button onClick={() => {setError(false);setIsLoading(true);setRetry(n => n + 1);}}>Try again</button></div>;
 
   if (isLoading) return <div className="animate-pulse h-32 bg-slate-100 rounded-3xl mt-8"></div>;
 

@@ -52,7 +52,7 @@ export default function LoginPage() {
         document.cookie = `token=${res.data.token}; path=/; max-age=86400; SameSite=Strict`;
         toast.success("Login successful!");
         
-        if (redirectUrl?.startsWith("/") && !redirectUrl.startsWith("//") && !redirectUrl.includes("\\") && res.data.user.role === "LANDLORD") {
+        if (redirectUrl?.startsWith("/") && !redirectUrl.startsWith("//") && !redirectUrl.includes("\\") && (redirectUrl.startsWith("/properties/") || redirectUrl.startsWith(`/dashboard/${res.data.user.role.toLowerCase()}/`))) {
           router.push(redirectUrl);
         } else {
           router.push(`/dashboard/${res.data.user.role.toLowerCase()}`);
