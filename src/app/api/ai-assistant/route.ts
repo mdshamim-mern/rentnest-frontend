@@ -1,3 +1,4 @@
+export const maxDuration = 60;
 import {z} from 'zod';
 import {generateAI,readQuestion,AIError,aiFailure} from '@/lib/ai';
 const answerSchema=z.object({answer:z.string().trim().min(1).max(4000)}).strict();

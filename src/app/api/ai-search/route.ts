@@ -1,3 +1,4 @@
+export const maxDuration = 60;
 import {generateAI,readQuestion,searchSchema,AIError,aiFailure} from '@/lib/ai';
 export async function POST(req:Request) {
  try {

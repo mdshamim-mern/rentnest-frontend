@@ -7,12 +7,12 @@ export async function generateAI(instruction:string,text:string) {
  const model=process.env.GEMINI_MODEL || 'gemini-2.5-flash';
  if(!/^[a-zA-Z0-9.-]+$/.test(model)) throw new AIError(503,'AI configuration is unavailable.');
  let response:Response;
- const options={method:'POST',headers:{'Content-Type':'application/json','x-goog-api-key':key},body:JSON.stringify({systemInstruction:{parts:[{text:instruction}]},contents:[{role:'user',parts:[{text}]}],generationConfig:{responseMimeType:'application/json',temperature:0.2,maxOutputTokens:2400}}),signal:AbortSignal.timeout(25000),cache:'no-store' as const};
+ const options={method:'POST',headers:{'Content-Type':'application/json','x-goog-api-key':key},body:JSON.stringify({systemInstruction:{parts:[{text:instruction}]},contents:[{role:'user',parts:[{text}]}],generationConfig:{responseMimeType:'application/json',temperature:0.2,maxOutputTokens:2400}}),signal:AbortSignal.timeout(50000),cache:'no-store' as const};
  try {
  response=await fetch('https://generativelanguage.googleapis.com/v1beta/models/'+model+':generateContent',options);
  if(response.status===404){
  const list=await fetch('https://generativelanguage.googleapis.com/v1beta/models?pageSize=1000',{headers:{'x-goog-api-key':key},signal:options.signal,cache:'no-store'});
- if(list.ok){const available=await list.json();const names=(available.models||[]).filter((item:{name:string;supportedGenerationMethods?:string[]})=>item.supportedGenerationMethods?.includes('generateContent')&&/^models\/gemini-[0-9.]+-flash$/.test(item.name)).map((item:{name:string})=>item.name as string).sort((a:string,b:string)=>b.localeCompare(a,undefined,{numeric:true}));
+ if(list.ok){const available=await list.json();const names=(available.models||[]).filter((item:{name:string;supportedGenerationMethods?:string[]})=>item.supportedGenerationMethods?.includes('generateContent')&&/^models\/gemini-[0-9.]+-flash(?:-lite)?$/.test(item.name)).map((item:{name:string})=>item.name as string).sort((a:string,b:string)=>Number(b.endsWith("-lite"))-Number(a.endsWith("-lite")) || b.localeCompare(a,undefined,{numeric:true}));
  if(names[0])response=await fetch('https://generativelanguage.googleapis.com/v1beta/'+names[0]+':generateContent',options);
  }
  }
