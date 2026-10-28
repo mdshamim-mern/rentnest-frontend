@@ -39,3 +39,34 @@ html.dark .status-pill[data-status=REJECTED] { background:#492c39; color:#ffc7d1
 html.dark .footer-socials :is(.social-facebook,.social-linkedin,.social-telegram) { background:#1d3e58!important; border-color:#3b6886!important; color:#b6dfff!important; }
 html.dark :is(.nav-desktop-links a:hover,.nav-mobile-links a:hover,.amenity-options label:has(input:checked)) { background:#345563!important; color:#b7fff0!important; }
 html.dark .workspace-search input { background:transparent!important; }
+/* Inputs belong to their glass field; avoid a second, square black surface. */
+html.dark .filter-search-input input,
+html.dark .filter-field input,
+html.dark .filter-field select,
+html.dark .home-search input,
+html.dark .home-search select {
+ background:transparent!important;
+ border:0!important;
+ box-shadow:none!important;
+ border-radius:8px;
+ color:#e7f2f4!important;
+}
+html.dark .filter-search-input input { padding:10px 0; }
+html.dark .filter-search-input:focus-within,
+html.dark .filter-field:focus-within { border-color:#79d8ca!important; box-shadow:0 0 0 2px #79d8ca33!important; }
+html.dark .filter-field { box-shadow:none!important; }
+html.dark :is(.filter-field,.home-search) option { background:#192f3a; color:#e7f2f4; }
+html.dark .home-search label > span,html.dark .filter-bottom .active-filters { color:#b8cfd7!important; }
+/* Help had light gradients behind dark-mode text. Theme each surface explicitly. */
+html.dark .help-page { background:transparent!important; }
+html.dark .help-page .help-glow { background:#1e6553!important; opacity:.18; }
+html.dark .help-page h1 { background:none!important; color:#eff8fa!important; -webkit-text-fill-color:#eff8fa; }
+html.dark .help-page .help-faq-card { background:linear-gradient(135deg,#243e4b,#1a303e)!important; border-color:#3b5867!important; box-shadow:none!important; }
+html.dark .help-page .help-faq-card h4 { color:#f0f8fa!important; }
+html.dark .help-page .help-faq-card p { color:#c6dbe2!important; }
+html.dark .help-page .help-topic-icon { background:#254552!important; border:1px solid #426674; }
+html.dark .help-page .help-topic-icon svg { color:#8ce0d4!important; }
+html.dark .help-page .help-support-banner { background:linear-gradient(115deg,#155c66,#203d65)!important; box-shadow:0 16px 40px #0003!important; }
+html.dark .help-page .help-support-banner :is(h3,p) { color:#f0f8fa!important; }
+html.dark .help-page .help-support-banner a { color:#f0f8fa!important; border:1px solid #61818d; background:#17303e!important; }
+html.dark .hero-image-label { background:#203b45e8!important; border-color:#446875; }
