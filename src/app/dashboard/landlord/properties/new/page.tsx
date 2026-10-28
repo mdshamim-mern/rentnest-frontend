@@ -237,7 +237,7 @@ export default function NewPropertyPage() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6 pb-24">
+    <div className="property-editor max-w-4xl mx-auto space-y-6 pb-24">
       <div>
         <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Add New Property</h1>
         <p className="text-slate-500 mt-1">Fill in the details to list a new property.</p>
@@ -605,7 +605,7 @@ export default function NewPropertyPage() {
             <div className="flex items-center space-x-3 bg-sky-50/50 p-4 rounded-xl border border-sky-100">
               <label className="relative inline-flex items-center cursor-pointer">
                 <input type="checkbox" {...register("isAvailable")} className="sr-only peer" />
-                <div className="w-11 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-sky-500"></div>
+                <div className="w-11 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
               </label>
               <span className="text-sm font-bold text-slate-700">Available for Rent Immediately</span>
             </div>
@@ -616,7 +616,7 @@ export default function NewPropertyPage() {
         <Button
           type="submit"
           disabled={isSubmitting}
-          className="w-full h-16 text-xl font-bold bg-slate-900 hover:bg-sky-600 text-white shadow-xl shadow-slate-900/20 rounded-2xl transition-all hover:scale-[1.01] flex items-center justify-center"
+          className="w-full h-16 text-xl font-bold bg-primary hover:bg-primary/90 text-white shadow-xl shadow-slate-900/20 rounded-2xl transition-all hover:scale-[1.01] flex items-center justify-center"
         >
           {isSubmitting ? (
             <><Loader2 className="mr-3 h-6 w-6 animate-spin" /> Publishing Property...</>

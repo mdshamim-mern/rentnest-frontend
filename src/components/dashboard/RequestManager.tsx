@@ -106,14 +106,14 @@ export default function RequestManager({initialTab = "rental"}: {initialTab?: "r
         <Button
           variant={activeTab === 'rental' ? 'default' : 'outline'}
           onClick={() => setActiveTab('rental')}
-          className={activeTab === 'rental' ? 'bg-sky-500 hover:bg-sky-600 text-white shadow-md' : 'text-slate-600'}
+          className={activeTab === 'rental' ? 'bg-primary hover:bg-primary/90 text-white shadow-md' : 'text-slate-600'}
         >
           Rental Requests
         </Button>
         <Button
           variant={activeTab === 'tour' ? 'default' : 'outline'}
           onClick={() => setActiveTab('tour')}
-          className={activeTab === 'tour' ? 'bg-sky-500 hover:bg-sky-600 text-white shadow-md' : 'text-slate-600'}
+          className={activeTab === 'tour' ? 'bg-primary hover:bg-primary/90 text-white shadow-md' : 'text-slate-600'}
         >
           Tour Requests
         </Button>
