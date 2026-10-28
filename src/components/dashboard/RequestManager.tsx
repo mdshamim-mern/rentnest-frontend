@@ -1,4 +1,5 @@
 "use client";
+import Pagination,{usePagination} from '@/components/shared/Pagination';
 import CollectionFilters from "@/components/dashboard/CollectionFilters";
 
 import { useEffect, useState } from "react";
@@ -92,6 +93,7 @@ export default function RequestManager({initialTab = "rental"}: {initialTab?: "r
   const matchRecord = (item: {status: string; property?: {title?:string}; tenant?: {name?:string}}) => (filter === "all" || item.status === filter) && `${item.property?.title || ""} ${item.tenant?.name || ""}`.toLowerCase().includes(search.trim().toLowerCase());
   const filteredRentals = requests.filter(matchRecord);
   const filteredTours = tourRequests.filter(matchRecord);
+  const paging = usePagination(activeTab === "rental" ? filteredRentals : filteredTours, JSON.stringify([activeTab,search,filter]));
 
   return (
     <div className="space-y-6">
@@ -150,7 +152,7 @@ export default function RequestManager({initialTab = "rental"}: {initialTab?: "r
                       </TableCell>
                     </TableRow>
                   ) : (
-                    filteredRentals.map((request) => (
+                    paging.items.map((request) => (
                       <TableRow key={request.id} className="hover:bg-white/60 transition-colors">
                         <TableCell className="font-medium text-slate-900">
                           {request.property?.title || "Unknown Property"}
@@ -205,7 +207,7 @@ export default function RequestManager({initialTab = "rental"}: {initialTab?: "r
                       </TableCell>
                     </TableRow>
                   ) : (
-                    filteredTours.map((request) => (
+                    paging.items.map((request) => (
                       <TableRow key={request.id} className="hover:bg-white/60 transition-colors">
                         <TableCell className="font-medium text-slate-900">
                           {request.property?.title || "Unknown Property"}
@@ -257,6 +259,7 @@ export default function RequestManager({initialTab = "rental"}: {initialTab?: "r
             </Table>
           </div>
         </CardContent>
+        {!isLoading && <Pagination {...paging}/>}
       </Card>
     </div>
   );

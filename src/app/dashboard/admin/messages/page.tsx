@@ -1,4 +1,5 @@
 "use client";
+import Pagination,{usePagination} from '@/components/shared/Pagination';
 import CollectionFilters from "@/components/dashboard/CollectionFilters";
 
 import { useEffect, useState } from "react";
@@ -83,6 +84,7 @@ export default function AdminMessagesPage() {
   const [filter, setFilter] = useState("all");
   const filterOptions = ['Read','Unread'].map(value => ({value: String(value), label: String(value)}));
   const filteredRecords = messages.filter(item => (filter === "all" || (item.isRead ? "Read" : "Unread") === filter) && `${item.name} ${item.email} ${item.message}`.toLowerCase().includes(search.trim().toLowerCase()));
+  const paging = usePagination(filteredRecords, JSON.stringify([search,filter]));
 
   return (
     <div className="space-y-6">
@@ -131,7 +133,7 @@ export default function AdminMessagesPage() {
                     </TableCell>
                   </TableRow>
                 ) : (
-                  filteredRecords.map((msg) => (
+                  paging.items.map((msg) => (
                     <TableRow key={msg.id} className={`transition-colors ${!msg.isRead ? 'bg-sky-50/50' : 'hover:bg-white/60'}`}>
                       <TableCell>
                         {!msg.isRead && <div className="h-2.5 w-2.5 rounded-full bg-primary mx-auto" />}
@@ -181,6 +183,7 @@ export default function AdminMessagesPage() {
             </Table>
           </div>
         </CardContent>
+        {!isLoading && <Pagination {...paging}/>}
       </Card>
     </div>
   );

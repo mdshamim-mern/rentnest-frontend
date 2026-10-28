@@ -1,4 +1,5 @@
 "use client";
+import Pagination,{usePagination} from '@/components/shared/Pagination';
 import CollectionFilters from "@/components/dashboard/CollectionFilters";
 
 import { useEffect, useState } from "react";
@@ -41,6 +42,7 @@ export default function TenantPaymentsPage() {
   const [filter, setFilter] = useState("all");
   const filterOptions = Array.from(new Set(payments.map(item => item.status).filter(Boolean))).map(value => ({value: String(value), label: String(value)}));
   const filteredRecords = payments.filter(item => (filter === "all" || (item.status) === filter) && `${item.transactionId || ""} ${item.rental?.property?.title || item.rentalRequest?.property?.title || ""}`.toLowerCase().includes(search.trim().toLowerCase()));
+  const paging = usePagination(filteredRecords, JSON.stringify([search,filter]));
 
   return (
     <div className="space-y-8">
@@ -131,7 +133,7 @@ export default function TenantPaymentsPage() {
                     </TableCell>
                   </TableRow>
                 ) : (
-                  filteredRecords.map((payment) => (
+                  paging.items.map((payment) => (
                     <TableRow key={payment.id} className="hover:bg-white/40 transition-colors">
                       <TableCell className="font-medium text-slate-600 text-sm">
                         {payment.transactionId || payment.id.slice(0, 8).toUpperCase()}
@@ -163,6 +165,7 @@ export default function TenantPaymentsPage() {
             </Table>
           </div>
         </CardContent>
+        {!isLoading && <Pagination {...paging}/>}
       </Card>
     </div>
   );

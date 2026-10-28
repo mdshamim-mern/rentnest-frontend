@@ -1,3 +1,4 @@
+import HomeSections from "@/components/shared/HomeSections";
 import Link from "next/link";
 import { ArrowUpRight, Search, MapPin, ShieldCheck, KeyRound, SlidersHorizontal, ArrowRight, Building2 } from "lucide-react";
 const neighborhoods = [
@@ -22,12 +23,12 @@ export default function HomePage() {
         <Link href="/properties" className="hero-floating glass"><span className="icon-tile"><KeyRound size={23} /></span><div><strong>Your next chapter starts here</strong><p>Find a home. Make it yours.</p></div><ArrowUpRight size={22} /></Link>
         <div className="image-caption">Thoughtful spaces. Everyday comfort.</div>
       </div>
-      <form action="/properties" className="home-search glass">
+    </section>
+      <form action="/properties" className="home-search glass site-width">
         <label><span>WHERE DO YOU WANT TO LIVE?</span><div><MapPin size={20} /><input name="location" placeholder="City or neighborhood" aria-label="City or neighborhood" /></div></label>
         <label><span>YOUR KIND OF SPACE</span><div><Building2 size={20} /><select name="type" aria-label="Property type"><option value="all">All property types</option>{["Apartment", "Duplex", "Studio", "Villa", "Penthouse"].map(type => <option key={type}>{type}</option>)}</select></div></label>
         <button className="primary-link" type="submit"><Search size={19} /> Find my home</button>
       </form>
-    </section>
     <section className="site-width section-space">
       <div className="section-heading"><div><span className="eyebrow">FIND YOUR NEIGHBORHOOD</span><h2>A location you&apos;ll love.</h2></div><Link className="text-link" href="/properties">Explore all properties <ArrowUpRight size={19} /></Link></div>
       <div className="neighborhood-grid">{neighborhoods.map(place => <Link href={'/properties?location=' + place.name} className="neighborhood-card" key={place.name}>
@@ -41,6 +42,7 @@ export default function HomePage() {
       { icon: Building2, title: "Take a closer look", text: "Explore property details and request a tour before making your next move." },
       { icon: KeyRound, title: "Start your next chapter", text: "Send a rental request and follow its progress from your personal dashboard." },
     ].map((item, i) => <div key={item.title} className="step-row"><span className="step-number">0{i + 1}</span><item.icon size={24} /><div><h3>{item.title}</h3><p>{item.text}</p></div></div>)}</div></section>
+    <HomeSections/>
     <section className="site-width cta-panel"><div><span className="eyebrow">A GREAT SPACE DESERVES A GREAT TENANT</span><h2>Your property.<br />Someone&apos;s next home.</h2><p>Bring your listing to RentNest and manage it all in one place.</p></div><Link href="/login?redirect=/dashboard/landlord/properties/new" className="primary-link light-link">List your property <ArrowUpRight size={20} /></Link></section>
   </div>;
 }

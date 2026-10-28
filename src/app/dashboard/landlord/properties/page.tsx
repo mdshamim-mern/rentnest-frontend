@@ -1,4 +1,5 @@
 "use client";
+import Pagination,{usePagination} from '@/components/shared/Pagination';
 import CollectionFilters from "@/components/dashboard/CollectionFilters";
 
 import { useEffect, useState } from "react";
@@ -57,6 +58,7 @@ export default function LandlordPropertiesPage() {
   const [filter, setFilter] = useState("all");
   const filterOptions = Array.from(new Set(properties.map(item => item.propertyType).filter(Boolean))).map(value => ({value: String(value), label: String(value)}));
   const filteredRecords = properties.filter(item => (filter === "all" || (item.propertyType) === filter) && `${item.title} ${item.location}`.toLowerCase().includes(search.trim().toLowerCase()));
+  const paging = usePagination([...filteredRecords].reverse(), JSON.stringify([search,filter]));
 
   return (
     <div className="space-y-6">
@@ -107,7 +109,7 @@ export default function LandlordPropertiesPage() {
                     </TableCell>
                   </TableRow>
                 ) : (
-                  [...filteredRecords].reverse().map((property) => (
+                  paging.items.map((property) => (
                     <TableRow key={property.id} className="hover:bg-white/40 transition-colors">
                       <TableCell className="font-medium text-slate-900">{property.title}</TableCell>
                       <TableCell className="text-slate-600">{property.location}</TableCell>
@@ -152,6 +154,7 @@ export default function LandlordPropertiesPage() {
             </Table>
           </div>
         </CardContent>
+        {!isLoading && <Pagination {...paging}/>}
       </Card>
     </div>
   );

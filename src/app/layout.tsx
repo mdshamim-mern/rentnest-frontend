@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 import "./readability.css";
 import "./glass-refresh.css";
+import "./upgrade.css";
+import "./dark.css";
 import Navbar from "@/components/shared/Navbar";
 import Footer from "@/components/shared/Footer";
 import { Toaster } from "react-hot-toast";
@@ -18,7 +20,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" data-scroll-behavior="smooth">
+    <html lang="en" data-scroll-behavior="smooth" suppressHydrationWarning>
+      <head><script dangerouslySetInnerHTML={{__html: "try{document.documentElement.classList.toggle('dark',localStorage.getItem('rentnest-theme')==='dark')}catch(e){}"}} /></head>
       <body className="min-h-screen flex flex-col text-slate-900">
         <Navbar />
         <main className="grow pt-20">

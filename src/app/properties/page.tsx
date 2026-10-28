@@ -5,6 +5,8 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { axiosInstance } from "@/lib/api/axiosInstance";
 import { Property, Category } from "@/types";
+import Pagination,{usePagination} from '@/components/shared/Pagination';
+import PropertySkeleton from '@/components/properties/PropertySkeleton';
 import PropertyCard from "@/components/properties/PropertyCard";
 import PropertyFilters from "@/components/properties/PropertyFilters";
 import { useFavoritesStore } from "@/lib/store/favoritesStore";
@@ -163,6 +165,7 @@ export default function PropertiesPage() {
     return list.sort((a,b) => sort === "price-low" ? a.price-b.price : sort === "price-high" ? b.price-a.price : sort === "area" ? (b.floorArea||0)-(a.floorArea||0) : new Date(b.createdAt||0).getTime()-new Date(a.createdAt||0).getTime());
   }, [properties, onlySaved, favorites, sort]);
 
+  const paging=usePagination(visibleProperties,JSON.stringify([sort,onlySaved,selectedLocation,selectedCategory,propertyType,minPrice,maxPrice,minArea,maxArea,beds,baths,amenities,rentFor,furnished]),12);
   return (
     <div className="properties-page min-h-screen pt-8 pb-24">
       <div className="site-width">
@@ -189,9 +192,7 @@ export default function PropertiesPage() {
 
         <div className="results-toolbar"><div aria-live="polite">{isLoading ? "Finding your next home…" : `${visibleProperties.length} properties found`}<label className="ml-4 inline-flex gap-2 items-center"><input type="checkbox" checked={onlySaved} onChange={e=>setOnlySaved(e.target.checked)} />Saved homes</label></div><select aria-label="Sort properties" value={sort} onChange={e=>setSort(e.target.value)}><option value="newest">Newest first</option><option value="price-low">Price: low to high</option><option value="price-high">Price: high to low</option><option value="area">Largest area</option></select></div>
         {fetchError ? <div className="glass p-12 rounded-2xl text-center" role="alert"><h2 className="text-xl font-semibold">We couldn’t load the properties.</h2><p className="my-4 text-slate-500">Please check your connection and try again.</p><button className="primary-link" onClick={()=>setRetry(v=>v+1)}>Try again</button></div> : isLoading ? (
-          <div className="flex justify-center items-center py-32">
-            <Loader2 className="animate-spin text-sky-500 h-12 w-12" />
-          </div>
+          <PropertySkeleton/>
         ) : viewMode === "map" ? (
           <PropertyMap properties={visibleProperties} />
         ) : visibleProperties.length === 0 ? (
@@ -200,12 +201,13 @@ export default function PropertiesPage() {
             <p className="text-slate-500 mt-2">Try adjusting your search or filters.</p><button className="text-link mt-5" onClick={()=>{handleResetFilters();setOnlySaved(false);}}>Reset filters</button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-8">
-            {visibleProperties.map((property) => (
+          <div className="property-results-grid">
+            {paging.items.map((property) => (
               <PropertyCard key={property.id} property={property} />
             ))}
           </div>
         )}
+        {!isLoading && !fetchError && viewMode === "list" && <Pagination {...paging}/>}
       </div>
     </div>
   );

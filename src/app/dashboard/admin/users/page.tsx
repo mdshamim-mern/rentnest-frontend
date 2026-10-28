@@ -1,4 +1,5 @@
 "use client";
+import Pagination,{usePagination} from '@/components/shared/Pagination';
 import CollectionFilters from "@/components/dashboard/CollectionFilters";
 
 import { useEffect, useState } from "react";
@@ -52,6 +53,7 @@ export default function AdminUsersPage() {
   const [filter, setFilter] = useState("all");
   const filterOptions = ['ADMIN','LANDLORD','TENANT'].map(value => ({value: String(value), label: String(value)}));
   const filteredRecords = users.filter(item => (filter === "all" || (item.role) === filter) && `${item.name} ${item.email}`.toLowerCase().includes(search.trim().toLowerCase()));
+  const paging = usePagination(filteredRecords, JSON.stringify([search,filter]));
 
   return (
     <div className="space-y-6">
@@ -92,7 +94,7 @@ export default function AdminUsersPage() {
                     </TableCell>
                   </TableRow>
                 ) : (
-                  filteredRecords.map((user) => (
+                  paging.items.map((user) => (
                     <TableRow key={user.id} className="hover:bg-white/40 transition-colors">
                       <TableCell className="font-medium text-slate-900">{user.name}</TableCell>
                       <TableCell className="text-slate-600">{user.email}</TableCell>
@@ -128,6 +130,7 @@ export default function AdminUsersPage() {
             </Table>
           </div>
         </CardContent>
+        {!isLoading && <Pagination {...paging}/>}
       </Card>
     </div>
   );

@@ -1,0 +1,41 @@
+/* Only dark mode is restyled here. Removing .dark restores the original light theme. */
+html.dark { color-scheme:dark; --background:#0c1822; --foreground:#e7f2f4; --card:#152733; --card-foreground:#e7f2f4; --popover:#182d3a; --popover-foreground:#e7f2f4; --muted:#213745; --muted-foreground:#b4cbd3; --accent:#233d49; --accent-foreground:#85e1d1; --border:#35515e; --input:#35515e; --primary:#168b98; --primary-foreground:#fff; --secondary:#243c49; --secondary-foreground:#eef7f9; }
+html.dark body { background:radial-gradient(ellipse at 0 0,#17423d66,transparent 45%),radial-gradient(ellipse at 100% 30%,#28375e55,transparent 45%),#0c1822!important; color:#e7f2f4!important; }
+html.dark :is(.property-detail,.dashboard-workspace,.workspace-shell,.workspace-main,.auth-shell,.properties-page) { background:transparent!important; color:#e7f2f4!important; }
+html.dark :is(.glass,.filter-panel.glass,.rentnest-nav,.nav-mobile-menu,.site-footer,.footer,.auth-form-panel,.workspace-sidebar,.workspace-panel,.workspace-welcome,.stat-card,.activity-row,.member-card,.portfolio-card,.workspace-support,.workspace-mobile-bar,.workspace-drawer,.drawer-content,.detail-panel,.detail-booking-card,.detail-stats > div,.detail-tour-dialog,.account-popover,[data-slot=card],[data-slot=dialog-content],[data-slot=alert-dialog-content],[data-slot=select-content],[data-slot=popover-content],[data-slot=dropdown-menu-content]) { background:linear-gradient(135deg,#192f3aeb,#152431ed)!important; border-color:#3c58656b!important; color:#e7f2f4!important; box-shadow:0 12px 35px #0003!important; }
+html.dark :is(h1,h2,h3,h4,h5,h6,dt,dd,figcaption,strong,.nav-brand,.property-card-body h3,.detail-price,.detail-owner-profile strong) { color:#e7f2f4!important; }
+html.dark :is(p,small,label,legend,.eyebrow,.detail-eyebrow,.workspace-eyebrow,.detail-breadcrumb,.detail-features dt,.detail-heading p,.detail-description,.detail-costs,.detail-price > span,.detail-booking-note,.detail-location > small,.detail-location > p,.detail-stats small,.property-card-description,.property-card-location,.property-specs,.results-toolbar,.pagination-bar,.section-description,.home-info-card p,.home-faq p,.footer-intro,.footer-bottom,.nav-brand small) { color:#b8cfd7!important; }
+html.dark :is([class*=text-slate-],[class*=text-gray-],[class*=text-zinc-]) { color:#bdd0d8!important; }
+html.dark :is([class*=text-sky-],[class*=text-teal-],[class*=text-blue-],.text-link,.detail-section-heading > a,.detail-breadcrumb a,.footer-top a) { color:#81dcda!important; }
+html.dark :is([class*=bg-white],[class*=bg-slate-50],[class*=bg-slate-100],[class*=bg-gray-50],[class*=bg-gray-100]) { background-color:#192e3b!important; }
+html.dark :is([class*=border-white],[class*=border-slate-],[class*=border-gray-]) { border-color:#36515e!important; }
+html.dark :is(input,select,textarea,[data-slot=input],[data-slot=textarea],[data-slot=select-trigger]) { color:#e7f2f4!important; background:#11232f!important; border-color:#42606c!important; }
+html.dark input::placeholder,html.dark textarea::placeholder { color:#9ab3bd!important; opacity:1; }
+html.dark input[type=checkbox],html.dark input[type=radio] { accent-color:#62c8bb; }
+html.dark :is(.nav-desktop-links,.nav-account,.nav-menu-toggle,.theme-switch,.search-mode,.view-toggle,.filter-search-input,.save-search-button,.more-filters,.filter-chip,.filter-live-badge,.filter-heading-icon,.detail-heading-actions button,.detail-section-nav,.detail-contact-links a,.detail-tour-button,.detail-amenities > div,.detail-price-tag,.detail-type,.detail-all-photos,.detail-stats svg,.detail-features dt svg,.detail-section-heading > svg,.detail-amenities > div > span,.account-avatar,.pagination-bar button,.home-data-message,.workspace-notice,.dashboard-filter-bar) { background:#213a46!important; border-color:#3b5967!important; color:#9de4da!important; box-shadow:none!important; }
+html.dark :is(.nav-desktop-links a,.nav-mobile-links a,.detail-section-nav a,.theme-switch button,.search-mode button,.view-toggle button,.account-popover a,.account-popover button,.sidebar-links a) { color:#c2d9df!important; }
+html.dark :is(.nav-desktop-links a[aria-current=page],.nav-mobile-links a[aria-current=page],.theme-switch button[aria-pressed=true],.search-mode button[aria-pressed=true],.view-toggle button[aria-pressed=true],.account-popover a:hover,.account-popover button:hover,.detail-section-nav a:hover) { background:#345563!important; color:#b7fff0!important; }
+html.dark :is(.detail-amenities > div > span,.chart-track,.skeleton-image,.skeleton-line) { background:#2a4652!important; }
+html.dark .property-card-bottom { border-color:#36515e; }html.dark .property-card-bottom > a { background:#264b53; color:#aff5e8; }
+html.dark :is(.home-search,.property-card,.auth-form-panel) { border-color:#36515e!important; }
+html.dark :is([class*=bg-green-100],[class*=bg-emerald-100],[class*=bg-green-50]) { background:#174337!important; color:#aff0ce!important; }
+html.dark :is([class*=bg-red-100],[class*=bg-red-50],.nav-logout) { background:#492c39!important; color:#ffc7d1!important; }
+html.dark :is([class*=bg-orange-100],[class*=bg-yellow-50]) { background:#4b3d24!important; color:#ffe1a0!important; }
+html.dark :is([class*=bg-blue-100],[class*=bg-sky-100]) { background:#243f58!important; color:#b8dfff!important; }
+html.dark :is(.primary-link,.nav-list,.detail-rent-button) { color:#fff!important; }
+html.dark .primary-link.light-link { background:#d4f6ed!important; color:#174c50!important; }
+html.dark .hero-copy h1 > span { color:#6ed4ca!important; }
+html.dark ::selection { background:#386b70; color:#fff; }
+html.dark :focus-visible { outline-color:#8ee8dd; }
+html.dark :is(.social-login,.auth-divider,.detail-photo-controls) { color:#bed3dc; }
+html.dark .leaflet-popup-content-wrapper,html.dark .leaflet-popup-tip { background:#192e3b; color:#e7f2f4; }
+html.dark :is(.footer-top,.filter-field,.advanced-filters,.amenity-options label,.contact-page,.contact-page .contact-form,.contact-page .contact-card,.auth-form-panel > div,.workspace-search,.panel-footer,.workspace-stat,.refresh-button,.demo-button,.sidebar-explore,.activity-icon,.action-icon,.member-avatar,.portfolio-card > svg,.workspace-mobile-bar button,.icon-tile,.circle-arrow,.stat-skeleton) { background:#1b3340!important; border-color:#3b5967!important; color:#c0e1e3!important; }
+html.dark :is(.stat-top,.stat-foot,.sidebar-workspace-label,.sidebar-workspace-role,.sidebar-help,.footer-brand,.footer-color-note,.nav-menu-caption,.active-filters,.filter-field > span) { color:#bfd5dc!important; }
+html.dark .dashboard-workspace th { background:#243d49!important; color:#d1e7eb!important; }
+html.dark .status-pill { background:#243f4c; color:#d1e7eb; border-color:#486372; }
+html.dark .status-pill[data-status=PENDING] { background:#4b3d24; color:#ffe1a0; border-color:#78643d; }
+html.dark .status-pill[data-status=ACTIVE],html.dark .status-pill[data-status=APPROVED] { background:#174337; color:#aff0ce; border-color:#346a55; }
+html.dark .status-pill[data-status=REJECTED] { background:#492c39; color:#ffc7d1; border-color:#805063; }
+html.dark .footer-socials :is(.social-facebook,.social-linkedin,.social-telegram) { background:#1d3e58!important; border-color:#3b6886!important; color:#b6dfff!important; }
+html.dark :is(.nav-desktop-links a:hover,.nav-mobile-links a:hover,.amenity-options label:has(input:checked)) { background:#345563!important; color:#b7fff0!important; }
+html.dark .workspace-search input { background:transparent!important; }

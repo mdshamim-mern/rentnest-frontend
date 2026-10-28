@@ -1,4 +1,5 @@
 "use client";
+import Pagination,{usePagination} from '@/components/shared/Pagination';
 import CollectionFilters from "@/components/dashboard/CollectionFilters";
 
 import { useEffect, useState } from "react";
@@ -46,6 +47,7 @@ export default function AdminRequestsPage() {
   const [filter, setFilter] = useState("all");
   const filterOptions = ['PENDING','APPROVED','REJECTED','ACTIVE','COMPLETED'].map(value => ({value: String(value), label: String(value)}));
   const filteredRecords = requests.filter(item => (filter === "all" || (item.status) === filter) && `${item.property?.title || ""} ${item.tenant?.name || ""}`.toLowerCase().includes(search.trim().toLowerCase()));
+  const paging = usePagination(filteredRecords, JSON.stringify([search,filter]));
 
   return (
     <div className="space-y-6">
@@ -86,7 +88,7 @@ export default function AdminRequestsPage() {
                     </TableCell>
                   </TableRow>
                 ) : (
-                  filteredRecords.map((request) => (
+                  paging.items.map((request) => (
                     <TableRow key={request.id} className="hover:bg-white/40 transition-colors">
                       <TableCell className="font-medium text-slate-900">{request.property?.title}</TableCell>
                       <TableCell className="text-slate-600">{request.tenant?.name}</TableCell>
@@ -106,6 +108,7 @@ export default function AdminRequestsPage() {
             </Table>
           </div>
         </CardContent>
+        {!isLoading && <Pagination {...paging}/>}
       </Card>
     </div>
   );
