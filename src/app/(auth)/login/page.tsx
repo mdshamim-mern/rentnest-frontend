@@ -130,9 +130,9 @@ export default function LoginPage() {
             </Button>
           </form>
           <div className="demo-options">
-            {([{label:"Tenant demo",email:"demo@rentnest.example",password:"RentNestDemo2026!"},{label:"Admin demo",email:"admin.demo@rentnest.example",password:"RentNestAdminDemo2026!"}]).map(demo => <button key={demo.email} type="button" className="demo-button" disabled={isLoading} onClick={() => { setValue("email", demo.email, { shouldValidate: true }); setValue("password", demo.password, { shouldValidate: true }); toast.success("Demo credentials filled. Select Sign in to explore."); }}>{demo.label} · Auto-fill</button>)}
+            {([{label:"Tenant demo",email:"demo@rentnest.example",password:"RentNestDemo2026!"},{label:"Landlord demo",email:"landlord.demo@rentnest.example",password:"RentNestLandlordDemo2026!"},{label:"Admin demo",email:"admin.demo@rentnest.example",password:"RentNestAdminDemo2026!"}]).map(demo => <button key={demo.email} type="button" className="demo-button" disabled={isLoading} onClick={() => { setValue("email", demo.email, { shouldValidate: true }); setValue("password", demo.password, { shouldValidate: true }); toast.success("Demo credentials filled. Select Sign in to explore."); }}>{demo.label} · Auto-fill</button>)}
           </div>
-          <p className="mt-3 text-center text-sm text-slate-500">Read-only previews. Admin demo uses sample data.</p>
+          <p className="mt-3 text-center text-sm text-slate-500">Read-only previews. Landlord and Admin demos use sample data.</p>
           <div className="mt-6 text-center text-sm text-slate-600">
             Don&apos;t have an account?{" "}
             <Link href="/register" className="font-semibold text-primary hover:underline">

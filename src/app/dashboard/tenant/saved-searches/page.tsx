@@ -68,7 +68,7 @@ export default function SavedSearchesPage() {
           <h1 className="text-3xl font-bold text-slate-900">My Saved Searches</h1>
           <p className="text-slate-500 mt-1">View and manage your saved property searches.</p>
         </div>
-        <Link href="/properties" className="hidden sm:flex items-center justify-center px-6 py-2.5 bg-sky-500 text-white font-medium rounded-xl hover:bg-sky-600 transition-colors shadow-sm hover:shadow">
+        <Link href="/properties" className="hidden sm:flex items-center justify-center px-6 py-2.5 bg-primary text-white font-medium rounded-xl hover:bg-primary/90 transition-colors shadow-sm hover:shadow">
           Browse Properties
         </Link>
       </div>
@@ -82,7 +82,7 @@ export default function SavedSearchesPage() {
           <Search className="h-12 w-12 text-slate-300 mx-auto mb-3" />
           <h3 className="text-lg font-bold text-slate-800">No saved searches yet</h3>
           <p className="text-slate-500 mt-1 mb-4">When you save a search from the properties page, it will appear here.</p>
-          <Link href="/properties" className="sm:hidden inline-flex items-center justify-center px-4 py-2 bg-sky-500 text-white rounded-xl hover:bg-sky-600 transition-colors">
+          <Link href="/properties" className="sm:hidden inline-flex items-center justify-center px-4 py-2 bg-primary text-white rounded-xl hover:bg-primary/90 transition-colors">
             Browse Properties
           </Link>
         </div>

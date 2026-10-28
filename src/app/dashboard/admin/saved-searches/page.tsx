@@ -77,7 +77,7 @@ export default function AdminSavedSearchesPage() {
           <h1 className="text-3xl font-bold text-slate-900">All Saved Searches</h1>
           <p className="text-slate-500 mt-1">View and manage all users' saved property searches.</p>
         </div>
-        <Link href="/properties" className="hidden sm:flex items-center justify-center px-6 py-2.5 bg-sky-500 text-white font-medium rounded-xl hover:bg-sky-600 transition-colors shadow-sm hover:shadow">
+        <Link href="/properties" className="hidden sm:flex items-center justify-center px-6 py-2.5 bg-primary text-white font-medium rounded-xl hover:bg-primary/90 transition-colors shadow-sm hover:shadow">
           Browse Properties
         </Link>
       </div>
@@ -114,7 +114,7 @@ export default function AdminSavedSearchesPage() {
           </div>
           <h3 className="text-xl font-bold text-slate-800">No saved searches yet</h3>
           <p className="text-slate-500 mt-2 mb-6">No {activeTab.toLowerCase()} users have saved any searches yet.</p>
-          <Link href="/properties" className="sm:hidden inline-flex items-center justify-center px-6 py-2.5 bg-sky-500 text-white font-medium rounded-xl hover:bg-sky-600 transition-colors shadow-sm hover:shadow">
+          <Link href="/properties" className="sm:hidden inline-flex items-center justify-center px-6 py-2.5 bg-primary text-white font-medium rounded-xl hover:bg-primary/90 transition-colors shadow-sm hover:shadow">
             Browse Properties
           </Link>
         </div>

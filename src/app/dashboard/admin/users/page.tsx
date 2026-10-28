@@ -99,7 +99,7 @@ export default function AdminUsersPage() {
                       <TableCell className="font-medium text-slate-900">{user.name}</TableCell>
                       <TableCell className="text-slate-600">{user.email}</TableCell>
                       <TableCell>
-                        <span className="px-3 py-1 rounded-full text-xs font-bold bg-primary/10 text-primary">
+                        <span data-role={user.role} className="role-badge px-3 py-1 rounded-full text-xs font-bold bg-primary/10 text-primary">
                           {user.role}
                         </span>
                       </TableCell>

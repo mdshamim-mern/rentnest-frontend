@@ -33,3 +33,24 @@ html.dark .auth-shell [data-slot=card-title] {color:#f1fafb!important}
 html.dark .auth-shell input,html.dark .auth-shell [data-slot=select-trigger] {background:#112935b3!important;border-color:#4b6b79!important}
 html.dark .demo-notice {background:#203e48;color:#d0eee8;border-color:#477b7e}
 @media(max-width:767px){.about-page .value-card,.contact-page .contact-card {padding:24px;border-radius:24px}.contact-page .contact-card {flex-direction:column;gap:18px}.auth-shell {padding-top:20px;gap:20px}.auth-shell .auth-story {min-height:280px}.auth-shell .auth-form-panel {border-radius:24px;padding:24px}.demo-options {grid-template-columns:1fr}}
+
+/* Readable dashboard tables: solid surfaces, clear hierarchy and colored roles. */
+.demo-options {grid-template-columns:repeat(3,minmax(0,1fr))}
+.dashboard-workspace table {width:100%;table-layout:auto}
+.dashboard-workspace td,.dashboard-workspace th {white-space:normal;overflow-wrap:anywhere}
+.dashboard-workspace td {font-size:16px;line-height:1.65}
+.dashboard-workspace th {font-size:14px}
+html.dark .dashboard-workspace [data-slot=card]:has(table) {background:#142b39!important;backdrop-filter:none!important}
+html.dark .dashboard-workspace td {color:#e0edf3!important;border-color:#395664!important}
+html.dark .dashboard-workspace td:first-child {color:#f5fbff!important;font-weight:650}
+html.dark .dashboard-workspace th {background:#264654!important;color:#f1fbff!important}
+html.dark .dashboard-workspace tbody tr:nth-child(even) {background:#1b3443!important}
+html.dark .dashboard-workspace tbody tr:hover {background:#244a58!important}
+html.dark .dashboard-workspace td.text-primary {color:#7aebce!important;font-weight:750}
+html.dark .dashboard-workspace .role-badge {display:inline-block;border:1px solid #5687b0;background:#233f64!important;color:#c6e6ff!important;font-size:13px}
+html.dark .dashboard-workspace .role-badge[data-role=LANDLORD] {background:#493461!important;border-color:#936bb5;color:#eed6ff!important}
+html.dark .dashboard-workspace .role-badge[data-role=TENANT] {background:#124e49!important;border-color:#438f7c;color:#b1f9dd!important}
+html.dark .dashboard-workspace td [class*=text-red-] {color:#ffc9d0!important;background:#613344!important}
+html.dark .dashboard-workspace td [class*=text-green-] {color:#b2fbd6!important;background:#205440!important}
+html.dark .dashboard-workspace .dashboard-filter-bar {color:#d9eaf0!important}
+@media(max-width:767px){.demo-options{grid-template-columns:1fr}.dashboard-workspace td{font-size:15px;min-width:120px}}
