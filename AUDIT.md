@@ -31,7 +31,7 @@ Tested the live app with desktop 1280/1440px, tablet 768px and mobile 390px view
 - Header, footer and detail links inspected for their destinations; mail/phone/WhatsApp actions were not sent.
 
 ## Verification limits / owner checks
-- Browser OAuth button now uses the normalized client ID with no encoded spaces. A full sign-in with the owner's Google account still requires owner confirmation; merely having a configured ID is not an end-to-end sign-in pass.
+- Browser OAuth button now uses the normalized client ID with no encoded spaces. The owner confirmed successful Google sign-in after the production fix.
 - No real payment, new account, production listing edit, user ban, or rental/tour approval was completed. Those flows need an isolated test environment and test payment credentials for a complete transaction audit.
 - Live listings and catalog totals come from the API, but ownership, factual descriptions and photo authenticity cannot be independently verified. One sampled apartment image contains a land advertisement; the owner should replace mismatched/advertising images with actual property photos.
 - This is a documented representative flow audit, not a claim that every control on every route was exercised.
@@ -39,3 +39,8 @@ Tested the live app with desktop 1280/1440px, tablet 768px and mobile 390px view
 ## Automated checks
 - Backend build and 16 tests passed, including OAuth whitespace regression and demo access isolation.
 - Frontend production build and 15 tests passed (AI validation/error paths, pagination, charts and theme restoration).
+
+## Production follow-up
+- Frontend f9e18e2 and backend b1e6698 deployments succeeded on Vercel.
+- Rechecked deployed dark Terms on mobile and Help on tablet: readable surfaces and no mobile horizontal overflow.
+- Fresh tenant demo sign-in and saved-homes empty state also passed.
