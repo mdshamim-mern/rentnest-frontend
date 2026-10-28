@@ -101,3 +101,38 @@ html.dark .catalog-stat-card:nth-child(3) {background:linear-gradient(135deg,#44
 html.dark .catalog-stat-card > span {color:#d6e9ec!important}
 @media(max-width:767px){.home-page .hero-floating{bottom:20px}.property-editor > div:first-child{padding:22px}.property-editor [data-slot=card-content]{padding:20px}.property-editor [data-slot=card] > div:first-child{padding:20px}.steps-section > div:first-child{padding:24px}.steps-list .step-row{grid-template-columns:28px 38px minmax(0,1fr);padding:20px 16px;gap:10px}.steps-list .step-row > svg{width:38px;height:38px;padding:8px}.catalog-stat-card{padding:26px!important}}
 @media(prefers-reduced-motion:reduce){.home-page .hero-floating{animation:none}}
+
+/* A consistent RentNest teal family across the informational home cards. */
+.home-page .home-info-card,.home-page .catalog-stat-card:nth-child(n) {
+ border:1px solid #cce3df!important;border-radius:26px!important;
+ background:linear-gradient(135deg,#ffffffed,#e9f5f2e8)!important;
+ box-shadow:0 14px 35px #174d5810!important;padding:30px!important;gap:18px;
+}
+.home-page .home-info-card > svg,.home-page .catalog-stat-card:nth-child(n) > svg {
+ width:54px;height:54px;padding:13px;border-radius:17px;
+ background:linear-gradient(135deg,#d0ede5,#e0f2ef);color:#087e87;border:1px solid #b8ded5;
+}
+.home-page .home-info-card h3 {font-size:21px;line-height:1.4;font-weight:750;color:#173f4c}
+.home-page .home-info-card p {font-size:16px;line-height:1.8;color:#4d6d78}
+.home-page .catalog-stat-card .home-stat {color:#126d75;letter-spacing:-.035em}
+.home-page .steps-section {grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:28px;align-items:stretch}
+.home-page .steps-section > div:first-child {
+ display:flex;flex-direction:column;justify-content:center;padding:clamp(28px,3.2vw,44px);
+ border:1px solid #cce3df;border-radius:28px;background:linear-gradient(135deg,#e0f2ec,#eff8f7);
+}
+.home-page .steps-section > div:first-child h2 {font-size:clamp(30px,3vw,42px);line-height:1.2}
+.home-page .steps-section > div:first-child .text-link {margin-top:26px;align-self:flex-start}
+.home-page .steps-list {gap:0;padding:8px 26px;border:1px solid #cce3df;border-radius:28px;background:linear-gradient(135deg,#ffffffed,#edf7f4);box-shadow:0 14px 35px #174d5810}
+.home-page .steps-list .step-row {grid-template-columns:42px minmax(0,1fr);position:relative;gap:16px;padding:26px 0;border:0;border-bottom:1px solid #cfe2dd;border-radius:0;background:none;box-shadow:none;align-items:start}
+.home-page .steps-list .step-row:last-child {border-bottom:0}
+.home-page .step-row .step-number {grid-column:1;grid-row:1;display:grid;place-items:center;width:42px;height:42px;border-radius:14px;background:#d8eee8;color:#087c83;font-size:15px;align-self:start}
+.home-page .steps-list .step-row > svg {display:none}
+.home-page .steps-list .step-row > div {grid-column:2;grid-row:1}
+.home-page .steps-list h3 {font-size:20px;margin-bottom:6px}
+.home-page .steps-list p {font-size:16px;line-height:1.7}
+html.dark .home-page .home-info-card,html.dark .home-page .catalog-stat-card:nth-child(n) {background:linear-gradient(135deg,#21424a,#172f3c)!important;border-color:#41666d!important}
+html.dark .home-page .home-info-card > svg,html.dark .home-page .catalog-stat-card:nth-child(n) > svg {background:#285b5e;color:#a3eddd;border-color:#447e7a}
+html.dark .home-page .steps-section > div:first-child,html.dark .home-page .steps-list {background:linear-gradient(135deg,#21434b,#192f3e);border-color:#41666d}
+html.dark .home-page .steps-list .step-row {background:none;border-color:#41616b}
+html.dark .home-page .step-row .step-number {background:#285b5e;color:#a3eddd}
+@media(max-width:767px){.home-page .steps-section{grid-template-columns:1fr;gap:18px}.home-page .steps-section > div:first-child{padding:26px}.home-page .steps-list{padding:4px 20px}.home-page .steps-list .step-row{padding:22px 0;gap:13px}.home-page .home-info-card,.home-page .catalog-stat-card:nth-child(n){padding:26px!important}}
