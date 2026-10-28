@@ -4,6 +4,7 @@ import "./readability.css";
 import "./glass-refresh.css";
 import "./upgrade.css";
 import "./dark.css";
+import "./welcome.css";
 import Navbar from "@/components/shared/Navbar";
 import Footer from "@/components/shared/Footer";
 import { Toaster } from "react-hot-toast";

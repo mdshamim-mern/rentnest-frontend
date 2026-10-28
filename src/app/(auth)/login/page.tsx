@@ -129,8 +129,10 @@ export default function LoginPage() {
               {isLoading ? "Signing in..." : "Sign in"}
             </Button>
           </form>
-          <button type="button" className="demo-button" disabled={isLoading} onClick={() => { setValue("email", "demo@rentnest.example", { shouldValidate: true }); setValue("password", "RentNestDemo2026!", { shouldValidate: true }); toast.success("Demo credentials filled. Select Sign in to explore."); }}>Demo Login — auto-fill credentials</button>
-          <p className="mt-2 text-center text-xs text-slate-500">Explore with a read-only demo account.</p>
+          <div className="demo-options">
+            {([{label:"Tenant demo",email:"demo@rentnest.example",password:"RentNestDemo2026!"},{label:"Admin demo",email:"admin.demo@rentnest.example",password:"RentNestAdminDemo2026!"}]).map(demo => <button key={demo.email} type="button" className="demo-button" disabled={isLoading} onClick={() => { setValue("email", demo.email, { shouldValidate: true }); setValue("password", demo.password, { shouldValidate: true }); toast.success("Demo credentials filled. Select Sign in to explore."); }}>{demo.label} · Auto-fill</button>)}
+          </div>
+          <p className="mt-3 text-center text-sm text-slate-500">Read-only previews. Admin demo uses sample data.</p>
           <div className="mt-6 text-center text-sm text-slate-600">
             Don&apos;t have an account?{" "}
             <Link href="/register" className="font-semibold text-primary hover:underline">
