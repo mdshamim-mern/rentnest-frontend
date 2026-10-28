@@ -30,7 +30,7 @@ export default function HomePage() {
         <button className="primary-link" type="submit"><Search size={19} /> Find my home</button>
       </form>
     <section className="site-width section-space">
-      <div className="section-heading"><div><span className="eyebrow">FIND YOUR NEIGHBORHOOD</span><h2>A location you&apos;ll love.</h2></div><Link className="text-link" href="/properties">Explore all properties <ArrowUpRight size={19} /></Link></div>
+      <div className="section-heading"><div><span className="eyebrow">FIND YOUR NEIGHBORHOOD</span><h2>A location you&apos;ll love.</h2><p className="section-description">Explore homes by neighborhood. Images are interior inspiration, not verified local listings.</p></div><Link className="text-link" href="/properties">Explore all properties <ArrowUpRight size={19} /></Link></div>
       <div className="neighborhood-grid">{neighborhoods.map(place => <Link href={'/properties?location=' + place.name} className="neighborhood-card" key={place.name}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={'https://images.unsplash.com/' + place.image + '?auto=format&fit=crop&w=800&q=80'} alt={place.name + ' rental home inspiration'} loading="lazy" />

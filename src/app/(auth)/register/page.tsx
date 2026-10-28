@@ -152,9 +152,9 @@ export default function RegisterPage() {
               )}
             </div>
             <div className="space-y-2">
-              <label>Account type</label>
+              <label htmlFor="account-type">Account type</label>
               <Select value={watch("role")} onValueChange={(value) => setValue("role", value as "TENANT" | "LANDLORD")}>
-                <SelectTrigger className="bg-white/60 border-slate-200/60 h-12">
+                <SelectTrigger id="account-type" aria-label="Account type" className="bg-white/60 border-slate-200/60 h-12">
                   <SelectValue placeholder="Select your role" />
                 </SelectTrigger>
                 <SelectContent className="max-w-[calc(100vw-40px)]">

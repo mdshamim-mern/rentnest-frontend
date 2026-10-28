@@ -138,3 +138,29 @@ html.dark .home-page .step-row .step-number {background:#285b5e;color:#a3eddd}
 @media(max-width:767px){.home-page .steps-section{grid-template-columns:1fr;gap:18px}.home-page .steps-section > div:first-child{padding:26px}.home-page .steps-list{padding:4px 20px}.home-page .steps-list .step-row{padding:22px 0;gap:13px}.home-page .home-info-card,.home-page .catalog-stat-card:nth-child(n){padding:26px!important}}
 
 .ai-assistant{padding:clamp(24px,4vw,44px);border-radius:28px;margin:0 auto 48px;max-width:1000px}.ai-assistant .eyebrow{display:flex;align-items:center;gap:10px}.ai-assistant h2{font-size:clamp(26px,3vw,36px);margin:14px 0}.ai-assistant p{line-height:1.8}.ai-assistant form{display:grid;gap:12px;margin-top:24px}.ai-assistant label{font-weight:650}.ai-assistant textarea{width:100%;min-height:110px;padding:16px;border:1px solid #aacfc9;border-radius:16px;background:#ffffffa8;font:inherit}.ai-assistant button{justify-self:start}.ai-assistant button:disabled{opacity:.6;cursor:wait}.ai-answer{margin-top:24px;border-top:1px solid #7bada655;padding-top:24px;white-space:pre-wrap}.ai-assistant [role=alert]{margin-top:18px;color:#b53350}
+/* Final audit: teal, mint and slate are the three brand color families.
+   Validation/status colors and third-party brand marks retain their meaning. */
+.help-page .help-topic-icon {background:#d9eee9!important;color:#087f89!important}
+.help-page .help-topic-icon svg {color:inherit!important}
+.help-page .help-support-banner {background:linear-gradient(120deg,#173e4a,#087f89)!important}
+.help-page .help-support-banner h3,.help-page .help-support-banner p {color:#f0fbf8!important}
+.help-page .help-support-banner a:last-child {color:#116772!important}
+html.dark .help-page .help-topic-icon {background:#285b5e!important;color:#a3eddd!important}
+html.dark .help-page .help-support-banner a:last-child {color:#a3eddd!important}
+html.dark .ai-assistant textarea {background:#142e3b;color:#e7f2f4;border-color:#527782}
+html.dark .ai-assistant [role=alert] {color:#ffb8c0}
+.legal-page .legal-card {background:linear-gradient(135deg,#f8fcfa,#edf6f3);border-color:#cce3df}
+.legal-page .legal-card svg {color:#087f89!important}
+.legal-page .legal-security {background:linear-gradient(120deg,#173e4a,#087f89)}
+.legal-page .legal-security :is(h3,p) {color:#f0fbf8!important}
+html.dark .legal-page {background:transparent!important}
+html.dark .legal-page > .absolute {display:none}
+html.dark .legal-page h1 {background:none!important;-webkit-text-fill-color:#edf8fa;color:#edf8fa!important}
+html.dark .legal-page .legal-card {background:linear-gradient(135deg,#213c49,#172d3b)!important;border-color:#426370!important}
+html.dark .legal-page .legal-card svg {color:#a3eddd!important}
+html.dark .legal-page .legal-card [class*="bg-"]:not(.legal-card) {background:#285b5e!important}
+.workspace-stat .stat-top svg {color:#087f89!important}
+html.dark .workspace-stat .stat-top svg {color:#9de3db!important}
+/* Keep focused form fields clear of the floating navigation. */
+input,textarea,select {scroll-margin-top:120px}
+@media (max-width:767px) {input,textarea,select {scroll-margin-top:100px}}

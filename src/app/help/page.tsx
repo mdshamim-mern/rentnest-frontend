@@ -13,34 +13,34 @@ export default function HelpPage() {
             How can we help you?
           </h1>
           <p className="text-xl text-slate-500 font-medium">
-            Search our knowledge base or browse categories below to find exactly what you need.
+            Ask the RentNest AI guide or browse the answers below to find your next step.
           </p>
         </div>
 
         <AIAssistant />
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-20">
           <div className="group bg-white p-10 rounded-[2rem] shadow-xl shadow-slate-200/40 border border-slate-100 hover:shadow-2xl hover:shadow-blue-100/50 transition-all duration-300 hover:-translate-y-2 relative overflow-hidden">
-            <div className="absolute top-0 left-0 w-full h-1.5 bg-linear-to-r from-blue-400 to-blue-600 transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500" />
-            <div className="help-topic-icon h-16 w-16 bg-blue-50 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-blue-100 transition-all duration-300">
-              <Home className="h-8 w-8 text-blue-600" />
+            <div className="absolute top-0 left-0 w-full h-1.5 bg-linear-to-r from-teal-400 to-teal-700 transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500" />
+            <div className="help-topic-icon h-16 w-16 bg-teal-50 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-teal-100 transition-all duration-300">
+              <Home className="h-8 w-8 text-teal-700" />
             </div>
             <h3 className="text-2xl font-bold text-slate-900 mb-3">Properties</h3>
             <p className="text-slate-500 text-lg leading-relaxed">Everything about listing, finding, and managing rental properties on our platform.</p>
           </div>
 
           <div className="group bg-white p-10 rounded-[2rem] shadow-xl shadow-slate-200/40 border border-slate-100 hover:shadow-2xl hover:shadow-emerald-100/50 transition-all duration-300 hover:-translate-y-2 relative overflow-hidden">
-            <div className="absolute top-0 left-0 w-full h-1.5 bg-linear-to-r from-emerald-400 to-emerald-600 transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500" />
-            <div className="help-topic-icon h-16 w-16 bg-emerald-50 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-emerald-100 transition-all duration-300">
-              <CreditCard className="h-8 w-8 text-emerald-600" />
+            <div className="absolute top-0 left-0 w-full h-1.5 bg-linear-to-r from-teal-400 to-teal-700 transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500" />
+            <div className="help-topic-icon h-16 w-16 bg-teal-50 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-teal-100 transition-all duration-300">
+              <CreditCard className="h-8 w-8 text-teal-700" />
             </div>
             <h3 className="text-2xl font-bold text-slate-900 mb-3">Payments</h3>
             <p className="text-slate-500 text-lg leading-relaxed">Information about secure transactions, rent collection, and payment methods.</p>
           </div>
 
           <div className="group bg-white p-10 rounded-[2rem] shadow-xl shadow-slate-200/40 border border-slate-100 hover:shadow-2xl hover:shadow-violet-100/50 transition-all duration-300 hover:-translate-y-2 relative overflow-hidden">
-            <div className="absolute top-0 left-0 w-full h-1.5 bg-linear-to-r from-violet-400 to-violet-600 transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500" />
-            <div className="help-topic-icon h-16 w-16 bg-violet-50 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-violet-100 transition-all duration-300">
-              <UserCheck className="h-8 w-8 text-violet-600" />
+            <div className="absolute top-0 left-0 w-full h-1.5 bg-linear-to-r from-teal-400 to-teal-700 transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500" />
+            <div className="help-topic-icon h-16 w-16 bg-teal-50 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-teal-100 transition-all duration-300">
+              <UserCheck className="h-8 w-8 text-teal-700" />
             </div>
             <h3 className="text-2xl font-bold text-slate-900 mb-3">Accounts</h3>
             <p className="text-slate-500 text-lg leading-relaxed">Manage your profile, security settings, roles, and verification process.</p>
@@ -58,15 +58,15 @@ export default function HelpPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="help-faq-card p-8 bg-linear-to-br from-slate-50 to-white rounded-3xl border border-slate-100 hover:shadow-lg hover:shadow-slate-200/40 transition-all">
                 <h4 className="text-xl font-bold text-slate-900 mb-3">How do I list a property?</h4>
-                <p className="text-slate-600 leading-relaxed text-lg">To list a property, you must be registered as a Landlord. Go to your dashboard, click on "Add Property," fill in all the required details, upload high-quality images, and submit. Your property will be live instantly.</p>
+                <p className="text-slate-600 leading-relaxed text-lg">To list a property, you must be registered as a Landlord. Go to your dashboard, click on "Add Property," fill in all the required details, upload high-quality images, and submit. Check your listing in My Properties after submission.</p>
               </div>
               <div className="help-faq-card p-8 bg-linear-to-br from-slate-50 to-white rounded-3xl border border-slate-100 hover:shadow-lg hover:shadow-slate-200/40 transition-all">
                 <h4 className="text-xl font-bold text-slate-900 mb-3">How can I contact a landlord?</h4>
-                <p className="text-slate-600 leading-relaxed text-lg">Once you find a property you like, click on the "Request Tour" or "Contact Landlord" button on the property details page. You can then communicate directly through our secure platform.</p>
+                <p className="text-slate-600 leading-relaxed text-lg">Open a property and choose Schedule a tour to send a request for landlord approval. Use Email landlord, Call, or WhatsApp to contact the listed owner directly.</p>
               </div>
               <div className="help-faq-card p-8 bg-linear-to-br from-slate-50 to-white rounded-3xl border border-slate-100 hover:shadow-lg hover:shadow-slate-200/40 transition-all md:col-span-2 lg:col-span-1">
                 <h4 className="text-xl font-bold text-slate-900 mb-3">Is my payment information secure?</h4>
-                <p className="text-slate-600 leading-relaxed text-lg">Yes. We use industry-standard encryption and partner with trusted payment gateways like Stripe and SSLCommerz to ensure that your financial data is 100% secure.</p>
+                <p className="text-slate-600 leading-relaxed text-lg">Eligible rental requests show a payment option in your tenant dashboard. Review the amount and payment provider before continuing. Never send card details or passwords through contact forms or chat.</p>
               </div>
             </div>
           </div>
@@ -83,9 +83,9 @@ export default function HelpPage() {
               <Mail className="h-6 w-6" />
               Email Support
             </Link>
-            <Link href="https://wa.me/8801865190471" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-white text-blue-600 rounded-2xl font-bold text-lg hover:bg-slate-50 hover:scale-105 transition-all shadow-xl shadow-white/20">
+            <Link href="https://wa.me/8801865190471" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-white text-teal-700 rounded-2xl font-bold text-lg hover:bg-slate-50 hover:scale-105 transition-all shadow-xl shadow-white/20">
               <MessageCircle className="h-6 w-6" />
-              Live Chat
+              WhatsApp support
             </Link>
           </div>
         </div>

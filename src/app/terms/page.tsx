@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export default function TermsPage() {
   return (
-    <div className="min-h-screen relative overflow-hidden bg-linear-to-b from-slate-50 to-white pt-12 pb-24">
+    <div className="legal-page min-h-screen relative overflow-hidden bg-linear-to-b from-slate-50 to-white pt-12 pb-24">
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-125 bg-blue-50/50 blur-[120px] rounded-full pointer-events-none" />
 
       <div className="relative z-10 max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-10">
@@ -29,8 +29,8 @@ export default function TermsPage() {
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div className="group bg-linear-to-br from-slate-50 to-white p-8 rounded-3xl border border-slate-100 shadow-md hover:shadow-xl hover:shadow-blue-100/50 transition-all duration-300 hover:-translate-y-1">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              <div className="legal-card group bg-linear-to-br from-slate-50 to-white p-8 rounded-3xl border border-slate-100 shadow-md hover:shadow-xl hover:shadow-blue-100/50 transition-all duration-300 hover:-translate-y-1">
                 <div className="flex flex-col mb-6">
                   <div className="h-14 w-14 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
                     <CheckCircle2 className="h-7 w-7" />
@@ -42,7 +42,7 @@ export default function TermsPage() {
                 </p>
               </div>
 
-              <div className="group bg-linear-to-br from-slate-50 to-white p-8 rounded-3xl border border-slate-100 shadow-md hover:shadow-xl hover:shadow-emerald-100/50 transition-all duration-300 hover:-translate-y-1">
+              <div className="legal-card group bg-linear-to-br from-slate-50 to-white p-8 rounded-3xl border border-slate-100 shadow-md hover:shadow-xl hover:shadow-emerald-100/50 transition-all duration-300 hover:-translate-y-1">
                 <div className="flex flex-col mb-6">
                   <div className="h-14 w-14 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
                     <Shield className="h-7 w-7" />
@@ -54,7 +54,7 @@ export default function TermsPage() {
                 </p>
               </div>
 
-              <div className="group bg-linear-to-br from-slate-50 to-white p-8 rounded-3xl border border-slate-100 shadow-md hover:shadow-xl hover:shadow-violet-100/50 transition-all duration-300 hover:-translate-y-1">
+              <div className="legal-card group bg-linear-to-br from-slate-50 to-white p-8 rounded-3xl border border-slate-100 shadow-md hover:shadow-xl hover:shadow-violet-100/50 transition-all duration-300 hover:-translate-y-1">
                 <div className="flex flex-col mb-6">
                   <div className="h-14 w-14 bg-violet-100 text-violet-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
                     <FileText className="h-7 w-7" />

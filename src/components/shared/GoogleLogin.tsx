@@ -4,6 +4,7 @@ import Script from "next/script";
 import { axiosInstance } from "@/lib/api/axiosInstance";
 import { AuthResponse } from "@/types";
 import toast from "react-hot-toast";
+import { isAxiosError } from "axios";
 
 type GoogleIdentity = { accounts: { id: {
   initialize: (options: { client_id: string; callback: (response: { credential: string }) => void }) => void;
@@ -23,7 +24,8 @@ export default function GoogleLogin({ onSuccess, role = "TENANT" }: { onSuccess:
   roleRef.current = role;
   useEffect(() => {
     axiosInstance.get('/auth/providers').then(res => {
-      if (res.data.data?.googleClientId) setClientId(res.data.data.googleClientId);
+      const id = res.data.data?.googleClientId?.trim();
+      if (id && /^\d+-[a-zA-Z0-9_-]+\.apps\.googleusercontent\.com$/.test(id)) setClientId(id);
       else setUnavailable(true);
     }).catch(() => setUnavailable(true));
   }, []);
@@ -34,7 +36,11 @@ export default function GoogleLogin({ onSuccess, role = "TENANT" }: { onSuccess:
       try {
         const res = await axiosInstance.post<AuthResponse>('/auth/google', { credential, role: roleRef.current });
         callbackRef.current(res.data.data);
-      } catch { toast.error("Google sign-in could not be completed. Please try email sign-in."); }
+      } catch (error) {
+        const message = isAxiosError(error) ? error.response?.data?.message : null;
+        const safeMessages = ["An account already uses this email. Please sign in with your password.", "This account is not active. Please contact support.", "A verified Google email is required."];
+        toast.error(safeMessages.includes(message) ? message : "Google sign-in could not be completed. Please try email sign-in.");
+      }
       finally { setBusy(false); }
     } });
     window.google.accounts.id.renderButton(container.current, { theme: 'outline', size: 'large', shape: 'pill', width: Math.min(container.current.clientWidth, 400), text: 'continue_with' });

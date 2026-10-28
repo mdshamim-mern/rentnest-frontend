@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export default function PrivacyPage() {
   return (
-    <div className="min-h-screen relative overflow-hidden bg-linear-to-b from-slate-50 to-white pt-12 pb-24">
+    <div className="legal-page min-h-screen relative overflow-hidden bg-linear-to-b from-slate-50 to-white pt-12 pb-24">
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-125 bg-green-50/50 blur-[120px] rounded-full pointer-events-none" />
       
       <div className="relative z-10 max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-10">
@@ -28,7 +28,7 @@ export default function PrivacyPage() {
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div className="group bg-linear-to-br from-blue-50/50 to-white p-8 rounded-3xl border border-blue-100/50 shadow-lg shadow-blue-100/20 hover:shadow-blue-200/40 hover:-translate-y-1 transition-all duration-300">
+              <div className="legal-card group bg-linear-to-br from-blue-50/50 to-white p-8 rounded-3xl border border-blue-100/50 shadow-lg shadow-blue-100/20 hover:shadow-blue-200/40 hover:-translate-y-1 transition-all duration-300">
                 <div className="flex items-center gap-4 mb-6">
                   <div className="p-3 bg-blue-100 rounded-xl group-hover:scale-110 transition-transform duration-300">
                     <Database className="h-7 w-7 text-blue-600" />
@@ -40,7 +40,7 @@ export default function PrivacyPage() {
                 </p>
               </div>
 
-              <div className="group bg-linear-to-br from-purple-50/50 to-white p-8 rounded-3xl border border-purple-100/50 shadow-lg shadow-purple-100/20 hover:shadow-purple-200/40 hover:-translate-y-1 transition-all duration-300">
+              <div className="legal-card group bg-linear-to-br from-purple-50/50 to-white p-8 rounded-3xl border border-purple-100/50 shadow-lg shadow-purple-100/20 hover:shadow-purple-200/40 hover:-translate-y-1 transition-all duration-300">
                 <div className="flex items-center gap-4 mb-6">
                   <div className="p-3 bg-purple-100 rounded-xl group-hover:scale-110 transition-transform duration-300">
                     <Eye className="h-7 w-7 text-purple-600" />
@@ -53,7 +53,7 @@ export default function PrivacyPage() {
               </div>
             </div>
 
-            <div className="bg-linear-to-br from-emerald-500 to-teal-600 p-10 sm:p-12 rounded-[2rem] shadow-2xl shadow-emerald-500/30 text-white relative overflow-hidden">
+            <div className="legal-security bg-linear-to-br from-emerald-500 to-teal-600 p-10 sm:p-12 rounded-[2rem] shadow-2xl shadow-emerald-500/30 text-white relative overflow-hidden">
               <div className="absolute top-0 right-0 -translate-y-1/4 translate-x-1/4 w-64 h-64 bg-white/10 blur-3xl rounded-full" />
               <div className="relative z-10 flex flex-col md:flex-row items-center gap-8">
                 <div className="p-5 bg-white/20 backdrop-blur-md rounded-2xl shrink-0">
@@ -77,7 +77,7 @@ export default function PrivacyPage() {
             <p className="text-slate-300 mb-8 max-w-xl mx-auto text-lg">
               If you have any questions or concerns about our Privacy Policy or data processing practices, please reach out to our Data Protection Officer.
             </p>
-            <Link href="mailto:mdshamim.mern@gmail.com" className="inline-flex items-center justify-center gap-2 px-10 py-4 bg-sky-500 text-white rounded-2xl font-bold text-lg hover:bg-sky-400 hover:scale-105 transition-all shadow-xl shadow-sky-500/30">
+            <Link href="mailto:mdshamim.mern@gmail.com" className="inline-flex items-center justify-center gap-2 px-10 py-4 bg-primary text-white rounded-2xl font-bold text-lg hover:bg-primary/90 hover:scale-105 transition-all shadow-xl shadow-sky-500/30">
               Contact Privacy Team
             </Link>
             <p className="mt-6 text-sm font-medium text-slate-400">mdshamim.mern@gmail.com</p>

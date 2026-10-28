@@ -90,7 +90,7 @@ export default function AdminUsersPage() {
                 ) : filteredRecords.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={5} className="text-center py-16 text-slate-500">
-                      No users found in the system.
+                      No users match your search or filters.
                     </TableCell>
                   </TableRow>
                 ) : (
