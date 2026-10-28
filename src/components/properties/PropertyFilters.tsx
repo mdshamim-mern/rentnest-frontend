@@ -162,12 +162,9 @@ export default function PropertyFilters(props: PropertyFiltersProps) {
           body: JSON.stringify({ text: props.searchTerm })
         });
         
-        let aiData: any = {};
-        if (response.ok) {
-          const data = await response.json();
-          aiData = data.data || data;
-        }
-        
+        const payload = await response.json();
+        if (!response.ok || !payload.success || payload.source !== 'ai') throw new Error(payload.error || 'AI search is unavailable. Please use Classic search.');
+        const aiData = payload.data;
         let filtersApplied = 0;
 
         props.setSelectedCategory("all");
@@ -215,34 +212,6 @@ export default function PropertyFilters(props: PropertyFiltersProps) {
           }
         }
 
-        if (filtersApplied === 0) {
-            const text = props.searchTerm.toLowerCase();
-            
-            if (text.includes("gulshan") || text.includes("gulsan")) { props.setSelectedLocation("Gulshan"); filtersApplied++; }
-            else if (text.includes("banani") || text.includes("bonani")) { props.setSelectedLocation("Banani"); filtersApplied++; }
-            else if (text.includes("dhanmondi")) { props.setSelectedLocation("Dhanmondi"); filtersApplied++; }
-            else if (text.includes("mirpur")) { props.setSelectedLocation("Mirpur"); filtersApplied++; }
-            else if (text.includes("uttara")) { props.setSelectedLocation("Uttara"); filtersApplied++; }
-            else if (text.includes("badda")) { props.setSelectedLocation("Badda"); filtersApplied++; }
-            else if (text.includes("mohammadpur")) { props.setSelectedLocation("Mohammadpur"); filtersApplied++; }
-
-            const bedMatch = text.match(/([1-5])\s*bed/);
-            if (bedMatch && bedMatch[1]) { 
-                props.setBeds(bedMatch[1]); 
-                filtersApplied++; 
-            }
-
-            if (text.includes("apartment") || text.includes("flat")) { props.setPropertyType("Apartment"); filtersApplied++; }
-            else if (text.includes("duplex")) { props.setPropertyType("Duplex"); filtersApplied++; }
-            else if (text.includes("studio")) { props.setPropertyType("Studio"); filtersApplied++; }
-            
-            const priceMatch = text.match(/under\s*(\d+)k/);
-            if (priceMatch && priceMatch[1]) {
-                props.setMaxPrice((Number(priceMatch[1]) * 1000).toString());
-                filtersApplied++;
-            }
-        }
-
         props.setSearchTerm("");
         toast.dismiss(loadingToastId);
 
@@ -253,7 +222,7 @@ export default function PropertyFilters(props: PropertyFiltersProps) {
         }
       } catch (error: any) {
         toast.dismiss();
-        toast.error("AI service error. Please try again.");
+        toast.error(error.message || "AI service error. Please try again.", { duration: 6000 });
       }
     } else {
       let formattedLocation = props.searchTerm.trim();

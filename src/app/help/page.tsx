@@ -1,3 +1,4 @@
+import AIAssistant from "@/components/shared/AIAssistant";
 import { Mail, MessageCircle, FileQuestion, Home, CreditCard, UserCheck } from "lucide-react";
 import Link from "next/link";
 
@@ -16,6 +17,7 @@ export default function HelpPage() {
           </p>
         </div>
 
+        <AIAssistant />
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
           <div className="group bg-white p-10 rounded-[2rem] shadow-xl shadow-slate-200/40 border border-slate-100 hover:shadow-2xl hover:shadow-blue-100/50 transition-all duration-300 hover:-translate-y-2 relative overflow-hidden">
             <div className="absolute top-0 left-0 w-full h-1.5 bg-linear-to-r from-blue-400 to-blue-600 transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500" />
