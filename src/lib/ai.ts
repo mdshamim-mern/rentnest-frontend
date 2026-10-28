@@ -9,7 +9,16 @@ export async function generateAI(instruction:string,text:string) {
  let response:Response;
  try {response=await fetch('https://generativelanguage.googleapis.com/v1beta/models/'+model+':generateContent',{method:'POST',headers:{'Content-Type':'application/json','x-goog-api-key':key},body:JSON.stringify({systemInstruction:{parts:[{text:instruction}]},contents:[{role:'user',parts:[{text}]}],generationConfig:{responseMimeType:'application/json',temperature:0.2,maxOutputTokens:1200}}),signal:AbortSignal.timeout(20000),cache:'no-store'});}
  catch {throw new AIError(504,'AI timed out. Please try again or use standard filters.');}
- if(!response.ok) throw new AIError(response.status===429?429:502,response.status===429?'AI is busy. Please wait a moment and try again.':'AI provider is unavailable. Please try again later.');
+ if(!response.ok) {
+ let reason='';
+ try {const body=await response.json();reason=String(body.error?.details?.find((detail:{reason?:string})=>detail.reason)?.reason||'');} catch {}
+ if(reason==='API_KEY_INVALID' || response.status===401) throw new AIError(503,'The AI API key is invalid. Update GEMINI_API_KEY in the frontend production environment and redeploy.');
+ if(response.status===403) throw new AIError(503,'AI access is denied. Check the API key restrictions and Gemini API access in Google Cloud.');
+ if(response.status===404) throw new AIError(503,'The configured AI model is unavailable. Set GEMINI_MODEL to an available Gemini text model and redeploy.');
+ if(response.status===429) throw new AIError(429,'AI quota is exhausted or busy. Check the Google AI project quota and retry later.');
+ if(response.status===400) throw new AIError(503,'The AI provider rejected the configuration. Check the API key, model and Google AI project settings.');
+ throw new AIError(502,'AI provider is unavailable. Please try again later.');
+ }
  try {const body=await response.json();const content=body.candidates?.[0]?.content?.parts?.map((p:{text?:string})=>p.text||'').join('');if(!content)throw new Error();return JSON.parse(content);}
  catch {throw new AIError(502,'AI returned an invalid response. Please try again.');}
 }
