@@ -126,7 +126,6 @@ export default function LoginPage() {
               {isLoading ? "Signing in..." : "Sign in"}
             </Button>
           </form>
-          <p className="mt-5 text-center text-sm text-slate-500">Sign in with your real Tenant, Landlord, or Administrator account. Evaluators receive full-access credentials privately from the project owner.</p>
           <div className="mt-6 text-center text-sm text-slate-600">
             Don&apos;t have an account?{" "}
             <Link href="/register" className="font-semibold text-primary hover:underline">
