@@ -175,7 +175,6 @@ export default function RegisterPage() {
               {isLoading ? "Creating account..." : "Sign up"}
             </Button>
           </form>
-          <Link href="/login?demo=true" className="demo-button block text-center">Try Demo Login instead</Link>
           <div className="mt-6 text-center text-sm text-slate-600">
             Already have an account?{" "}
             <Link href="/login" className="font-semibold text-primary hover:underline">

@@ -4,19 +4,9 @@
 - Frontend: https://github.com/mdshamim-mern/rentnest-frontend
 - Backend: https://github.com/mdshamim-mern/rentnest-backend
 
-## Public demo
-
-| Role | Email | Password | Access |
-| --- | --- | --- | --- |
-| Tenant | demo@rentnest.example | RentNestDemo2026! | Read-only account backed by the database; live public listings |
-
-Select Tenant demo on /login to autofill, then Sign in. No rental history, payments or chart values are invented. An empty account shows an honest empty state. Browser-local favorites work.
-
-The former virtual Admin and Landlord sample previews have been retired. Their published passwords and previously issued tokens cannot access production records.
-
 ## Full-access evaluation (private handoff)
 
-The owner has chosen the existing live website for evaluation, not a separate test deployment. Real Tenant, Landlord and Admin accounts use the normal database-backed role flows; the public tenant demo intentionally cannot save changes.
+The owner has chosen the existing live website for evaluation, not a separate test deployment. Real Tenant, Landlord and Admin accounts use the normal database-backed role flows. No public demo account is available.
 
 Provide the evaluator with a real Tenant email/password and a real Admin email/password through the assignment's private submission channel. Include a Landlord account for listing and request management tests. Do not commit these passwords, publish them in the login page or send production credentials to a public issue. Actual private credentials are supplied by the owner and are not contained in this repository.
 
@@ -36,4 +26,4 @@ Google sign-in is configured on the live application and the owner confirmed suc
 
 ## Verification status
 
-Real-account features are implemented; the owner must supply private evaluation credentials. A public read-only demo is not proof that every write operation has been tested end-to-end. See AUDIT.md for the scope and limitations of prior browser checks.
+Real-account features are implemented; the owner must supply private evaluation credentials. See AUDIT.md for the scope and limitations of prior browser checks.

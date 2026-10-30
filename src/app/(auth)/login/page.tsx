@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -35,13 +35,10 @@ export default function LoginPage() {
   const {
     register,
     handleSubmit,
-    setValue,
     formState: { errors },
   } = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
   });
-
-  useEffect(() => { if (searchParams.get("demo") === "true") { setValue("email", "demo@rentnest.example"); setValue("password", "RentNestDemo2026!"); } }, [searchParams, setValue]);
 
   const onSubmit = async (data: LoginFormValues) => {
     try {
@@ -129,9 +126,7 @@ export default function LoginPage() {
               {isLoading ? "Signing in..." : "Sign in"}
             </Button>
           </form>
-          <button type="button" className="demo-button w-full mt-4" disabled={isLoading} onClick={() => { setValue("email", "demo@rentnest.example", { shouldValidate: true }); setValue("password", "RentNestDemo2026!", { shouldValidate: true }); toast.success("Demo credentials filled. Select Sign in to explore."); }}>Tenant demo · Auto-fill</button>
-          <p className="mt-3 text-center text-sm text-slate-500">Explore live listings with a read-only tenant account. To save changes, sign in with your own account.</p>
-          <p className="mt-3 text-center text-sm text-slate-500">Landlords and administrators sign in above with their real accounts. Evaluators receive full-access credentials privately from the project owner.</p>
+          <p className="mt-5 text-center text-sm text-slate-500">Sign in with your real Tenant, Landlord, or Administrator account. Evaluators receive full-access credentials privately from the project owner.</p>
           <div className="mt-6 text-center text-sm text-slate-600">
             Don&apos;t have an account?{" "}
             <Link href="/register" className="font-semibold text-primary hover:underline">

@@ -27,7 +27,7 @@ Tested the live app with desktop 1280/1440px, tablet 768px and mobile 390px view
 - Admin user role filter returns only Sample Tenant; unmatched search gives an empty table. Admin rental table shows sample tenant, landlord and dates.
 - Mobile dashboard navigation drawer opens and routes to Add Property.
 - Contact empty submission is blocked by required field validation; no message was sent.
-- Help AI guide returned an actual answer about listing properties, including the read-only demo limitation.
+- Help AI guide returned an actual answer about listing properties and account requirements.
 - Header, footer and detail links inspected for their destinations; mail/phone/WhatsApp actions were not sent.
 
 ## Verification limits / owner checks
