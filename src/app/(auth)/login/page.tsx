@@ -35,6 +35,7 @@ export default function LoginPage() {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -126,6 +127,8 @@ export default function LoginPage() {
               {isLoading ? "Signing in..." : "Sign in"}
             </Button>
           </form>
+          <button type="button" className="demo-button w-full mt-4" disabled={isLoading} onClick={() => { setValue("email", "demo@rentnest.example", { shouldValidate: true }); setValue("password", "RentNestDemo2026!", { shouldValidate: true }); toast.success("Demo credentials filled. Select Sign in to explore."); }}>Demo Login · Auto-fill</button>
+          <p className="mt-3 text-center text-sm text-slate-500">Explore live listings with a read-only Tenant demo account.</p>
           <div className="mt-6 text-center text-sm text-slate-600">
             Don&apos;t have an account?{" "}
             <Link href="/register" className="font-semibold text-primary hover:underline">

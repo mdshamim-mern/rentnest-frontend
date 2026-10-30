@@ -6,7 +6,11 @@
 
 ## Full-access evaluation (private handoff)
 
-The owner has chosen the existing live website for evaluation, not a separate test deployment. Real Tenant, Landlord and Admin accounts use the normal database-backed role flows. No public demo account is available.
+The owner has chosen the existing live website for evaluation, not a separate test deployment. Real Tenant, Landlord and Admin accounts use the normal database-backed role flows.
+
+## Restricted demo login
+
+The login page includes a **Demo Login · Auto-fill** button as required by the assignment. It fills a dedicated public Tenant demo account that can browse the live property catalog but cannot write data. The Demo account is separate from every real evaluation account.
 
 Provide the evaluator with a real Tenant email/password and a real Admin email/password through the assignment's private submission channel. Include a Landlord account for listing and request management tests. Do not commit these passwords, publish them in the login page or send production credentials to a public issue. Actual private credentials are supplied by the owner and are not contained in this repository.
 

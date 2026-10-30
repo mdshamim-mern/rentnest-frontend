@@ -22,8 +22,8 @@ Tested the live app with desktop 1280/1440px, tablet 768px and mobile 390px view
 - Live AI search for a two-bedroom apartment in Banani below $800 applied four filters and returned one matching listing.
 - Property details, photo modal, next image (1/4 to 2/4), and tour request dialog open.
 - Mobile home, property details, registration, navigation and landlord add-property form remain within viewport width.
-- Empty login and registration submissions display field validation. Demo autofill and password visibility work.
-- Landlord and admin demo sign-in and logout work in browser. Landlord rental/tour tabs show their correct data and dates; PENDING filter works.
+- Empty login and registration submissions display field validation. The restricted Tenant demo autofill and password visibility work.
+- Real Landlord and Admin role flows are supplied privately for evaluation. Landlord rental/tour tabs show their correct data and dates; PENDING filter works.
 - Admin user role filter returns only Sample Tenant; unmatched search gives an empty table. Admin rental table shows sample tenant, landlord and dates.
 - Mobile dashboard navigation drawer opens and routes to Add Property.
 - Contact empty submission is blocked by required field validation; no message was sent.
@@ -43,4 +43,4 @@ Tested the live app with desktop 1280/1440px, tablet 768px and mobile 390px view
 ## Production follow-up
 - Frontend f9e18e2 and backend b1e6698 deployments succeeded on Vercel.
 - Rechecked deployed dark Terms on mobile and Help on tablet: readable surfaces and no mobile horizontal overflow.
-- Fresh tenant demo sign-in and saved-homes empty state also passed.
+- Restricted Tenant demo sign-in and saved-homes empty state also passed.
