@@ -42,6 +42,13 @@
  .home-page .hero-actions a { padding:12px 16px; }
 }
 @media(max-height:480px) {
- .home-page .hero-shell { height:auto; min-height:68svh; max-height:none; }
- .home-page .hero-visual { min-height:300px; }
+ .home-page .hero-shell { height:68svh; min-height:0; max-height:70svh; padding-block:8px; gap:16px; }
+ .home-page .hero-copy { min-height:0; max-height:100%; overflow-y:auto; overscroll-behavior:contain; padding:3px; }
+ .home-page .hero-copy h1 { font-size:clamp(24px,6svh,29px); line-height:1.05; }
+ .home-page .hero-copy > p { font-size:14px; line-height:1.35; margin-top:8px; }
+ .home-page .hero-actions { margin-top:10px; gap:10px; }
+ .home-page .hero-actions a { font-size:14px; padding:10px 12px; }
+ .home-page .hero-visual { min-height:0; height:100%; }
+ .home-page .hero-floating { bottom:16px; left:12px; right:12px; padding:10px; }
+ .home-page .hero-image-label,.home-page .image-caption { display:none; }
 }
